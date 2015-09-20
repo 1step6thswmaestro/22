@@ -1,0 +1,33 @@
+{
+  "name": "givemetask",
+  "version": "0.0.1",
+  "homepage": "https://github.com/insikk/givemetask",
+  "authors": [
+    "inosphe <inosphe@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "bower_components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "~0.13.3",
+    "underscore": "~1.8.3"
+  },
+  "install": {
+    "base": "./src/frontend/resources/bowerAssets",
+    "path": {
+      "css": "css",
+      "js": "js",
+      "woff": "fonts",
+      "woff2": "fonts",
+      "eof": "fonts",
+      "svg": "fonts",
+      "ttf": "fonts"
+    }
+  }
+}
