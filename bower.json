@@ -19,15 +19,15 @@
     "underscore": "~1.8.3"
   },
   "install": {
-    "base": "./src/frontend/resources/bowerAssets",
+    "base": "./public/resources/bowerAssets",
     "path": {
       "css": "css",
       "js": "js",
       "woff": "fonts",
       "woff2": "fonts",
       "eof": "fonts",
-      "svg": "fonts",
-      "ttf": "fonts"
+      "ttf": "fonts",
+      "svg": "images"
     }
   }
 }

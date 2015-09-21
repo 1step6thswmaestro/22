@@ -9,20 +9,25 @@ var watch       = require('gulp-watch');
 var sass        = require('gulp-sass');
 var template    = require('gulp-template');
 
-var base_dir = 'src/frontend/resources/nativeAssets/';
-var target_dir = 'src/frontend/compiled/';
+var base_dir = './src/frontend/';
+var target_dir = './public/resources/nativeAssets/';
 
-gulp.task('compile_assets_html', compileAssets_html);
-gulp.task('compile_assets_sass', compileAssets_sass);
+gulp.task('compile_html', compile_html);
+gulp.task('compile_sass', compile_sass);
+gulp.task('compile_assets', compile_assets);
 gulp.task('watch', onWatch);
-gulp.task('default', ['compile_assets_html', 'compile_assets_sass', 'watch']);
+gulp.task('default', ['compile_html', 'compile_sass', 'compile_assets', 'watch']);
 
-function compileAssets_html(){
+function compile_html(){
     build_files(__dirname, base_dir + '*/*.html', target_dir + 'index.html');
 }
 
-function compileAssets_sass(){
+function compile_sass(){
     compile_sass_concat(__dirname, [base_dir + '*/*.scss'], target_dir + 'index.css');
+}
+
+function compile_assets(){
+    copy_files(__dirname, base_dir + '/**/*.svg', target_dir+'/svg');
 }
 
 function build_files(root, src_files, dest_file){
@@ -40,6 +45,11 @@ function build_files(root, src_files, dest_file){
         //.pipe(gulp.dest(scriptsPath));
 }
 
+function copy_files(root, src_files, dest_file){
+    return gulp.src(src_files, { base: base_dir })
+    .pipe(gulp.dest(dest_file))
+}
+
 function compile_sass_concat(root, src_files, dest_file){
     return gulp.src(src_files)
         .pipe(sass({includePaths: [base_dir]}))
@@ -48,6 +58,6 @@ function compile_sass_concat(root, src_files, dest_file){
 }
 
 function onWatch(){
-    gulp.watch([base_dir + '/*', base_dir + '/*/*'], compileAssets_html);
-    gulp.watch([base_dir + '/*', base_dir + '/*/*'], compileAssets_sass);
+    gulp.watch([base_dir + '/*', base_dir + '/*/*'], compile_html);
+    gulp.watch([base_dir + '/*', base_dir + '/*/*'], compile_sass);
 }
