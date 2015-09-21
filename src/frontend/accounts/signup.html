@@ -4,17 +4,26 @@
 	<title>givemetask</title>
 	<link rel="stylesheet" href="index.css">
 	<script type="text/javascript" src="js/jquery/jquery.js"></script>
-	<script type="text/javascript" src="js/react/react.js"></script>
 </head>
 <body>
 	<div class='container'>
 		<div class='sample-banner'>
-			hello, world
+			signup
 		</div>
-		<br>
-		<div class='sample-banner'>
-			<a href="/signup">signup</a>
-		</div>
+		<script type='text/javascript'>
+			$(function(){
+				$.ajax({
+					type: 'post'
+					, url: '/signup_test'
+				})
+				.then(function(data){
+					alert(data.message);
+				})
+				.fail(function(e){
+
+				})
+			});
+		</script>
 	</div>
 </body>
 </html>

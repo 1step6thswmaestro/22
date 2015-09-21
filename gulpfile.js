@@ -19,7 +19,8 @@ gulp.task('watch', onWatch);
 gulp.task('default', ['compile_html', 'compile_sass', 'compile_assets', 'watch']);
 
 function compile_html(){
-    build_files(__dirname, base_dir + '*/*.html', target_dir + 'index.html');
+    build_files(__dirname, base_dir + 'accounts/*.html', target_dir + '/accounts');
+    build_files_concat(__dirname, base_dir + 'main/*.html', target_dir + '/index.html');
 }
 
 function compile_sass(){
@@ -31,19 +32,16 @@ function compile_assets(){
 }
 
 function build_files(root, src_files, dest_file){
-    // concat into foldername.js
-    // write to output
-    // minify
-    // rename to folder.min.js
-    // write to output again
+    return gulp.src(src_files, { base: base_dir })
+        .pipe(gulp.dest(path.dirname(dest_file)))
+}
+
+function build_files_concat(root, src_files, dest_file){
     return gulp.src(src_files)
         .pipe(concat(path.basename(dest_file)))
-        .pipe(template({domain: '/INDEL2'}))
         .pipe(gulp.dest(path.dirname(dest_file)))
-        //.pipe(uglify())
-        //.pipe(rename(folder + '.min.js'))
-        //.pipe(gulp.dest(scriptsPath));
 }
+
 
 function copy_files(root, src_files, dest_file){
     return gulp.src(src_files, { base: base_dir })
