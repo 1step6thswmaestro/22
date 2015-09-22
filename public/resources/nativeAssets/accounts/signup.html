@@ -7,23 +7,21 @@
 </head>
 <body>
 	<div class='container'>
-		<div class='sample-banner'>
-			signup
-		</div>
-		<script type='text/javascript'>
-			$(function(){
-				$.ajax({
-					type: 'post'
-					, url: '/signup_test'
-				})
-				.then(function(data){
-					alert(data.message);
-				})
-				.fail(function(e){
-
-				})
-			});
-		</script>
+		<form name="login-form" class="login-form" action="v1/signup" method="post">
+		    <div class="header">
+			    <h1>Login Form</h1>
+			    <span>Fill out the form below to login to my super awesome imaginary control panel.</span>
+		    </div>
+			
+		    <div class="content">
+				<input name="email" type="text" class="input username" value="" onfocus="this.value=''" placeholder='email'/>
+			    <input name="passwd" type="password" class="input password" value="" onfocus="this.value=''" placeholder='password'/>
+		    </div>
+		    
+		    <div class="footer">
+			    <input type="submit" name="submit" value="Sign up" class="button" />
+		    </div>
+		</form>
 	</div>
 </body>
 </html>
