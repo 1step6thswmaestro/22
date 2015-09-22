@@ -21,14 +21,18 @@ module.exports = function(opt){
 	_.extend(app, opt);
 
 
-	init(['app/init.js', 'router/']);
+	init(['app/init.js', 'app/init_mongodb.js', 'models/', 'app/init_passport.js', 'router/']);
 
 	app.config = readJson(path.resolve(app.rootdir, '../config.json'));
 
 	app.start = function(){
 		var port = app.config.port || 3000;
-		app.listen(port);
-		logger.log('*** server is running on', port);
+
+		return app.connectMongo()
+		.then(function(){
+			app.listen(port);
+			logger.log('*** server is running on', port);
+		});
 	}
 
 	return app;

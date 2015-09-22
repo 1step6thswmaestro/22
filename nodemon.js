@@ -1,3 +1,3 @@
 {
-	"ignore": ["src/frontend/*", "bower_components"]
+	"ignore": ["src/frontend/*", "bower_components", "public"]
 }
