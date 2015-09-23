@@ -37,6 +37,7 @@ module.exports = function(app){
  	app.use('/', express.static('./public/resources/bowerAssets', {index: false}));
  	app.use(function(req, res, next){
 	 	res.render = render.bind(res);
+	 	res.renderIndex = renderIndex.bind(res);
 	 	next();
  	});
  	app.use(function(req, res, next){
@@ -51,5 +52,9 @@ module.exports = function(app){
 
  	function render(filename){
 		this.sendFile(path.resolve(app.rootdir, './../public/resources/nativeAssets/' + filename));
+	}
+
+	function renderIndex(){
+		this.render(app.config.index);
 	}
 }
