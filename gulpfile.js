@@ -27,12 +27,13 @@ gulp.task('default', ['build_html', 'build_sass', 'build_assets', 'watch']);
 function build_html(){
     copy_files(__dirname, base_dir('accounts/*.html'), target_dir(''));
     copy_files(__dirname, base_dir('todo/*.html'), target_dir(''));
+    copy_files(__dirname, base_dir('todo/*.json'), target_dir(''));
     compile_files_concat(__dirname, base_dir('main/*.html'), target_dir('index.html'));
     compile_jsx(__dirname, base_dir('todo/index.jsx'), target_dir('Todos.js'))
 }
 
 function build_sass(){
-    compile_sass_concat(__dirname, [base_dir('*/*.scss')], target_dir('index.css'));
+    compile_sass_concat(__dirname, [base_dir('*/*.scss'), base_dir('*/*/*.scss')], target_dir('index.css'));
 }
 
 function build_assets(){

@@ -45,6 +45,10 @@ class TaskForm extends React.Component{
 };
 
 class TodoApp extends React.Component{
+  constructor(){
+    super();
+    this.state = {tasks: []};
+  }
   loadTasksFromServer() {
     $.ajax({
       url: this.props.url,
@@ -79,10 +83,6 @@ class TodoApp extends React.Component{
     });
   }
 
-  getInitialState() {
-    return {tasks: []};
-  }
-
   componentDidMount() {
     this.loadTasksFromServer();
     setInterval(this.loadTasksFromServer, this.props.pollInterval);
@@ -104,8 +104,9 @@ class TodoApp extends React.Component{
     // SEND REMOVAL EVENT TO SERVER.
     alert('Discard Clicked');
   }
-  
+
   render() {
+    console.log(this, this.state);
     var tasks = this.state.tasks;
     var taskItems = tasks.map(function (task) {
       return (
