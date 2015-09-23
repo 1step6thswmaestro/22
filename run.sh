@@ -11,4 +11,4 @@ $TMUX new \; \
   select-pane -t 1 \; \
     send-keys "gulp" Enter \; \
   select-pane -t 2 \; \
-    send-keys "./mongodb/mongod --dbpath __database/givemetask --port 27340" Enter \; \
+    send-keys "mongod --dbpath __database/givemetask --port 27340" Enter \; \

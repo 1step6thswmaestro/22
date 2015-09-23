@@ -1,0 +1,21 @@
+.task {
+
+}
+
+.task-name{
+  width: 70%;
+  float:left;
+
+}
+.task-duedate{
+  width: 30%;
+  float:left;
+
+}
+
+.task-description{
+  clear:left;
+}
+.task-due{
+
+}

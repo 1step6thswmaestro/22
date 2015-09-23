@@ -42,7 +42,7 @@ module.exports = function(app){
  	});
  	app.use(function(req, res, next){
  		console.log(req.user);
- 		if(!req.user && (req.url != '/signin' && req.url != '/v1/signin')){
+ 		if(false && !req.user && (req.url != '/signin' && req.url != '/v1/signin')){
  			res.redirect('/signin');
  		}
  		else{
