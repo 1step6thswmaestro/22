@@ -4,6 +4,7 @@ node_modules
 *.sublime-workspace
 __database
 mongodb
+run.sh
 
 # --- GIT IGNORE FOR OSX ----
 .DS_Store
