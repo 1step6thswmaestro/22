@@ -27,16 +27,17 @@ gulp.task('default', ['build_html', 'build_sass', 'build_assets', 'watch']);
 function build_html(){
     copy_files(__dirname, base_dir('accounts/*.html'), target_dir(''));
     copy_files(__dirname, base_dir('todo/*.html'), target_dir(''));
+    copy_files(__dirname, base_dir('todo/*.json'), target_dir(''));
     compile_files_concat(__dirname, base_dir('main/*.html'), target_dir('index.html'));
     compile_jsx(__dirname, base_dir('todo/index.jsx'), target_dir('Todos.js'))
 }
 
 function build_sass(){
-    compile_sass_concat(__dirname, [base_dir('*/*.scss')], target_dir('index.css'));
+    compile_sass_concat(__dirname, [base_dir('*/*.scss'), base_dir('*/*/*.scss')], target_dir('index.css'));
 }
 
 function build_assets(){
-    copy_files(__dirname, base_dir('/**/*.svg'), target_dir('/svg'));
+    copy_files(__dirname, base_dir('/**/*.svg'), target_dir('/'));
 }
 
 function onWatch(){
@@ -55,6 +56,9 @@ function compile_files_concat(root, src_files, dest_file){
 
 function copy_files(root, src_files, dest_file){
     return gulp.src(src_files, { base: __base_dir })
+    .pipe(rename(function (path) {
+        path.dirname = path.dirname.split('/')[0];
+    }))
     .pipe(gulp.dest(dest_file))
 }
 

@@ -1,10 +1,10 @@
 //import React from 'react';
-import TodoList from './TodoList';
+import TodoApp from './TodoApp';
 
 React.render(
     // Load data from user-specific task list.
     // The given data will be processed already. It means it has n-promising
     // tasks for current context. In view it only render the data pretty.
-    <TodoList/>
+    <TodoApp url="v1/sample_data" pollInterval={2000} />
     , document.getElementById('content')
 );
