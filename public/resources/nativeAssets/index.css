@@ -84,13 +84,13 @@ ul {
   float: left; }
 
 .card-control .toolbar .button.done {
-  background-image: url(/image/checkbox.svg); }
+  background-image: url(/todo/checkbox.svg); }
 
 .card-control .toolbar .button.postpone {
-  background-image: url(/image/postpone.svg); }
+  background-image: url(/todo/postpone.svg); }
 
 .card-control .toolbar .button.discard {
-  background-image: url(/image/trash.svg); }
+  background-image: url(/todo/trash.svg); }
 
 .task-name {
   width: 70%;

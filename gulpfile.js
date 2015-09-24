@@ -37,7 +37,7 @@ function build_sass(){
 }
 
 function build_assets(){
-    copy_files(__dirname, base_dir('/**/*.svg'), target_dir('/svg'));
+    copy_files(__dirname, base_dir('/**/*.svg'), target_dir('/'));
 }
 
 function onWatch(){
@@ -56,6 +56,9 @@ function compile_files_concat(root, src_files, dest_file){
 
 function copy_files(root, src_files, dest_file){
     return gulp.src(src_files, { base: __base_dir })
+    .pipe(rename(function (path) {
+        path.dirname = path.dirname.split('/')[0];
+    }))
     .pipe(gulp.dest(dest_file))
 }
 
