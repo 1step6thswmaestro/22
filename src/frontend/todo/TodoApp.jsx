@@ -11,11 +11,13 @@ class TaskForm extends React.Component{
     for ( var i in this.refs ) {
 
       taskModel[i] = React.findDOMNode(this.refs[i]).value.trim();
-      // When there is an empty field.
-      if (!taskModel[i]) {
-        alert('Please Enter Value: ' + i);
-        return;
-      }
+
+    }
+
+    // At least user have to enter name of the task
+    if (!taskModel.name) {
+      alert('Please enter task name');
+      return;
     }
 
     console.log(taskModel);
@@ -31,7 +33,7 @@ class TaskForm extends React.Component{
   render() {
     // NOTE: Check if there is snippet for assigning location from address or getting current location. -->
     return (
-      <form className="taskForm" onSubmit={this.handleSubmit}>
+      <form className="taskForm" onSubmit={this.handleSubmit.bind(this)}>
         <input type="text" placeholder="Task Name" ref="name" />
         <input type="text" placeholder="Description" ref="description" />
         <input type="text" placeholder="Importance:0, 1, 2" ref="importance" />
@@ -74,8 +76,8 @@ class TodoApp extends React.Component{
       dataType: 'json',
       type: 'POST',
       data: task,
-      success: function(data) {
-        this.setState({tasks: data});
+      success: function(res) {
+        // Do NOTHING.
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -85,10 +87,10 @@ class TodoApp extends React.Component{
 
   componentDidMount() {
     this.loadTasksFromServer();
-    setInterval(this.loadTasksFromServer, this.props.pollInterval);
+    setInterval(this.loadTasksFromServer.bind(this), this.props.pollInterval);
   }
 
-  toggle(todoToToggle) {
+  toggle(taskToToggle) {
     // Implement toggle routine.
     // For example:
     // UPDATE VIEW
@@ -97,16 +99,24 @@ class TodoApp extends React.Component{
 
   }
 
-  discard(todo) {
+  discard(task) {
     // Implement discard routine.
     // For example:
     // REMOVE FROM VIEW
     // SEND REMOVAL EVENT TO SERVER.
-    alert('Discard Clicked');
+
+    // What is good way to call REST API for deletion instead of ajax call?
+    $.ajax({
+      url: 'v1/tasks/'+task._id,
+      type: 'DELETE',
+      success: function(result) {
+        // Update current view.
+        this.loadTasksFromServer();
+      }.bind(this)
+    });
   }
 
   render() {
-    console.log(this, this.state);
     var tasks = this.state.tasks;
     var taskItems = tasks.map(function (task) {
       return (
@@ -122,7 +132,7 @@ class TodoApp extends React.Component{
     return (
       <div className="task-box">
         <h1>Give Me Task</h1>
-        <TaskForm onTaskSubmit={this.handleTaskSubmit} />
+        <TaskForm onTaskSubmit={this.handleTaskSubmit.bind(this)} />
         <div className="task-list">
           {taskItems}
         </div>

@@ -82,11 +82,11 @@ module.exports = function(opt){
 				initialized[path.basename(file)] = true;
 
 				logger.log(file, 'initialized.');
-				
+
 			}
 			else{
 				logger.warn(file , 'is not function.');
 			}
 		}
-	}	
+	}
 }

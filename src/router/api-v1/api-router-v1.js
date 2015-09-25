@@ -4,6 +4,7 @@ var fs = require('fs');
 module.exports = function(app){
 	var router_auth = express.Router();
 	router_auth.use('/', app.needAuthorization);
+
 	fs.readdirSync(__dirname + '/modules').forEach(function(file){
 		if(file.search(/.*?\.js/) != -1){
 			require(__dirname + '/modules/' + file)(router_auth, app);
