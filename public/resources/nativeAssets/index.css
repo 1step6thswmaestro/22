@@ -8,7 +8,7 @@
   font-size: 30px; }
 
 body {
-  background: #fff;
+  background-color: #ffffff;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 1.7;
@@ -71,10 +71,13 @@ ul {
 .card, .card-content {
   display: block; }
 
-.card, .card-content, .card-control {
+.card, .card-content {
   float: left;
   margin-left: 10px;
   margin-right: 10px; }
+
+.card-control .btn {
+  width: 100%; }
 
 .card-control .toolbar .button {
   width: 32px;
@@ -85,18 +88,6 @@ ul {
   color: rgba(0, 0, 0, 0.498039);
   opacity: 1;
   float: left; }
-
-.card-control .done-button {
-  width: 80px;
-  height: 32px;
-  opacity: 1;
-  position: absolute;
-  right: 20px;
-  align-content: center;
-  padding-bottom: 5px;
-  padding-left: 14px;
-  padding-right: 14px;
-  padding-top: 5px; }
 
 .card-control .toolbar .button.done {
   background-image: url(/todo/checkbox.svg); }
