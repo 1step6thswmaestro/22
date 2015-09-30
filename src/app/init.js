@@ -41,20 +41,37 @@ module.exports = function(app){
 	 	next();
  	});
  	app.use(function(req, res, next){
- 		console.log(req.user);
  		if(!req.user && (req.url != '/signin' && req.url != '/v1/signin' && req.url != '/signup' && req.url != '/v1/signup')){
  			res.redirect('/signin');
  		}
  		else{
  			next();
  		}
- 	})
+ 	});
 
  	function render(filename){
 		this.sendFile(path.resolve(app.rootdir, './../public/resources/nativeAssets/' + filename));
 	}
 
 	function renderIndex(){
-		this.render(app.config.index);
+		this.render('todo/index.html');
+	}
+
+	app.needAuthorization = function(req, res, next){
+		if(!req.user){
+			res.redirect(app.config.index);
+		}
+		else{
+			next();
+		}
+	}
+
+	app.needUnathorization = function(req, res, next){
+		if(req.user){
+			res.redirect(app.config.index);
+		}
+		else{
+			next();
+		}
 	}
 }
