@@ -6,14 +6,14 @@ var ObjectId = Types.ObjectId;
 var crypto = require('crypto');
 
 module.exports = function(){
-	var schema = Schema({
+	var accountSchema = new Schema({
 		name: String
 		, email: String
 		, hashed_passwd: String
 		, salt: String
 	});
 
-	schema.methods = {
+	accountSchema.methods = {
 		encrypt: function(passwd){
 			return crypto.createHmac('sha1', this.salt).update(passwd).digest('hex');
 		}
@@ -22,7 +22,7 @@ module.exports = function(){
 		}
 	};
 
-	schema
+	accountSchema
 		.virtual('passwd')
 		.set(function(passwd){
 			this.salt = makeSalt();
@@ -33,5 +33,5 @@ module.exports = function(){
 			}
 		});
 
-	mongoose.model('Account', schema);
+	mongoose.model('Account', accountSchema);
 }
