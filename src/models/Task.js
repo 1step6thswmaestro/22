@@ -11,10 +11,10 @@ module.exports = function(app){
 	  offset: {type: Number, default: 0.0, required: false},
 
 		//estimate_time: {type: Date, default: Date.now()},
-		timestampCreated: {type: Date, default: Date.now()},
-		timestampStart: {type: Date, default: Date.now()},
-		timestampComplete: {type: Date, default: Date.now()},
-		timestampDuedate: {type: Date, default: Date.now()},
+		timestampCreated: {type: Date, default: Date.now},
+		timestampStart: {type: Date, default: Date.now},
+		timestampComplete: {type: Date, default: Date.now},
+		timestampDuedate: {type: Date, default: Date.now},
 
 	  expectedDuration: {type: String, default: ""},
 		locationstampStart: {
