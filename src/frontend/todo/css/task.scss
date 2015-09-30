@@ -2,19 +2,24 @@
 
 }
 
-.task-name{
-  width: 70%;
-  float:left;
 
+textarea:focus, input:focus{
+    outline: 0;
+}
+
+.task-name{
+  width:100%;
+  display:block;
+  border:none;
 }
 .task-duedate{
-  width: 30%;
-  float:left;
-
+  display:block;
 }
 
 .task-description{
-  clear:left;
+  width:100%;
+  display:block;
+  border:none;
 }
 .task-due{
 }

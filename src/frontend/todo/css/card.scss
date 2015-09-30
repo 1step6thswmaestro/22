@@ -7,12 +7,16 @@
   width: 100%;
   margin-bottom: 10px;
 }
+.card, .card-content{
+  display: block;
+}
 
 .card, .card-content, .card-control {
     float: left;
     margin-left: 10px;
     margin-right: 10px;
 }
+
 
 .card-control .toolbar .button{
   width: 32px;
@@ -23,6 +27,19 @@
   color: rgba(0, 0, 0, 0.498039);
   opacity: 1;
   float: left;
+}
+
+.card-control .done-button{
+  width: 80px;
+  height: 32px;
+  opacity: 1;
+  position: absolute;
+  right: 20px;
+  align-content: center;
+  padding-bottom: 5px;
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-top: 5px;
 }
 
 .card-control .toolbar .button.done{
