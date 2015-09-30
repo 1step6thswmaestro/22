@@ -42,8 +42,8 @@ function build_assets(){
 
 function onWatch(){
     gulp.watch([base_dir('/**')], build_html);
-    gulp.watch([base_dir('/*'), base_dir('/*/*')], build_sass);
-    gulp.watch([base_dir('/*'), base_dir('/*/*')], build_assets);
+    gulp.watch([base_dir('/**')], build_sass);
+    gulp.watch([base_dir('/**')], build_assets);
 }
 
 ///////////////////////////////////////////////////////////////

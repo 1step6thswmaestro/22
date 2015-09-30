@@ -17,6 +17,7 @@ class TaskInputForm extends React.Component{
     };
   }
   handleSubmit() {
+    console.log('handleSubmit : ', this.refs.taskForm.getFormData());
     if (this.refs.taskForm.isValid()) {
       this.props.onTaskSubmit(this.refs.taskForm.getFormData());
       this.refs.taskForm.clearForm();
@@ -71,14 +72,25 @@ class TaskInputForm extends React.Component{
 
     return (
       <div className="card">
-        <TaskForm ref='taskForm' className="card-contents"/>
-        <div className="card-control">
-          <div className="toolbar">
-            <button className="button postpone" label="Remined me later" onClick={this.props.onPostpone}/>
-            <button className="button discard" label="Discard this task" onClick={this.props.onDiscard} />
-          </div>
-          <div className="done-button" onClick={this.handleSubmit.bind(this)}>
-            Done
+        <div className='card-contents'>
+          <TaskForm ref='taskForm'/>
+          
+          <div className="card-control">
+            <div className="toolbar">
+              <div className='row'>
+                <div className='col-md-6'>
+                  <button className="btn btn-default postpone" onClick={this.props.onPostpone}>Remined me later</button>
+                </div>
+                <div className='col-md-6'>
+                  <button className="btn btn-default discard" onClick={this.props.onDiscard}>Discard this task</button>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-md-12'>
+                  <button className='btn btn-default' onClick={this.handleSubmit.bind(this)}>Done</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

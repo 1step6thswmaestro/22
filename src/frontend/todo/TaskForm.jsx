@@ -6,9 +6,11 @@ import React from 'react'
 class MyInput extends React.Component{
     constructor(){
       super();
+      this.state = {}
     }
 
     handleChange(evt){
+      console.log('handleChange : ', evt);
       this.setState({
         value: evt.target.value
       });
@@ -16,7 +18,7 @@ class MyInput extends React.Component{
 
     clear(){
       // Below line works
-      React.findDOMNode(this).value = '';
+      React.findDOMNode(this).querySelector('input').value = '';
       // Below line does not work.  I want to use react component as controlled form.
       // In other words, I don't want to manipulate dom object directly like above code.
       // TODO: Find a way to implement my idea.
@@ -27,13 +29,15 @@ class MyInput extends React.Component{
 
     render(){
         return (
-          <input
-            className={this.props.className}
-            type="text"
-            onChange={this.handleChange}
-            placeholder={this.props.placeholder}
-            defaultValue={this.props.initValue}
-            />
+          <div className='form-group'>
+            <input
+              className="form-control"
+              type="text"
+              onChange={this.handleChange.bind(this)}
+              placeholder={this.props.placeholder}
+              defaultValue={this.props.initValue}
+              />
+          </div>
         );
     }
 };
@@ -42,6 +46,7 @@ class MyInput extends React.Component{
 class MyTextarea extends React.Component{
     constructor(){
       super();
+      this.state = {};
     }
 
     handleChange(evt){
@@ -52,6 +57,7 @@ class MyTextarea extends React.Component{
 
 
     clear(){
+      React.findDOMNode(this).querySelector('textarea').value = '';
       this.setState({
         value: ''
       });
@@ -60,8 +66,8 @@ class MyTextarea extends React.Component{
     render(){
         return (
           <textarea
-            className={this.props.className}
-            onChange={this.handleChange}
+            className="form-control"
+            onChange={this.handleChange.bind(this)}
             placeholder={this.props.placeholder}
             defaultValue={this.props.initValue}
             />
@@ -79,12 +85,17 @@ class TaskForm extends React.Component{
   }
 
   isValid(){
+    let name = undefined;
+    if(this.refs.name.state)
+      name = this.refs.name.state.value;
+
     var errors = {};
     // Do validity check for every form here.
 
-    if (!React.findDOMNode(this.refs.name).value){
+    if (!name){
       errors['name'] = 'name' + ' field is required';
     }
+    
     this.setState({errors: errors});
 
     var isValid = true;
@@ -96,11 +107,11 @@ class TaskForm extends React.Component{
   }
 
   getFormData(){
-    var data={
-      name: React.findDOMNode(this.refs.name).value,
-      description: React.findDOMNode(this.refs.description).value
-    };
-    return data;
+    console.log('getFormData : ', this.refs);
+    let name = this.refs.name.state.value;
+    let description = this.refs.description.state.value;
+
+    return {name, description};
   }
 
   clearForm(){
@@ -111,9 +122,31 @@ class TaskForm extends React.Component{
 
   render() {
     return (
-      <div className={this.props.className}>
-        <MyInput ref="name" className="task-name" placeholder="Task Name" />
-        <MyTextarea ref="description" className="task-description" placeholder="Task Description"/>
+      <div className='form-group-attached'>
+        <div className='row'>
+          <div className='col-md-12'>
+            <MyInput ref="name" placeholder="Task Name" />
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-md-6'>
+            <div className='form-group'>
+              <input className='form-control'/>
+            </div>
+          </div>
+          <div className='col-md-6'>
+            <div className='form-group'>
+              <input className='form-control'/>
+            </div>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-md-12'>
+            <div className='form-group'>
+              <MyTextarea ref="description" placeholder="Task Description"/>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

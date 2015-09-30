@@ -52,11 +52,15 @@ class TodoApp extends React.Component{
     return (
       <div className="task-box">
         <h1>Give Me Task</h1>
-        <TaskInputForm
-          onTaskSubmit={this.handleTaskSubmit.bind(this)}
-          onToggle={this.toggle.bind(this)}
-          onDiscard={this.discard.bind(this)}
-        />
+        <div className='row'>
+          <div className='col-md-4'>
+            <TaskInputForm
+              onTaskSubmit={this.handleTaskSubmit.bind(this)}
+              onToggle={this.toggle.bind(this)}
+              onDiscard={this.discard.bind(this)}
+            />
+          </div>
+        </div>
         <div className="task-list">
           {taskItems}
         </div>
