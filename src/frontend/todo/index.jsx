@@ -5,15 +5,15 @@ import { configureStore } from './store/configureStore'
 
 let store = configureStore({
   tasks: {
-    list: []
+	list: []
   }
 });
 
 console.log('index.jsx');
 
 React.render(
-    <Provider store={store}>
-	    {() => <TodoApp />}
-    </Provider>
+	<Provider store={store}>
+		{() => <TodoApp />}
+	</Provider>
 	, document.getElementById('content')
 );
