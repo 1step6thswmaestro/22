@@ -1,3 +1,5 @@
+import React from 'react'
+
 // Task edit template.
 // If it looks pretty, then we can use same edite template for displaying existing tasks.
 

@@ -1,87 +1,52 @@
+import React from 'react'
+import { createStore } from 'redux'
+import { connect } from 'react-redux';
+import TaskForm from './TaskForm';
+import { fetchList, makeNewItem, removeItem } from './actions/tasks'
 import TaskItem from './TaskItem'
 import TaskInputForm from './TaskInputForm'
+import _ from 'underscore'
 
 class TodoApp extends React.Component{
   constructor(){
     super();
     this.state = {tasks: []};
   }
-  loadTasksFromServer() {
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      cache: false,
-      success: function(data) {
-        this.setState({tasks: data});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
-  }
-
-  handleTaskSubmit(task) {
-    // Optimistic Update. Update view before getting success response from server.
-    var taskList = this.state.tasks;
-    var newTasks = taskList.concat([task]);
-    this.setState({tasks: newTasks});
-
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      type: 'POST',
-      data: task,
-      success: function(res) {
-        // Do NOTHING.
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
-  }
 
   componentDidMount() {
-    this.loadTasksFromServer();
-    setInterval(this.loadTasksFromServer.bind(this), this.props.pollInterval);
+    const { dispatch } = this.props;
+    dispatch(fetchList());
   }
 
-  toggle(taskToToggle) {
+
+  handleTaskSubmit(task) {
+    const { dispatch } = this.props;
+    console.log('handleTaskSubmit : ', this, task, dispatch);
+    dispatch(makeNewItem(task));
+  }
+
+  discard(task){
+    const { dispatch } = this.props;
+    dispatch(removeItem(task));
+  }
+
+  toggle(todoToToggle) {
     // Implement toggle routine.
     // For example:
     // UPDATE VIEW
     // SEND THE EVENT TO SERVER.
     alert('Check Clicked');
-
   }
-
-  discard(task) {
-    // Implement discard routine.
-    // For example:
-    // REMOVE FROM VIEW
-    // SEND REMOVAL EVENT TO SERVER.
-
-    // What is good way to call REST API for deletion instead of ajax call?
-    $.ajax({
-      url: 'v1/tasks/'+task._id,
-      type: 'DELETE',
-      success: function(result) {
-        // Update current view.
-        this.loadTasksFromServer();
-      }.bind(this)
-    });
-  }
-
+  
   render() {
-    var tasks = this.state.tasks;
-    var taskItems = tasks.map(function (task) {
+    var tasks = this.props.tasks.list;
+    console.log(tasks);
+    var taskItems = _.map(tasks, function (task) {
       return (
         <TaskItem
           key={task.id}
-          task={task}
-          onToggle={this.toggle.bind(this, task)}
-          onDiscard={this.discard.bind(this, task)}
-          />
-      );
+          task={task} 
+          onDiscard={this.discard.bind(this, task)} />)
     }, this);
 
     return (
@@ -91,7 +56,7 @@ class TodoApp extends React.Component{
           onTaskSubmit={this.handleTaskSubmit.bind(this)}
           onToggle={this.toggle.bind(this)}
           onDiscard={this.discard.bind(this)}
-          />
+        />
         <div className="task-list">
           {taskItems}
         </div>
@@ -100,4 +65,12 @@ class TodoApp extends React.Component{
   }
 };
 
-export default TodoApp;
+function mapStateToProps(state){
+  return {
+    tasks: Object.assign({}, state, {list: _.filter(state.tasks.list, item => !item.removed)})
+  }
+};
+
+export default connect(
+  mapStateToProps
+)(TodoApp);

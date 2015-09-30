@@ -1,3 +1,5 @@
+import React from 'react'
+
 // TaskIputForm gives consistent look with other task items.
 // We are going to use same card shape design for the input form.
 

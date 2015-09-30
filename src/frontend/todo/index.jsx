@@ -1,10 +1,19 @@
-//import React from 'react';
+import React from 'react';
+import { Provider } from 'react-redux';
 import TodoApp from './TodoApp';
+import { configureStore } from './store/configureStore'
+
+let store = configureStore({
+  tasks: {
+    list: []
+  }
+});
+
+console.log('index.jsx');
 
 React.render(
-    // Load data from user-specific task list.
-    // The given data will be processed already. It means it has n-promising
-    // tasks for current context. In view it only render the data pretty.
-    <TodoApp url="v1/tasks" pollInterval={2000} />
-    , document.getElementById('content')
+    <Provider store={store}>
+	    {() => <TodoApp />}
+    </Provider>
+	, document.getElementById('content')
 );

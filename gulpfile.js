@@ -41,7 +41,7 @@ function build_assets(){
 }
 
 function onWatch(){
-    gulp.watch([base_dir('/*'), base_dir('/*/*')], build_html);
+    gulp.watch([base_dir('/**')], build_html);
     gulp.watch([base_dir('/*'), base_dir('/*/*')], build_sass);
     gulp.watch([base_dir('/*'), base_dir('/*/*')], build_assets);
 }
@@ -72,7 +72,7 @@ function compile_sass_concat(root, src_files, dest_file){
 function compile_jsx(root, src_files, dest_file){
     browserify({
         entries: src_files,
-        extensions: ['.jsx'],
+        extensions: ['.jsx', 'js'],
         debug: true
       })
       .transform(babelify)
