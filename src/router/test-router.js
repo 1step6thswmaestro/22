@@ -7,7 +7,6 @@ module.exports = function(app){
 		logger.log(test_msg);
 		logger.log(path.resolve('./src/app/python_interpreter.js'));
 		py_interpreter.analyze_morphem(test_msg, function(msg) {
-			// logger.log(test_msg);
 			logger.log(msg);
 			res.send(JSON.stringify(msg));
 		});
