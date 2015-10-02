@@ -1,4 +1,5 @@
-import React from 'react'
+import React from "react"
+import DateTime from './DateTime'
 
 // Task edit template.
 // If it looks pretty, then we can use same edite template for displaying existing tasks.
@@ -6,22 +7,18 @@ import React from 'react'
 class MyInput extends React.Component{
 		constructor(){
 			super();
-			this.state = {}
+			this.state = {
+				value: ''
+			};
 		}
 
 		handleChange(evt){
-			console.log('handleChange : ', evt);
 			this.setState({
 				value: evt.target.value
 			});
 		}
 
 		clear(){
-			// Below line works
-			React.findDOMNode(this).querySelector('input').value = '';
-			// Below line does not work.  I want to use react component as controlled form.
-			// In other words, I don't want to manipulate dom object directly like above code.
-			// TODO: Find a way to implement my idea.
 			this.setState({
 				value: ''
 			});
@@ -33,6 +30,7 @@ class MyInput extends React.Component{
 						<input
 							className="form-control"
 							type="text"
+							value={this.state.value}
 							onChange={this.handleChange.bind(this)}
 							placeholder={this.props.placeholder}
 							defaultValue={this.props.initValue}
@@ -46,7 +44,9 @@ class MyInput extends React.Component{
 class MyTextarea extends React.Component{
 		constructor(){
 			super();
-			this.state = {};
+			this.state = {
+				value: ''
+			};
 		}
 
 		handleChange(evt){
@@ -55,9 +55,7 @@ class MyTextarea extends React.Component{
 			});
 		}
 
-
 		clear(){
-			React.findDOMNode(this).querySelector('textarea').value = '';
 			this.setState({
 				value: ''
 			});
@@ -67,6 +65,7 @@ class MyTextarea extends React.Component{
 				return (
 					<textarea
 						className="form-control"
+						value={this.state.value}
 						onChange={this.handleChange.bind(this)}
 						placeholder={this.props.placeholder}
 						defaultValue={this.props.initValue}
@@ -79,13 +78,11 @@ class TaskForm extends React.Component{
 	constructor(){
 		super();
 		this.state = {
-			name: '',
-			description: ''
 		};
 	}
 
 	isValid(){
-		let name = undefined;
+		var name = undefined;
 		if(this.refs.name.state)
 			name = this.refs.name.state.value;
 
@@ -95,11 +92,11 @@ class TaskForm extends React.Component{
 		if (!name){
 			errors['name'] = 'name' + ' field is required';
 		}
-		
+
 		this.setState({errors: errors});
 
 		var isValid = true;
-		for (var error in errors) {
+		for (let error in errors) {
 			isValid = false;
 			break;
 		}
@@ -107,20 +104,25 @@ class TaskForm extends React.Component{
 	}
 
 	getFormData(){
-		console.log('getFormData : ', this.refs);
-		let name = this.refs.name.state.value;
-		let description = this.refs.description.state.value;
-
-		return {name, description};
+		var name = this.refs.name.state.value;
+		var description = this.refs.description.state.value;
+		// Convert moment objects to Unix Time.
+		var timestampDuedate = this.refs.dueDate.state.value.valueOf();
+		return {name, description, timestampDuedate};
 	}
 
 	clearForm(){
 		this.refs.name.clear();
 		this.refs.description.clear();
+		this.refs.dueDate.clear();
 	}
 
 
+
 	render() {
+		// TODO: Layout Datetime Picker. Beacuse of bootstrap forcing body style, its original function does not work.
+		// See original work from here. http://codepen.io/arqex/pen/BNRNBw
+
 		return (
 			<div className='form-group-attached'>
 				<div className='row'>
@@ -129,15 +131,8 @@ class TaskForm extends React.Component{
 					</div>
 				</div>
 				<div className='row'>
-					<div className='col-md-6'>
-						<div className='form-group'>
-							<input className='form-control'/>
-						</div>
-					</div>
-					<div className='col-md-6'>
-						<div className='form-group'>
-							<input className='form-control'/>
-						</div>
+					<div className='col-md-12'>
+						<DateTime ref="dueDate" placeholder="Due Date"/>
 					</div>
 				</div>
 				<div className='row'>

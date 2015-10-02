@@ -21,7 +21,6 @@ class TodoApp extends React.Component{
 
 	handleTaskSubmit(task) {
 		const { dispatch } = this.props;
-		console.log('handleTaskSubmit : ', this, task, dispatch);
 		dispatch(makeNewItem(task));
 	}
 
@@ -37,15 +36,14 @@ class TodoApp extends React.Component{
 		// SEND THE EVENT TO SERVER.
 		alert('Check Clicked');
 	}
-	
+
 	render() {
 		var tasks = this.props.tasks.list;
-		console.log(tasks);
 		var taskItems = _.map(tasks, function (task) {
 			return (
 				<TaskItem
 					key={task.id}
-					task={task} 
+					task={task}
 					onDiscard={this.discard.bind(this, task)} />)
 		}, this);
 

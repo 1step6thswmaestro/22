@@ -19,6 +19,7 @@
     "gulp-template": "*",
     "gulp-watch": "*",
     "isomorphic-fetch": "^2.1.1",
+    "moment": "^2.10.6",
     "mongoose": "^4.1.8",
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",

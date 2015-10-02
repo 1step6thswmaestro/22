@@ -1,18 +1,21 @@
 import React from 'react';
+import moment from 'moment';
 
 class TaskItem extends React.Component{
-	getReadableDate(stdDate){
-
-		// Convert time format from DB, to readable format.
-		// stdDate = "2015-09-17T01:00:00.000Z"
+	getReadableDate(unixTimestamp){
+		// Convert time format from DB (Unix Time), to readable format.
 		var readableData = '';
-
-		if(typeof stdDate != 'undefined'){
-				readableData = stdDate.replace(
-				/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):\d{2}\.000Z/,
-				function($0,$1,$2,$3,$4,$5){
-					return $2+"월 "+$3+"일, " + $4%12+":"+$5+(+$4>12?" PM":" AM")
-				});
+		if(typeof unixTimestamp != 'undefined'){
+			if (unixTimestamp == null){
+				readableData = '미지정';
+			}
+			else{
+				console.log('getreadable date from:' + unixTimestamp);
+				readableData = moment(unixTimestamp).format("YY/MM/DD HH:mm");
+			}
+		}
+		else{
+			readableData = '오류: 정의 안됨';
 		}
 		return readableData;
 	}
@@ -26,7 +29,7 @@ class TaskItem extends React.Component{
 					<input
 						className="toggle"
 						type="checkbox"
-						checked={this.props.task.timestampComplete!=""}
+						checked={this.props.task.timestampComplete!=null}
 						onChange={this.props.onToggle}
 						/>
 				</div>
@@ -45,6 +48,9 @@ class TaskItem extends React.Component{
 					</div>
 					<div className="taskStartedDate">
 						STARTED: {this.getReadableDate(this.props.task.timestampStart)}
+					</div>
+					<div className="taskStartedDate">
+						COMPLETED: {this.getReadableDate(this.props.task.timestampComplete)}
 					</div>
 					<div className="task-description">
 						<span dangerouslySetInnerHTML={{__html: rawMarkup}} />
