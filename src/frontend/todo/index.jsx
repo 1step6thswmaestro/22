@@ -8,9 +8,6 @@ let store = configureStore({
 	list: []
   }
 });
-
-console.log('index.jsx');
-
 React.render(
 	<Provider store={store}>
 		{() => <TodoApp />}

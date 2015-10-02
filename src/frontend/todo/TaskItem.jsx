@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import MapImage from './MapImage';
 
 class TaskItem extends React.Component{
 	getReadableDate(unixTimestamp){
@@ -10,7 +11,6 @@ class TaskItem extends React.Component{
 				readableData = '미지정';
 			}
 			else{
-				console.log('getreadable date from:' + unixTimestamp);
 				readableData = moment(unixTimestamp).format("YY/MM/DD HH:mm");
 			}
 		}
@@ -54,6 +54,10 @@ class TaskItem extends React.Component{
 					</div>
 					<div className="task-description">
 						<span dangerouslySetInnerHTML={{__html: rawMarkup}} />
+					</div>
+					<div className="task-startlocation">
+						Created Location:
+						{ this.props.task.locationstampCreated ? <MapImage location={this.props.task.locationstampCreated} /> : null }
 					</div>
 				</div>
 				<div className="card-control">

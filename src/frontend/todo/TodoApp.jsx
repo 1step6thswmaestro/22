@@ -5,23 +5,43 @@ import TaskForm from './TaskForm';
 import { fetchList, makeNewItem, removeItem } from './actions/tasks'
 import TaskItem from './TaskItem'
 import TaskInputForm from './TaskInputForm'
+import MapImage from './MapImage'
 import _ from 'underscore'
+
+
 
 class TodoApp extends React.Component{
 	constructor(){
 		super();
-		this.state = {tasks: []};
+		this.state = {
+			location: '',
+			tasks: []
+		};
 	}
 
 	componentDidMount() {
+		if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function(position){
+				this.setState({
+					location: {
+						latitude: position.coords.latitude,
+						longitude: position.coords.longitude
+					}
+				});
+			}.bind(this));
+		}
+
 		const { dispatch } = this.props;
 		dispatch(fetchList());
 	}
 
 
-	handleTaskSubmit(task) {
+	handleTaskSubmit(taskPart) {
+		var taskWhole = taskPart;
+		// Put current location info into appropriate field.
+		taskWhole['locationstampCreated'] = this.state.location; // When this function handles task creation.
 		const { dispatch } = this.props;
-		dispatch(makeNewItem(task));
+		dispatch(makeNewItem(taskWhole));
 	}
 
 	discard(task){
@@ -52,6 +72,11 @@ class TodoApp extends React.Component{
 				<header>
 					<h1>Give Me Task</h1>
 				</header>
+				<div className='current-location'>
+					Current Location:
+					{ this.state.location ? <MapImage location={this.state.location} /> : null }
+				</div>
+
 				<div className="task-box">
 					<div className="row">
 						<div className="col-md-4">

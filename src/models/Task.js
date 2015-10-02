@@ -16,6 +16,12 @@ module.exports = function(app){
 		timestampDuedate:  {type: Date, default: ""},
 
 		expectedDuration: {type: String, default: ""},
+
+		locationstampCreated: {
+			longitude: Number,
+			latitude: Number,
+			required: false
+		},
 		locationstampStart: {
 			longitude: Number,
 			latitude: Number,
