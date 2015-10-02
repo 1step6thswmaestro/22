@@ -1,25 +1,20 @@
-.task {
-
-}
-
-
 textarea:focus, input:focus{
-    outline: 0;
+		outline: 0;
 }
 
 .task-name{
-  width:100%;
-  display:block;
-  border:none;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	display: inline-block;
+	border: none;
 }
+
 .task-duedate{
-  display:block;
+	display: block;
 }
 
 .task-description{
-  width:100%;
-  display:block;
-  border:none;
-}
-.task-due{
+	width:1 00%;
+	display: block;
+	border: none;
 }
