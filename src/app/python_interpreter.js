@@ -10,7 +10,7 @@ var morphem_py_path = 'morphem_call.py'
 var py_function_broker = function(path, input, callback){
 	// This function should get a message. 
 	// Then it will return to you the python script result as JSON type
-	var options = {ß
+	var options = {
 	  mode: 'text',
 	  pythonPath: '/usr/bin/python',
 	  scriptPath: py_absolute_path ,
