@@ -5,7 +5,7 @@ module.exports = function(app){
 	var taskSchema = new Schema({
 		user_id: Schema.Types.ObjectId,
 		name: String,
-		desc: {type: String, default: ""},
+		description: {type: String, default: ""},
 		importance: {type: Number, default: 0},
 		priority: {type: Number, default: 0.0},
 		offset:   {type: Number, default: 0.0, required: false},
