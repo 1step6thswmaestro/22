@@ -7,45 +7,72 @@ const defaultState = {
 };
 
 export default function taskReducer(state=defaultState, action){
-	console.log('reducer : ', action.type);
+	// console.log('reducer : ', action.type);
 	switch(action.type){
 		case ActionTypes.TASK_REQ_NEWITEM:
 			return Object.assign({}, state, {
 				list: [...state.list, action.item]
+				, isFetching: true
 			})
+		case ActionTypes.TASK_UPDATE_ITEM:
+		{
+			let newlist = state.list.map(function(item){
+				var _item = item;
+				if(item._id == action.taskID){
+					_.extend(_item, action.data);
+				}
+				return _item;
+			});
+
+			return Object.assign({}, state, {
+				list: newlist
+				, isFetching: true
+			});
+		}
 		case ActionTypes.TASK_RECV_ITEM:
-			let list = state.list;
-			let _item;
-			if(action.tid){
-				_item = _.findWhere(list, {tid: action.tid});
-				console.log('tid : ', action.tid, _item);
-				if(_item)
+		{
+			let newlist = state.list.map(function(item){
+				var _item = item;
+				if(action.tid && _item.tid == action.tid){
 					_.extend(_item, action.item);
-			}
-			if(!_item){
-				list = [...state.list, action.item];
-			}
-			return Object.assign({}, state, {list});
+				}
+				else if(action.taskID && _item._id == action.taskID){
+					_.extend(_item, action.data);
+				}
+				return _item;
+			});
+			return Object.assign({}, state, {
+				list: newlist
+				, isFetching: false
+			});
+		}
+
 
 		case ActionTypes.TASK_REQ_LIST:
 			return Object.assign({}, state, {
-				loading: true
+				isFetching: true
 			});
 		case ActionTypes.TASK_RECV_LIST:
 			return Object.assign({}, state, {
 				list: action.list
-				, loading: false
+				, isFetching: false
 			});
+
 		case ActionTypes.TASK_ERROR:
 			return Object.assign({}, state, {
-				loading: false
+				isFetching: false
 			});
 		case ActionTypes.TASK_REMOVE_ITEM:
-			return Object.assign({}, state
-				, state.list.map(function(item){
-					if(item._id && item._id==action.item._id)item.removed = true;
-					return item
-				}));
+		{
+			let newlist = state.list.filter(function(item){
+				return item._id!=action.taskID;
+			});
+
+			return Object.assign({}, state, {
+				list: newlist
+				, isFetching: false
+			});
+		}
 		default:
 			return state;
 	}

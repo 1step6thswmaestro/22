@@ -35,15 +35,24 @@ module.exports = function(router, app){
 		});
 	})
 
+	router.patch('/tasks/:id', function(req, res){
+		// This request do partial update on the task.
+		var set = req.body;
+		Task.update({user_id: req.user._id, _id: req.params.id},{$set: set}, function(err, numAffected) {
+			if (err) return res.status(400).send(err);
+			res.send(numAffected);
+		});
+	})
+
 	router.get('/tasks/:id', function(req, res){
-		// This request returns all tasks that are saved for the user.
+		// This request returns error. At this moment, we don't support for this kind of operation.
 		res.send('SORRY! You cannot access taskid: ' + req.params.id + '<br/>This not a valid access method.');
 	})
 
-	router.delete('/task/:id', function(req, res){
+	router.delete('/tasks/:id', function(req, res){
 		// This request delete specific task.
 		Task.remove({user_id: req.user._id, _id: req.params.id}, function(err){
-			if (err) return res.send(err);
+			if (err) return res.status(400).send(err);
 			res.send({});
 		});
 	})

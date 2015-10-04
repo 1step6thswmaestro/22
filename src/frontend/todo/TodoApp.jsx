@@ -2,7 +2,7 @@ import React from 'react'
 import { createStore } from 'redux'
 import { connect } from 'react-redux';
 import TaskForm from './TaskForm';
-import { fetchList, makeNewItem, removeItem } from './actions/tasks'
+import { fetchList, makeNewItem, removeItem, updateItem } from './actions/tasks'
 import TaskItem from './TaskItem'
 import TaskInputForm from './TaskInputForm'
 import MapImage from './MapImage'
@@ -11,6 +11,8 @@ import _ from 'underscore'
 
 
 class TodoApp extends React.Component{
+	// Define every task handling methods here. Subcomponents only use handles defined in here.
+	// We have to avoid distributed handle definition to reduce complexity.
 	constructor(){
 		super();
 		this.state = {
@@ -44,27 +46,36 @@ class TodoApp extends React.Component{
 		dispatch(makeNewItem(taskWhole));
 	}
 
-	discard(task){
+	discardTask(taskID){
 		const { dispatch } = this.props;
-		dispatch(removeItem(task));
+		dispatch(removeItem(taskID));
 	}
 
-	toggle(todoToToggle) {
-		// Implement toggle routine.
-		// For example:
-		// UPDATE VIEW
-		// SEND THE EVENT TO SERVER.
-		alert('Check Clicked');
+	updateTask(taskID, patch){
+		const { dispatch } = this.props;
+		dispatch(updateItem(taskID, patch));
+		if(patch.timestampComplete){
+			// When this function handles task completion.
+			patch['locationstampComplete'] = this.state.location;
+		}
+		else{
+			patch['locationstampComplete'] = null;
+		}
 	}
 
 	render() {
-		var tasks = this.props.tasks.list;
+		var tasks = this.props.tasks;
 		var taskItems = _.map(tasks, function (task) {
 			return (
 				<TaskItem
-					key={task.id}
+					key={task._id}
 					task={task}
-					onDiscard={this.discard.bind(this, task)} />)
+					onDiscard={this.discardTask.bind(this)}
+					onUpdate={this.updateTask.bind(this)}
+				/>
+			)
+
+
 		}, this);
 
 		return (
@@ -82,8 +93,6 @@ class TodoApp extends React.Component{
 						<div className="col-md-4">
 							<TaskInputForm
 								onTaskSubmit={this.handleTaskSubmit.bind(this)}
-								onToggle={this.toggle.bind(this)}
-								onDiscard={this.discard.bind(this)}
 							/>
 						</div>
 					</div>
@@ -96,9 +105,12 @@ class TodoApp extends React.Component{
 	}
 };
 
+
+// TODO: Redux's state.tasks should be mapped to TodoApp's state, not props.
+// Ask 상현, why this is mapped to props. - Insik.
 function mapStateToProps(state){
 	return {
-		tasks: Object.assign({}, state, {list: _.filter(state.tasks.list, item => !item.removed)})
+		tasks: state.tasks.list
 	}
 };
 
