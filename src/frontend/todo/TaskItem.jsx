@@ -1,18 +1,21 @@
 import React from 'react';
+import moment from 'moment';
+import MapImage from './MapImage';
 
 class TaskItem extends React.Component{
-	getReadableDate(stdDate){
-
-		// Convert time format from DB, to readable format.
-		// stdDate = "2015-09-17T01:00:00.000Z"
+	getReadableDate(unixTimestamp){
+		// Convert time format from DB (Unix Time), to readable format.
 		var readableData = '';
-
-		if(typeof stdDate != 'undefined'){
-				readableData = stdDate.replace(
-				/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):\d{2}\.000Z/,
-				function($0,$1,$2,$3,$4,$5){
-					return $2+"월 "+$3+"일, " + $4%12+":"+$5+(+$4>12?" PM":" AM")
-				});
+		if(typeof unixTimestamp != 'undefined'){
+			if (unixTimestamp == null){
+				readableData = '미지정';
+			}
+			else{
+				readableData = moment(unixTimestamp).format("YY/MM/DD HH:mm");
+			}
+		}
+		else{
+			readableData = '오류: 정의 안됨';
 		}
 		return readableData;
 	}
@@ -30,6 +33,10 @@ class TaskItem extends React.Component{
 						<div className="col-md-8">
 							<div className="task-description">
 								<span dangerouslySetInnerHTML={{__html: rawMarkup}} />
+							</div>
+							<div className="task-startlocation">
+								Created Location:
+								{ this.props.task.locationstampCreated ? <MapImage location={this.props.task.locationstampCreated} /> : null }
 							</div>
 						</div>
 						<div className="card-contents col-md-4">

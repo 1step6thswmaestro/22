@@ -27,7 +27,6 @@ export function fetchList(){
 let count = 0;
 export function makeNewItem(item){
 	return function(dispatch){
-		console.log('requestNewItem dispatch : ', dispatch);
 		let tid = ++count;
 		item.tid = tid;
 		dispatch({

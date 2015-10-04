@@ -5,27 +5,32 @@ module.exports = function(app){
 	var taskSchema = new Schema({
 		user_id: Schema.Types.ObjectId,
 		name: String,
-		desc: String,
-		importance: Number,
+		desc: {type: String, default: ""},
+		importance: {type: Number, default: 0},
 		priority: {type: Number, default: 0.0},
-	  offset: {type: Number, default: 0.0, required: false},
+		offset:   {type: Number, default: 0.0, required: false},
 
-		//estimate_time: {type: Date, default: Date.now()},
-		timestampCreated: {type: Date, default: Date.now},
-		timestampStart: {type: Date, default: Date.now},
-		timestampComplete: {type: Date, default: Date.now},
-		timestampDuedate: {type: Date, default: Date.now},
+		timestampCreated:  {type: Date, default: Date.now.valueOf()},
+		timestampStart:    {type: Date, default: ""},
+		timestampComplete: {type: Date, default: ""},
+		timestampDuedate:  {type: Date, default: ""},
 
-	  expectedDuration: {type: String, default: ""},
+		expectedDuration: {type: String, default: ""},
+
+		locationstampCreated: {
+			longitude: Number,
+			latitude: Number,
+			required: false
+		},
 		locationstampStart: {
 			longitude: Number,
 			latitude: Number,
-	        required: false
+			required: false
 		},
 		locationstampComplete: {
 			longitude: Number,
 			latitude: Number,
-	        required: false
+			required: false
 		}
 
 	});

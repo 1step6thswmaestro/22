@@ -23,8 +23,8 @@ module.exports = function(router, app){
 
 	router.post('/tasks', function(req, res){
 		// This request create new task for the current user.
-		let user_id = req.user._id;
-		let task = new Task(_.extend({user_id}, _.pick(req.body, 'name')));
+		var user_id = req.user._id;
+		var task = new Task(_.extend({user_id}, req.body));
 		task.save(function(err, result){
 			if(err){
 				res.status(400).send(err);
