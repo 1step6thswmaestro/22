@@ -45,6 +45,26 @@ class TaskItem extends React.Component{
 		this.props.onUpdate(this.state._id, patchRequest);
 		this.setState(patchRequest);
 	}
+
+	onStartToggle() {
+		var patchRequest;
+
+		if (this.state.taskOnProcess == false) {
+			var timestamp = Date.now();
+			patchRequest = {
+				timestampStart: timestamp,
+				taskOnProcess: true
+			};
+		}
+		else {
+			patchRequest = {
+				taskOnProcess: false
+			};
+		}
+		this.props.onUpdate(this.state._id, patchRequest);
+		this.setState(patchRequest);
+	}
+
 	onDiscard(){
 		this.props.onDiscard(this.state._id);
 	}
@@ -56,7 +76,8 @@ class TaskItem extends React.Component{
 		var rawMarkup = marked(descStr.toString(), {sanitize: true});
 		var startDate, completeDate;
 		var completeButtonState = "btn-default";
-		if(this.state.timestampComplete != null){
+		var processButtonState = "btn-default";
+		if(this.state.timestampStart != null){
 			startDate = (
 				<div className="taskStartedDate">
 					시작일: {this.getReadableDate(this.state.timestampStart)}
@@ -71,6 +92,10 @@ class TaskItem extends React.Component{
 				</div>
 			);
 			completeButtonState = "btn-check";
+		}
+
+		if (this.state.taskOnProcess == true) {
+			processButtonState = "btn-check";
 		}
 
 		return (
@@ -107,6 +132,9 @@ class TaskItem extends React.Component{
 					</div>
 					<div>
 						<div className="btn-group">
+							<button className={"btn " + processButtonState} onClick={this.onStartToggle.bind(this)}>
+								<span className="glyphicon glyphicon-play"></span> 시작
+							</button>
 							<button className={"btn " + completeButtonState} onClick={this.onCompleteToggle.bind(this)}>
 								<span className="glyphicon glyphicon-check"></span> 완료
 							</button>
