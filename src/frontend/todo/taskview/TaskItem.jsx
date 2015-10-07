@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import MapImage from './MapImage';
+import MapImage from '../utils/MapImage';
 import _ from 'underscore';
 
 class TaskItem extends React.Component{

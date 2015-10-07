@@ -11,6 +11,29 @@ module.exports = function(){
 		, email: String
 		, hashed_passwd: String
 		, salt: String
+
+		, timestampLastActivity: {type: Date, default: ""}
+
+		, locationstampHome: {
+			longitude: Number,
+			latitude: Number,
+			required: false
+		}
+		, locationstampSchool: {
+			longitude: Number,
+			latitude: Number,
+			required: false
+		}
+		, locationstampWork: {
+			longitude: Number,
+			latitude: Number,
+			required: false
+		}
+		, locationstampEtc: {
+			longitude: Number,
+			latitude: Number,
+			required: false
+		}
 	});
 
 	accountSchema.methods = {
