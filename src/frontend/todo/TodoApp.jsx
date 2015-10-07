@@ -1,23 +1,21 @@
 import React from 'react'
 import { createStore } from 'redux'
 import { connect } from 'react-redux';
-import TaskForm from './TaskForm';
-import { fetchList, makeNewItem, removeItem, updateItem } from './actions/tasks'
-import TaskItem from './TaskItem'
-import TaskInputForm from './TaskInputForm'
-import MapImage from './MapImage'
+
+import TaskView from './taskview/TaskView'
+import UserView from './userview/UserView'
+
 import _ from 'underscore'
 
 
 
 class TodoApp extends React.Component{
-	// Define every task handling methods here. Subcomponents only use handles defined in here.
-	// We have to avoid distributed handle definition to reduce complexity.
 	constructor(){
 		super();
 		this.state = {
 			location: '',
-			tasks: []
+			tasks: [],
+			currentView: 'task' // Save current user's view
 		};
 	}
 
@@ -32,74 +30,46 @@ class TodoApp extends React.Component{
 				});
 			}.bind(this));
 		}
-
-		const { dispatch } = this.props;
-		dispatch(fetchList());
 	}
 
-
-	handleTaskSubmit(taskPart) {
-		var taskWhole = taskPart;
-		// Put current location info into appropriate field.
-		taskWhole['locationstampCreated'] = this.state.location; // When this function handles task creation.
-		const { dispatch } = this.props;
-		dispatch(makeNewItem(taskWhole));
-	}
-
-	discardTask(taskID){
-		const { dispatch } = this.props;
-		dispatch(removeItem(taskID));
-	}
-
-	updateTask(taskID, patch){
-		const { dispatch } = this.props;
-		dispatch(updateItem(taskID, patch));
-		if(patch.timestampComplete){
-			// When this function handles task completion.
-			patch['locationstampComplete'] = this.state.location;
+	toggleView(){
+		var nextView;
+		if(this.state.currentView == 'task'){
+			nextView = 'user';
 		}
 		else{
-			patch['locationstampComplete'] = null;
+			nextView = 'task';
 		}
+
+		this.setState({
+			currentView: nextView
+		});
 	}
 
+
 	render() {
-		var tasks = this.props.tasks;
-		var taskItems = _.map(tasks, function (task) {
-			return (
-				<TaskItem
-					key={task._id}
-					task={task}
-					onDiscard={this.discardTask.bind(this)}
-					onUpdate={this.updateTask.bind(this)}
-				/>
-			)
+		var viewContent;
+		if(this.state.currentView == 'task'){
+			viewContent = (
+				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} location={this.state.location}/>
 
-
-		}, this);
+			);
+		}
+		else if(this.state.currentView == 'user'){
+			viewContent = (
+				<UserView dispatch={this.props.dispatch}  location={this.state.location} />
+			);
+		}
 
 		return (
 			<div className="task-container">
 				<header>
 					<h1>Give Me Task</h1>
-				</header>
-				<div className='current-location'>
-					Current Location:
-					{ this.state.location ? <MapImage location={this.state.location} /> : null }
-				</div>
-
-				<div className="task-box">
-					<div className="row">
-						<div className="col-md-4">
-							<TaskInputForm
-								onTaskSubmit={this.handleTaskSubmit.bind(this)}
-							/>
-						</div>
+					<div className="view-toggle" onClick={this.toggleView.bind(this)}>
+						Click HERE to Toggle UserView/TaskView
 					</div>
-				</div>
-				<div className="task-list">
-					{taskItems}
-				</div>
+				</header>
+				{viewContent}
 			</div>
 		);
 	}
