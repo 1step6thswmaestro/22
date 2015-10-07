@@ -49,12 +49,63 @@ class TaskItem extends React.Component{
 		this.props.onDiscard(this.state._id);
 	}
 
+	onToggleLocationButton(locName){
+		var locList = ['home', 'school', 'work', 'etc'];
+		var locIndex = 0;
+		for (let i in locList){
+			if (locList[i] == locName){
+				locIndex = i;
+				break;
+			}
+		}
+		// Flip bit on locIndex
+		var newValue = this.state.relatedLocation ^ (1 << (locList.length-1-locIndex));
+
+		var patchRequest;
+		patchRequest = {
+			relatedLocation: newValue
+		}
+		this.props.onUpdate(this.state._id, patchRequest);
+		this.setState({
+			relatedLocation: newValue
+		});
+	}
+
+	getLocButtonStates(relatedLocation){
+		var locButtonState={
+			home: "btn-default",
+			school: "btn-default",
+			work: "btn-default",
+			etc: "btn-default"
+		};
+
+		if (relatedLocation % 2 == 1)
+			locButtonState.etc = "btn-check";
+		relatedLocation = Math.floor(relatedLocation / 2);
+
+		if (relatedLocation % 2 == 1)
+			locButtonState.work = "btn-check";
+		relatedLocation = Math.floor(relatedLocation / 2);
+
+		if (relatedLocation % 2 == 1)
+			locButtonState.school = "btn-check";
+		relatedLocation = Math.floor(relatedLocation / 2);
+
+		if (relatedLocation % 2 == 1)
+			locButtonState.home = "btn-check";
+		relatedLocation = Math.floor(relatedLocation / 2);
+
+		return locButtonState;
+	}
+
 	render() {
 		// console.log('In TaskItem render():');
 		// console.log(this.state);
 		var descStr = this.state.description || '';
 		var rawMarkup = marked(descStr.toString(), {sanitize: true});
 		var startDate, completeDate;
+		var locButtonState = this.getLocButtonStates(this.state.relatedLocation);
+
 		var completeButtonState = "btn-default";
 		if(this.state.timestampComplete != null){
 			startDate = (
@@ -83,6 +134,23 @@ class TaskItem extends React.Component{
 						<div className="col-md-8">
 							<div className="task-description">
 								<span dangerouslySetInnerHTML={{__html: rawMarkup}} />
+							</div>
+							<div className="task-relatedLocation">
+								작업 가능 장소 선택 :
+								<div className="btn-group">
+									<button className={"btn " + locButtonState.home} data-toggle="집" label="집" onClick={this.onToggleLocationButton.bind(this, 'home')}>
+										<span className="glyphicon glyphicon-home"></span>
+									</button>
+									<button className={"btn " + locButtonState.school} data-toggle="학교" label="학교" onClick={this.onToggleLocationButton.bind(this, 'school')}>
+										<span className="glyphicon glyphicon-book"></span>
+									</button>
+									<button className={"btn " + locButtonState.work} data-toggle="직장" label="직장" onClick={this.onToggleLocationButton.bind(this, 'work')}>
+										<span className="glyphicon glyphicon-briefcase"></span>
+									</button>
+									<button className={"btn " + locButtonState.etc} data-toggle="기타" label="기타" onClick={this.onToggleLocationButton.bind(this, 'etc')}>
+										<span className="glyphicon glyphicon-flash"></span>
+									</button>
+								</div>
 							</div>
 							<div className="task-startlocation">
 								Created Location:

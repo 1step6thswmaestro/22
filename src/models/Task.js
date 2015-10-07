@@ -17,6 +17,14 @@ module.exports = function(app){
 
 		expectedDuration: {type: String, default: ""},
 
+		// Save related location as 4 bits. (home, school, work, etc)
+		// 0 means, no location is related to this task
+		// 1 means etc.
+		// 8 means home
+		// 12 means home and school.
+		// and, so on ...
+		relatedLocation: {type: Number, default: 0},
+
 		locationstampCreated: {
 			longitude: Number,
 			latitude: Number,
