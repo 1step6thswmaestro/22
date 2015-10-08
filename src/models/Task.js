@@ -26,16 +26,19 @@ module.exports = function(app){
 		relatedLocation: {type: Number, default: 0},
 
 		locationstampCreated: {
+			address: String,
 			longitude: Number,
 			latitude: Number,
 			required: false
 		},
 		locationstampStart: {
+			address: String,
 			longitude: Number,
 			latitude: Number,
 			required: false
 		},
 		locationstampComplete: {
+			address: String,
 			longitude: Number,
 			latitude: Number,
 			required: false
