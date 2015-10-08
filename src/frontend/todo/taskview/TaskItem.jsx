@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import MapImage from '../utils/MapImage';
+import LocationAddress from '../utils/LocationAddress';
 import _ from 'underscore';
 
 class TaskItem extends React.Component{
@@ -152,6 +153,7 @@ class TaskItem extends React.Component{
 									</button>
 								</div>
 							</div>
+							<LocationAddress location={this.state.locationstampCreated} />
 							<div className="task-startlocation">
 								Created Location:
 								{ this.state.locationstampCreated ? <MapImage location={this.state.locationstampCreated} /> : null }
