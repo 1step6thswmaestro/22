@@ -42,7 +42,9 @@ module.exports = function(app){
 			longitude: Number,
 			latitude: Number,
 			required: false
-		}
+		},
+
+		taskOnProcess: {type: Boolean, default: false},
 
 	});
 
