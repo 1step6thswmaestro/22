@@ -40,28 +40,20 @@ class TaskView extends React.Component{
 		}
 	}
 
-	handleTaskSubmit(taskPart) {
+	handleTaskSubmit(task) {
 		var taskWhole = taskPart;
-		// Put current location info into appropriate field.
-		taskWhole['locationstampCreated'] = this.props.location; // When this function handles task creation.
 		const { dispatch } = this.props;
-		dispatch(makeNewItem(taskWhole));
+		dispatch(makeNewItem(task));
 	}
 
 	render() {
+		var self = this;
 		var tasks = this.props.tasks;
-		var taskItems = _.map(tasks, function (task) {
-			return (
-				<TaskItem
-					key={task._id}
-					task={task}
-					onDiscard={this.discardTask.bind(this)}
-					onUpdate={this.updateTask.bind(this)}
-				/>
-			)
 
-
-		}, this);
+	    function createTaskElements(list){
+			return _.map(list, task => (
+		        <TaskItem key={task.id} task={task} />));
+	    }
 
 		return (
 			<div className="task-view">
@@ -75,7 +67,8 @@ class TaskView extends React.Component{
 					</div>
 				</div>
 				<div className="task-list">
-					{taskItems}
+					{createTaskElements(tasks.list)}
+					{createTaskElements(tasks.plist)}
 				</div>
 			</div>
 		);

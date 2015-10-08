@@ -6,14 +6,14 @@ module.exports = function(app){
 	router_auth.use('/', app.needAuthorization);
 
 	fs.readdirSync(__dirname + '/modules').forEach(function(file){
-		if(file.search(/.*?\.js/) != -1){
+		if(file.search(/.*?\.js$/) != -1){
 			require(__dirname + '/modules/' + file)(router_auth, app);
 		}
 	});
 
 	var router_n_auth = express.Router();
 	fs.readdirSync(__dirname + '/modules/not_authorized/').forEach(function(file){
-		if(file.search(/.*?\.js/) != -1){
+		if(file.search(/.*?\.js$/) != -1){
 			require(__dirname + '/modules/not_authorized/' + file)(router_n_auth, app);
 		}
 	});

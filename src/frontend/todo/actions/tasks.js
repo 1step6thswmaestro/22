@@ -5,12 +5,13 @@ import fetch from 'isomorphic-fetch';
 // Use the same value as the variable name.
 export const TASK_REQ_LIST = 'TASK_REQ_LIST';
 export const TASK_RECV_LIST = 'TASK_RECV_LIST';
+export const TASK_RECV_LIST_PRIORITIZED = 'TASK_RECV_LIST_PRIORITIZED';
 export const TASK_REQ_NEWITEM = 'TASK_REQ_NEWITEM';
 export const TASK_RECV_ITEM = 'TASK_RECV_ITEM';
 export const TASK_ERROR = 'TASK_ERROR';
 export const TASK_REMOVE_ITEM = 'TASK_REMOVE_ITEM';
 export const TASK_UPDATE_ITEM = 'TASK_UPDATE_ITEM';
-
+export const TASK_POSTPONE_ITEM = 'TASK_POSTPONE_ITEM';
 
 
 export function fetchList(){
@@ -21,7 +22,10 @@ export function fetchList(){
 
 		return $.ajax('/v1/tasks')
 		.then(
-			list => dispatch({type: TASK_RECV_LIST, list})
+			result => {
+				dispatch({type: TASK_RECV_LIST, list: result.list});
+				dispatch({type: TASK_RECV_LIST_PRIORITIZED, list: result.plist})
+			}
 			, err => disptch({type: TASK_ERROR, err})
 		)
 	}
@@ -43,7 +47,6 @@ export function makeNewItem(item){
 			type: TASK_REQ_NEWITEM
 			, item: item
 		});
-
 
 		return $.ajax({
 			url: '/v1/tasks'
@@ -69,6 +72,32 @@ export function removeItem(taskID){
 			dispatch({type: TASK_REMOVE_ITEM, taskID})
 			, err => dispatch({type: TASK_ERROR, err})
 		);
+	}
+}
+
+export function postpone(item){
+	return function(dispatch){
+		dispatch(TASK_POSTPONE_ITEM)
+
+		return $.ajax({
+			url: '/v1/task/${item.id}/postpone'
+			, type: 'put'
+		})
+		.then(function(result){
+			if(result.list){
+				dispatch({
+					type: TASK_RECV_LIST
+					, list: result.list
+				})
+			}
+
+			if(result.plist){
+				dispatch({
+					type: TASK_RECV_LIST_PRIORITIZED
+					, list: plist
+				})
+			}
+		})
 	}
 }
 

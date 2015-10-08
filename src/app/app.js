@@ -19,9 +19,10 @@ module.exports = function(opt){
 	opt = opt || {};
 	opt.rootdir = opt.rootdir || __dirname;
 	_.extend(app, opt);
+	app.helper = {};
 
 
-	init(['app/init.js', 'app/init_mongodb.js', 'models/', 'app/init_passport.js', 'router/']);
+	init(['app/init.js', 'app/init_mongodb.js', 'models/', 'app/init_passport.js', 'router/', 'helper/']);
 
 	app.config = readJson(path.resolve(app.rootdir, '../config.json'));
 
@@ -64,13 +65,14 @@ module.exports = function(opt){
 		function __initFolder(folder){
 			var dir = path.resolve(app.rootdir, folder);
 			fs.readdirSync(dir).forEach(function(file){
-				if(file.search(/.*?\.js/) != -1){
+				if(file.search(/.*?\.js$/) != -1){
 					__initFile(dir + '/' + file);
 				}
 			})
 		}
 
 		function __initFile(file){
+			logger.log('__initFile', file);
 			var file = path.resolve(app.rootdir, file);
 			if(initialized[path.basename(file)]){
 				console.warn('! duplicated - ', path.basename(file));

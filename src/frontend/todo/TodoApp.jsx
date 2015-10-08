@@ -7,14 +7,11 @@ import UserView from './userview/UserView'
 
 import _ from 'underscore'
 
-
-
 class TodoApp extends React.Component{
 	constructor(){
 		super();
 		this.state = {
 			location: '',
-			tasks: [],
 			currentView: 'task' // Save current user's view
 		};
 	}
@@ -46,7 +43,6 @@ class TodoApp extends React.Component{
 		});
 	}
 
-
 	render() {
 		var viewContent;
 		if(this.state.currentView == 'task'){
@@ -75,13 +71,10 @@ class TodoApp extends React.Component{
 	}
 };
 
-
-// TODO: Redux's state.tasks should be mapped to TodoApp's state, not props.
-// Ask 상현, why this is mapped to props. - Insik.
 function mapStateToProps(state){
-	return {
-		tasks: state.tasks.list
-	}
+	var props = Object.assign({}, state);
+	props.list = _.filter(state.tasks.list, item => !item.removed);
+	return props;
 };
 
 export default connect(

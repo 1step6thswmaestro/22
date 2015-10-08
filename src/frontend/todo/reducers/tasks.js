@@ -4,6 +4,7 @@ import _ from 'underscore'
 const defaultState = {
 	isFetching: false
 	, list: []
+	, plist: []
 };
 
 export default function taskReducer(state=defaultState, action){
@@ -56,6 +57,10 @@ export default function taskReducer(state=defaultState, action){
 			return Object.assign({}, state, {
 				list: action.list
 				, isFetching: false
+			});
+		case ActionTypes.TASK_RECV_LIST_PRIORITIZED:
+			return Object.assign({}, state, {
+				plist: action.list
 			});
 
 		case ActionTypes.TASK_ERROR:
