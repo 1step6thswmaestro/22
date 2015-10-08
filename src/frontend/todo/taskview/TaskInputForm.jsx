@@ -17,7 +17,6 @@ class TaskInputForm extends React.Component{
 		};
 	}
 	handleSubmit() {
-		console.log('handleSubmit : ', this.refs.taskForm.getFormData());
 		if (this.refs.taskForm.isValid()) {
 			this.props.onTaskSubmit(this.refs.taskForm.getFormData());
 			this.refs.taskForm.clearForm();
@@ -32,39 +31,6 @@ class TaskInputForm extends React.Component{
 		}
 	}
 
-
-
-/*  handleSubmit(e) {
-		// OLD
-		e.preventDefault();
-		var taskModel = {};
-		// Create objects from form and do validation test.
-		console.log('Refs:'+this.refs);
-		for ( var i in this.refs ) {
-			console.log('ref:'+i);
-			console.log('ref-val:'+this.refs.i);
-			console.log('  value:'+React.findDOMNode(this).value);
-
-			// taskModel[i] = React.findDOMNode(this.refs[i]).value.trim();
-
-		}
-
-		// At least user have to enter name of the task
-		if (!taskModel.name) {
-			alert('Please enter task name');
-			return;
-		}
-
-		console.log(taskModel);
-
-		this.props.onTaskSubmit(taskModel);
-
-		for ( var i in this.refs ) {
-			React.findDOMNode(this.refs[i]).value = '';
-		}
-		return;
-	}*/
-
 	render() {
 		// NOTE: Check if there is snippet for assigning location from address or getting current location. -->
 
@@ -74,7 +40,7 @@ class TaskInputForm extends React.Component{
 			<div className="card">
 				<div className='card-contents'>
 					<TaskForm ref='taskForm'/>
-					
+
 					<div className="card-control">
 						<div className="toolbar">
 							<div className='row'>

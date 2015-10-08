@@ -5,27 +5,40 @@ module.exports = function(app){
 	var taskSchema = new Schema({
 		user_id: Schema.Types.ObjectId,
 		name: String,
-		desc: String,
-		importance: Number,
+		description: {type: String, default: ""},
+		importance: {type: Number, default: 0},
 		priority: {type: Number, default: 0.0},
-	  offset: {type: Number, default: 0.0, required: false},
+		offset:   {type: Number, default: 0.0, required: false},
 
-		//estimate_time: {type: Date, default: Date.now()},
-		timestampCreated: {type: Date, default: Date.now},
-		timestampStart: {type: Date, default: Date.now},
-		timestampComplete: {type: Date, default: Date.now},
-		timestampDuedate: {type: Date, default: Date.now},
+		timestampCreated:  {type: Date, default: Date.now.valueOf()},
+		timestampStart:    {type: Date, default: ""},
+		timestampComplete: {type: Date, default: ""},
+		timestampDuedate:  {type: Date, default: ""},
 
-	  expectedDuration: {type: String, default: ""},
+		expectedDuration: {type: String, default: ""},
+
+		// Save related location as 4 bits. (home, school, work, etc)
+		// 0 means, no location is related to this task
+		// 1 means etc.
+		// 8 means home
+		// 12 means home and school.
+		// and, so on ...
+		relatedLocation: {type: Number, default: 0},
+
+		locationstampCreated: {
+			longitude: Number,
+			latitude: Number,
+			required: false
+		},
 		locationstampStart: {
 			longitude: Number,
 			latitude: Number,
-	        required: false
+			required: false
 		},
 		locationstampComplete: {
 			longitude: Number,
 			latitude: Number,
-	        required: false
+			required: false
 		}
 
 	});

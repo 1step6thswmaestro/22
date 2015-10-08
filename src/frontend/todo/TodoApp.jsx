@@ -1,81 +1,86 @@
 import React from 'react'
 import { createStore } from 'redux'
 import { connect } from 'react-redux';
-import TaskForm from './TaskForm';
-import { fetchList, makeNewItem, removeItem } from './actions/tasks'
-import TaskItem from './TaskItem'
-import TaskInputForm from './TaskInputForm'
+
+import TaskView from './taskview/TaskView'
+import UserView from './userview/UserView'
+
 import _ from 'underscore'
+
+
 
 class TodoApp extends React.Component{
 	constructor(){
 		super();
-		this.state = {tasks: []};
+		this.state = {
+			location: '',
+			tasks: [],
+			currentView: 'task' // Save current user's view
+		};
 	}
 
 	componentDidMount() {
-		const { dispatch } = this.props;
-		dispatch(fetchList());
+		if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function(position){
+				this.setState({
+					location: {
+						latitude: position.coords.latitude,
+						longitude: position.coords.longitude
+					}
+				});
+			}.bind(this));
+		}
+	}
+
+	toggleView(){
+		var nextView;
+		if(this.state.currentView == 'task'){
+			nextView = 'user';
+		}
+		else{
+			nextView = 'task';
+		}
+
+		this.setState({
+			currentView: nextView
+		});
 	}
 
 
-	handleTaskSubmit(task) {
-		const { dispatch } = this.props;
-		console.log('handleTaskSubmit : ', this, task, dispatch);
-		dispatch(makeNewItem(task));
-	}
-
-	discard(task){
-		const { dispatch } = this.props;
-		dispatch(removeItem(task));
-	}
-
-	toggle(todoToToggle) {
-		// Implement toggle routine.
-		// For example:
-		// UPDATE VIEW
-		// SEND THE EVENT TO SERVER.
-		alert('Check Clicked');
-	}
-	
 	render() {
-		var tasks = this.props.tasks.list;
-		console.log(tasks);
-		var taskItems = _.map(tasks, function (task) {
-			return (
-				<TaskItem
-					key={task.id}
-					task={task} 
-					onDiscard={this.discard.bind(this, task)} />)
-		}, this);
+		var viewContent;
+		if(this.state.currentView == 'task'){
+			viewContent = (
+				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} location={this.state.location}/>
+
+			);
+		}
+		else if(this.state.currentView == 'user'){
+			viewContent = (
+				<UserView dispatch={this.props.dispatch}  location={this.state.location} />
+			);
+		}
 
 		return (
 			<div className="task-container">
 				<header>
 					<h1>Give Me Task</h1>
-				</header>
-				<div className="task-box">
-					<div className="row">
-						<div className="col-md-4">
-							<TaskInputForm
-								onTaskSubmit={this.handleTaskSubmit.bind(this)}
-								onToggle={this.toggle.bind(this)}
-								onDiscard={this.discard.bind(this)}
-							/>
-						</div>
+					<div className="view-toggle" onClick={this.toggleView.bind(this)}>
+						Click HERE to Toggle UserView/TaskView
 					</div>
-				</div>
-				<div className="task-list">
-					{taskItems}
-				</div>
+				</header>
+				{viewContent}
 			</div>
 		);
 	}
 };
 
+
+// TODO: Redux's state.tasks should be mapped to TodoApp's state, not props.
+// Ask 상현, why this is mapped to props. - Insik.
 function mapStateToProps(state){
 	return {
-		tasks: Object.assign({}, state, {list: _.filter(state.tasks.list, item => !item.removed)})
+		tasks: state.tasks.list
 	}
 };
 
