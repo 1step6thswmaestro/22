@@ -1,6 +1,5 @@
 import React from 'react';
 import moment from 'moment';
-import MapImage from '../utils/MapImage';
 import LocationAddress from '../utils/LocationAddress';
 import _ from 'underscore';
 
@@ -8,6 +7,7 @@ class TaskItem extends React.Component{
 	constructor(props){
 		super(props);
 		this.state={
+			isExpanded: 0
 		}; // define variable 'state'.
 
 		_.extend(this.state, props.task); // Init state.
@@ -92,6 +92,13 @@ class TaskItem extends React.Component{
 		});
 	}
 
+	onExpandToggle(){
+		var newVal = this.state.isExpanded ^ 1;
+		this.setState({
+			isExpanded: newVal
+		})
+	}
+
 	getLocButtonStates(relatedLocation){
 		var locButtonState={
 			home: "btn-default",
@@ -119,9 +126,7 @@ class TaskItem extends React.Component{
 		return locButtonState;
 	}
 
-	render() {
-		// console.log('In TaskItem render():');
-		// console.log(this.state);
+	getDetailView(){
 		var descStr = this.state.description || '';
 		var rawMarkup = marked(descStr.toString(), {sanitize: true});
 		var startDate, completeDate;
@@ -152,7 +157,7 @@ class TaskItem extends React.Component{
 
 		return (
 			<div className="panel panel-default">
-				<div className="panel-heading">
+				<div className="panel-heading" onClick={this.onExpandToggle.bind(this)}>
 					<h2 className="task-name">{this.state.name}</h2>
 				</div>
 				<div className="panel-body">
@@ -180,10 +185,10 @@ class TaskItem extends React.Component{
 							</div>
 							<LocationAddress location={this.state.locationstampCreated} />
 							<div className="task-startlocation">
-								Created Location:
-								{ this.state.locationstampCreated ? <MapImage location={this.state.locationstampCreated} /> : null }
-								Complete Location:
-								{ this.state.locationstampComplete ? <MapImage location={this.state.locationstampComplete} /> : null }
+								생성 시 위치:
+								{ this.state.locationstampCreated ? <LocationAddress location={this.state.locationstampCreated} /> : null }
+								완료 위치:
+								{ this.state.locationstampComplete ? <LocationAddress location={this.state.locationstampComplete} /> : null }
 							</div>
 						</div>
 						<div className="card-contents col-md-4">
@@ -219,6 +224,77 @@ class TaskItem extends React.Component{
 				</div>
 			</div>
 		);
+	}
+
+	getSimpleView(){
+		var descStr = this.state.description || '';
+		var rawMarkup = marked(descStr.toString(), {sanitize: true});
+		var startDate, completeDate;
+		var locButtonState = this.getLocButtonStates(this.state.relatedLocation);
+
+		var completeButtonState = "btn-default";
+		var processButtonState = "btn-default";
+		if(this.state.timestampStart != null){
+			startDate = (
+				<div className="taskStartedDate">
+					시작일: {this.getReadableDate(this.state.timestampStart)}
+				</div>
+			);
+		}
+
+		if(this.state.timestampComplete != null){
+			completeDate = (
+				<div className="task-complete-date">
+					완료일: {this.getReadableDate(this.state.timestampComplete)}
+				</div>
+			);
+			completeButtonState = "btn-check";
+		}
+
+		if (this.state.taskOnProcess == true) {
+			processButtonState = "btn-check";
+		}
+
+		return (
+			<div className="panel panel-default">
+				<div className="panel-heading" onClick={this.onExpandToggle.bind(this)}>
+					<h2 className="task-name">{this.state.name}</h2>
+				</div>
+				<div className="panel-body">
+					<div>
+						<div className="btn-group">
+							<button className={"btn " + processButtonState} onClick={this.onStartToggle.bind(this)}>
+								<span className="glyphicon glyphicon-play"></span> 시작
+							</button>
+							<button className={"btn " + completeButtonState} onClick={this.onCompleteToggle.bind(this)}>
+								<span className="glyphicon glyphicon-check"></span> 완료
+							</button>
+							<button className="btn btn-default" label="Remind me later" onClick={this.props.onPostpone}>
+								<span className="glyphicon glyphicon-send"></span> 나중에 알림
+							</button>
+							<button className="btn btn-default" label="Discard this task" onClick={this.onDiscard.bind(this)}>
+								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+
+	}
+
+	render() {
+		// console.log('In TaskItem render():');
+		// console.log(this.state);
+		var viewContent;
+		if (this.state.isExpanded == 1){
+			viewContent = this.getDetailView();
+		}
+		else{
+			viewContent = this.getSimpleView();
+		}
+		return viewContent;
+
 	}
 
 };

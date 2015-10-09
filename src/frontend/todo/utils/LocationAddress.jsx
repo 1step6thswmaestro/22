@@ -1,18 +1,18 @@
 import React from 'react'
+import MapImage from './MapImage';
 
 class LocationAddress extends React.Component{
 	constructor(){
 		super();
 		this.state = {
-			readableAddress: ''
+			readableAddress: '',
+			viewImage: 0,
 		};
 	}
 
 	componentDidMount() {
 		this.getAddress(function(data){
 			var newVal = data.name2 + " " + data.name3;
-			console.log('On Success():' + newVal);
-
 			this.setState({
 				readableAddress: newVal
 			});
@@ -25,25 +25,34 @@ class LocationAddress extends React.Component{
 		var url = "https://apis.daum.net/local/geo/coord2addr?apikey=" + api + "&longitude=" + this.props.location.longitude + "&latitude=" + this.props.location.latitude + "&inputCoordSystem=" + coordSystem + "&output=json";
 		var address = "Now loading...";
 		var data;
-		$.ajax({ 
-			headers: {'Access-Control-Allow-Origin': '*'}, 
-			dataType: "jsonp", 
-			url: url, 
+		$.ajax({
+			headers: {'Access-Control-Allow-Origin': '*'},
+			dataType: "jsonp",
+			url: url,
 			data: data
 		})
 		.then(
 			function(data){
 				callback(data)
 			}
-			, function(XMLHttpRequest, textStatus, errorThrown) { 
-				console.log(errorThrown); 
+			, function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log(errorThrown);
 			}
 		);
+	}
+	onAddressClick(){
+		var newVal = this.state.viewImage ^ 1; // Toggle between 0 and 1
+		this.setState({
+			viewImage: newVal
+		});
+
 	}
 
 	render() {
 		return (
-			<div className="location-address">주소 : {this.state.readableAddress}</div>
+			<div className="location-address" onClick={this.onAddressClick.bind(this)}>{this.state.readableAddress}
+				{ this.state.viewImage ? <MapImage location={this.props.location} /> : null }
+			</div>
 		);
 	}
 };
