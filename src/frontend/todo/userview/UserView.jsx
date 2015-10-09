@@ -1,5 +1,5 @@
 import React from 'react'
-import MapImage from '../utils/MapImage'
+import LocationAddress from '../utils/LocationAddress'
 import LocSetup from './LocSetup'
 
 import _ from 'underscore'
@@ -14,13 +14,22 @@ class UserView extends React.Component{
 	}
 
 	render() {
+		// TODO: show recent event log, that is recieved from server.
 		return (
 			<div className="user-view">
+				<h3> 저장된 위치 정보 </h3>
 				<div className='current-location'>
-					Current Location:
-					{ this.props.location ? <MapImage location={this.props.location} /> : null }
+					<table>
+						<tr>
+							<td>현재 위치:</td>
+							<td>
+								{ this.props.location ? <LocationAddress location={this.props.location} /> : null }
+							</td>
+						</tr>
+					</table>
 				</div>
 				<LocSetup location = {this.props.location}/>
+				<h3> 이벤트 로그 </h3>
 			</div>
 		);
 	}

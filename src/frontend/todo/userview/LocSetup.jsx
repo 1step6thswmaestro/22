@@ -1,5 +1,5 @@
 import React from 'react'
-import MapImage from '../utils/MapImage'
+import LocationAddress from '../utils/LocationAddress'
 
 import _ from 'underscore'
 
@@ -49,23 +49,44 @@ class LocSetup extends React.Component{
 		// console.log(this.state);
 		return (
 			<div className='favorite-location-view'>
-				<div className='location-home'>
-					Home Location:
-					{ this.state.locationstampHome ? <MapImage location={this.state.locationstampHome} /> : null }
-				</div>
-				<div className='location-school'>
-					School Location:
-					{ this.state.locationstampSchool ? <MapImage location={this.state.locationstampSchool} /> : null }
-				</div>
-				<div className='location-work'>
-					Work Location:
-					{ this.state.locationstampWork ? <MapImage location={this.state.locationstampWork} /> : null }
-				</div>
-				<div className='location-etc'>
-					Etc Location:
-					{ this.state.locationstampEtc ? <MapImage location={this.state.locationstampEtc} /> : null }
-				</div>
-
+				<table className='location-table'>
+				<tr>
+					<th>위치</th>
+					<th>주소</th>
+				</tr>
+				<tr>
+					<td>집</td>
+					<td>
+						<div className='location-home'>
+							{ this.state.locationstampHome ? <LocationAddress location={this.state.locationstampHome} /> : null }
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>학교</td>
+					<td>
+						<div className='location-school'>
+							{ this.state.locationstampSchool ? <LocationAddress location={this.state.locationstampSchool} /> : null }
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>직장</td>
+					<td>
+						<div className='location-work'>
+							{ this.state.locationstampWork ? <LocationAddress location={this.state.locationstampWork} /> : null }
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>기타 지정장소</td>
+					<td>
+						<div className='location-etc'>
+							{ this.state.locationstampEtc ? <LocationAddress location={this.state.locationstampEtc} /> : null }
+						</div>
+					</td>
+				</tr>
+				</table>
 			</div>
 		);
 	}
