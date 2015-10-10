@@ -38,7 +38,6 @@ export function makeNewItem(item){
 			, item: item
 		});
 
-		alert('/v1/tasks');
 		return request({
 			url: '/v1/tasks'
 			, type: 'post'
@@ -93,7 +92,6 @@ function request(requestArg){
 		_.extend(requestArg, {loc: loc})
 		return $.ajax(requestArg);
 	})
-	.fail(err=>alert(err));
 }
 
 function _updateList(result){
