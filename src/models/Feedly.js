@@ -8,10 +8,11 @@ var crypto = require('crypto');
 module.exports = function(){
 	// create instance
 	var Feedly = new Schema({
-		user_id: String
-		, feedly_id: String
-		, feedly_hashed_passwd: String
-		, salt: String
+		user_email: {type: String, required: true}
+		, feedly_id: {type: String, default: "", required: false}
+		, feedly_hashed_passwd: {type: String, default: "", required: false}
+		, salt: {type: String, default: "", required: false}
+		, rss_updated: {type: Number, default: 0, required: false}
 		, rss_list: [] 
 	});
 
@@ -22,19 +23,6 @@ module.exports = function(){
 		}
 		, authenticate: function(passwd){
 			return this.encrypt(passwd) === this.hashed_passwd;
-		}
-		, get_user_feedly_info: function(user_id){
-			var feedly = new Feedly();
-			feedly.findOne({'user_id':user_id},function(err,feedly){
-		        if(err){
-		            logger.log(err);
-		        }
-	    	});
-
-	    	return {
-	    		feedly_id : feedly.feedly_id
-	    		, feedly_hashed_passwd : feedly.feedly_hashed_passwd
-	    	};
 		}
 	};
 

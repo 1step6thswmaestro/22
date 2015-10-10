@@ -14,7 +14,7 @@ var py_function_broker = function(path, input, callback){
 	  args: input
 	};
 
-	PythonShell.run(morphem_py_path, options, function(err, results){
+	PythonShell.run(path, options, function(err, results){
 		if (err) throw err;
 		callback(JSON.parse(results[0]))
 	});
@@ -22,7 +22,6 @@ var py_function_broker = function(path, input, callback){
 
 module.exports = {
 	analyze_morphem : function(msg, cb) {
-		logger.log(morphem_py_path)
 		//define function path
 		var morphem_py_path = 'morphem_call.py'
 		py_function_broker(morphem_py_path, msg, cb);

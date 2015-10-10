@@ -1,6 +1,6 @@
 {
-    "access_token" : "A3cuCp4kqSr6jZ07InvdGHl8InQXX_c-T07aqShJvfriHzt9ZPudEB4EBu_7FXD9iQ0Mj9t7CHnK2Uexy_6xp4rjqyeGQKI1bGLVxYWHR3QHOGnh4FHHUz8mzq7cm1Qw1LRYEt3juDksJSluNXgA6ezjwgOk2clo3_TJ9C2a74aVO-Vf1P3DrSt68O1DjNpdwYdJ4OiGsKCluPdvruzGUWkkqyzhrPf9wUIm6g:feedlydev"
-    ,"access_id" : "sandbox"
-    ,"access_passwd" : "L5L3EBB9XMVLA8OETMO3"
-    ,"base" : "https://sandbox.feedly.com"
+    "token" : "A3cuCp4kqSr6jZ07InvdGHl8InQXX_c-T07aqShJvfriHzt9ZPudEB4EBu_7FXD9iQ0Mj9t7CHnK2Uexy_6xp4rjqyeGQKI1bGLVxYWHR3QHOGnh4FHHUz8mzq7cm1Qw1LRYEt3juDksJSluNXgA6ezjwgOk2clo3_TJ9C2a74aVO-Vf1P3DrSt68O1DjNpdwYdJ4OiGsKCluPdvruzGUWkkqyzhrPf9wUIm6g:feedlydev"
+    ,"client_id" : "sandbox"
+    ,"client_secret" : "L5L3EBB9XMVLA8OETMO3"
+    ,"base" : "http://sandbox.feedly.com"
 }
