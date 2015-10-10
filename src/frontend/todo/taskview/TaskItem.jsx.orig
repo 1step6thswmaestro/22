@@ -1,22 +1,46 @@
 import React from 'react';
+<<<<<<< HEAD
 import MapImage from '../dialog/MapImage';
-import LocationAddress from '../dialog/LocationAddress';
+=======
+import moment from 'moment';
+import LocationAddress from '../utils/LocationAddress';
+>>>>>>> 8e462bd4d1d36e828cda3dd60b06640dfbc10b6d
 import _ from 'underscore';
 import { getReadableDate } from '../../utility/date'
 import { completeItem, removeItem, postponeItem } from '../actions/tasks';
 
 class TaskItem extends React.Component{
+<<<<<<< HEAD
 	constructor(){
 		super();
-		this.state = {};
+=======
+	constructor(props){
+		super(props);
+		this.state={
+			isExpanded: 0
+		}; // define variable 'state'.
+
+		_.extend(this.state, props.task); // Init state.
+>>>>>>> 8e462bd4d1d36e828cda3dd60b06640dfbc10b6d
 	}
 	
 	complete(){
 		dispatch(completeItem(this.props.task._id));
 	}
 
+	discard(){
+		const { dispatch } = this.props;
+		dispatch(removeItem(this.props.task._id));
+	}
+
+<<<<<<< HEAD
+	postpone(){
+		const { dispatch } = this.props;
+		dispatch(postponeItem(this.props.task._id));	
+=======
 	onStartToggle() {
 		var patchRequest;
+
 		if (this.state.taskOnProcess == false) {
 			var timestamp = Date.now();
 			patchRequest = {
@@ -33,14 +57,9 @@ class TaskItem extends React.Component{
 		this.setState(patchRequest);
 	}
 
-	discard(){
-		const { dispatch } = this.props;
-		dispatch(removeItem(this.props.task._id));
-	}
-
-	postpone(){
-		const { dispatch } = this.props;
-		dispatch(postponeItem(this.props.task._id));	
+	onDiscard(){
+		this.props.onDiscard(this.state._id);
+>>>>>>> 8e462bd4d1d36e828cda3dd60b06640dfbc10b6d
 	}
 
 	onToggleLocationButton(locName){
@@ -58,7 +77,7 @@ class TaskItem extends React.Component{
 	}
 
 	onExpandToggle(){
-		var newVal = (this.state.isExpanded||0) ^ 1;
+		var newVal = this.state.isExpanded ^ 1;
 		this.setState({
 			isExpanded: newVal
 		})
@@ -91,40 +110,53 @@ class TaskItem extends React.Component{
 		return locButtonState;
 	}
 
+<<<<<<< HEAD
+	render() {
+		var descStr = this.props.task.description || '';
+=======
 	getDetailView(){
-		var task = this.props.task;
-		var descStr = task.description || '';
+		var descStr = this.state.description || '';
+>>>>>>> 8e462bd4d1d36e828cda3dd60b06640dfbc10b6d
 		var rawMarkup = marked(descStr.toString(), {sanitize: true});
 		var startDate, completeDate;
-		var locButtonState = this.getLocButtonStates(task.relatedLocation);
+		var locButtonState = this.getLocButtonStates(this.props.task.relatedLocation);
 
 		var completeButtonState = "btn-default";
+<<<<<<< HEAD
+		if(this.props.task.timestampComplete != null){
+=======
 		var processButtonState = "btn-default";
-		if(task.timestampStart != null){
+		if(this.state.timestampStart != null){
+>>>>>>> 8e462bd4d1d36e828cda3dd60b06640dfbc10b6d
 			startDate = (
 				<div className="taskStartedDate">
-					시작일: {getReadableDate(task.timestampStart)}
+					시작일: {getReadableDate(this.props.task.timestampStart)}
 				</div>
 			);
 		}
 
-		if(task.timestampComplete != null){
+		if(this.props.task.timestampComplete != null){
 			completeDate = (
 				<div className="task-complete-date">
-					완료일: {getReadableDate(task.timestampComplete)}
+					완료일: {getReadableDate(this.props.task.timestampComplete)}
 				</div>
 			);
 			completeButtonState = "btn-check";
 		}
 
-		if (task.taskOnProcess == true) {
+		if (this.state.taskOnProcess == true) {
 			processButtonState = "btn-check";
 		}
 
 		return (
 			<div className="panel panel-default">
+<<<<<<< HEAD
+				<div className="panel-heading">
+					<h2 className="task-name">{this.props.task.name}</h2>
+=======
 				<div className="panel-heading" onClick={this.onExpandToggle.bind(this)}>
-					<h2 className="task-name">{task.name}</h2>
+					<h2 className="task-name">{this.state.name}</h2>
+>>>>>>> 8e462bd4d1d36e828cda3dd60b06640dfbc10b6d
 				</div>
 				<div className="panel-body">
 					<div className="row">
@@ -149,40 +181,50 @@ class TaskItem extends React.Component{
 									</button>
 								</div>
 							</div>
-							<LocationAddress location={task.locationstampCreated} />
+							<LocationAddress location={this.state.locationstampCreated} />
 							<div className="task-startlocation">
+<<<<<<< HEAD
+								Created Location:
+								{ this.props.task.locationstampCreated ? <MapImage location={this.props.task.locationstampCreated} /> : null }
+								Complete Location:
+								{ this.props.task.locationstampComplete ? <MapImage location={this.props.task.locationstampComplete} /> : null }
+=======
 								생성 시 위치:
-								{ task.locationstampCreated ? <LocationAddress location={task.locationstampCreated} /> : null }
+								{ this.state.locationstampCreated ? <LocationAddress location={this.state.locationstampCreated} /> : null }
 								완료 위치:
-								{ task.locationstampComplete ? <LocationAddress location={task.locationstampComplete} /> : null }
+								{ this.state.locationstampComplete ? <LocationAddress location={this.state.locationstampComplete} /> : null }
+>>>>>>> 8e462bd4d1d36e828cda3dd60b06640dfbc10b6d
 							</div>
 						</div>
 						<div className="card-contents col-md-4">
 							<div className="task-importance">
-								중요도: {task.importance}
+								중요도: {this.props.task.importance}
 							</div>
 							<div className="taskCreatedDate">
-								생성일: {getReadableDate(task.timestampCreated)}
+								생성일: {getReadableDate(this.props.task.timestampCreated)}
 							</div>
 							{startDate}
 							<div className="task-duedate">
-								마감일: {getReadableDate(task.timestampDuedate)}
+								마감일: {getReadableDate(this.props.task.timestampDuedate)}
 							</div>
 							{completeDate}
 						</div>
 					</div>
 					<div>
 						<div className="btn-group">
+<<<<<<< HEAD
+							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
+=======
 							<button className={"btn " + processButtonState} onClick={this.onStartToggle.bind(this)}>
 								<span className="glyphicon glyphicon-play"></span> 시작
 							</button>
-							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
+							<button className={"btn " + completeButtonState} onClick={this.onCompleteToggle.bind(this)}>
 								<span className="glyphicon glyphicon-check"></span> 완료
 							</button>
-							<button className="btn btn-default" label="Remind me later" onClick={this.postpone.bind(this)}>
+							<button className="btn btn-default" label="Remind me later" onClick={this.props.onPostpone}>
 								<span className="glyphicon glyphicon-send"></span> 나중에 알림
 							</button>
-							<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
+							<button className="btn btn-default" label="Discard this task" onClick={this.onDiscard.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
 							</button>
 						</div>
@@ -193,39 +235,38 @@ class TaskItem extends React.Component{
 	}
 
 	getSimpleView(){
-		var task = this.props.task;
-		var descStr = task.description || '';
+		var descStr = this.state.description || '';
 		var rawMarkup = marked(descStr.toString(), {sanitize: true});
 		var startDate, completeDate;
-		var locButtonState = this.getLocButtonStates(task.relatedLocation);
+		var locButtonState = this.getLocButtonStates(this.state.relatedLocation);
 
 		var completeButtonState = "btn-default";
 		var processButtonState = "btn-default";
-		if(task.timestampStart != null){
+		if(this.state.timestampStart != null){
 			startDate = (
 				<div className="taskStartedDate">
-					시작일: {getReadableDate(task.timestampStart)}
+					시작일: {this.getReadableDate(this.state.timestampStart)}
 				</div>
 			);
 		}
 
-		if(task.timestampComplete != null){
+		if(this.state.timestampComplete != null){
 			completeDate = (
 				<div className="task-complete-date">
-					완료일: {getReadableDate(task.timestampComplete)}
+					완료일: {this.getReadableDate(this.state.timestampComplete)}
 				</div>
 			);
 			completeButtonState = "btn-check";
 		}
 
-		if (task.taskOnProcess == true) {
+		if (this.state.taskOnProcess == true) {
 			processButtonState = "btn-check";
 		}
 
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading" onClick={this.onExpandToggle.bind(this)}>
-					<h2 className="task-name">{task.name}</h2>
+					<h2 className="task-name">{this.state.name}</h2>
 				</div>
 				<div className="panel-body">
 					<div>
@@ -233,7 +274,8 @@ class TaskItem extends React.Component{
 							<button className={"btn " + processButtonState} onClick={this.onStartToggle.bind(this)}>
 								<span className="glyphicon glyphicon-play"></span> 시작
 							</button>
-							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
+							<button className={"btn " + completeButtonState} onClick={this.onCompleteToggle.bind(this)}>
+>>>>>>> 8e462bd4d1d36e828cda3dd60b06640dfbc10b6d
 								<span className="glyphicon glyphicon-check"></span> 완료
 							</button>
 							<button className="btn btn-default" label="Remind me later" onClick={this.postpone.bind(this)}>

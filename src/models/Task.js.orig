@@ -7,14 +7,23 @@ module.exports = function(app){
 		name: String,
 		description: {type: String, default: ""},
 		importance: {type: Number, default: 0},
+<<<<<<< HEAD
 		priorityScore: {type: Number, default: 0.0},
 		estimation: {type: Number, default: 1.0},	//unit-hour
 		duedate: {type: Date, default: function(){
 			return new Date(Date.now() + 24*60*60*1000);
 		}},
-		created: {type: Date, default: Date.now},
-		taskOnProcess: {type: Boolean, default: false},
-expectedDuration: {type: String, default: ""},
+		created: {type: Date, default: Date.now}
+=======
+		priority: {type: Number, default: 0.0},
+		offset:   {type: Number, default: 0.0, required: false},
+
+		timestampCreated:  {type: Date, default: Date.now.valueOf()},
+		timestampStart:    {type: Date, default: ""},
+		timestampComplete: {type: Date, default: ""},
+		timestampDuedate:  {type: Date, default: ""},
+
+		expectedDuration: {type: String, default: ""},
 
 		// Save related location as 4 bits. (home, school, work, etc)
 		// 0 means, no location is related to this task
@@ -23,6 +32,29 @@ expectedDuration: {type: String, default: ""},
 		// 12 means home and school.
 		// and, so on ...
 		relatedLocation: {type: Number, default: 0},
+
+		locationstampCreated: {
+			address: String,
+			longitude: Number,
+			latitude: Number,
+			required: false
+		},
+		locationstampStart: {
+			address: String,
+			longitude: Number,
+			latitude: Number,
+			required: false
+		},
+		locationstampComplete: {
+			address: String,
+			longitude: Number,
+			latitude: Number,
+			required: false
+		},
+
+		taskOnProcess: {type: Boolean, default: false},
+
+>>>>>>> 8e462bd4d1d36e828cda3dd60b06640dfbc10b6d
 	});
 
 	taskSchema.index({

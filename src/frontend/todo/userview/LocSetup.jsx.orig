@@ -1,6 +1,9 @@
 import React from 'react'
+<<<<<<< HEAD
 import MapImage from '../dialog/MapImage'
-import LocationAddress from '../dialog/LocationAddress'
+=======
+import LocationAddress from '../utils/LocationAddress'
+>>>>>>> 8e462bd4d1d36e828cda3dd60b06640dfbc10b6d
 
 import _ from 'underscore'
 
