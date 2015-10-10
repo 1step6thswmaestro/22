@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var ActionTypes = require('./TaskActionTypes');
+var ActionTypes = require('../constants/TaskActionType');
 
 module.exports = function(app){
 	var taskActionSchema = new Schema({

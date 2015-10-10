@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var Task = mongoose.model('Task');
+var TaskActionType = require('../../../constants/TaskActionType');
 var Q = require('q');
 
 module.exports = function(router, app){
@@ -31,20 +32,19 @@ module.exports = function(router, app){
 	router.post('/tasks', function(req, res){
 		// This request create new task for the current user.
 		let userId = req.user._id;
-		let task = new Task(_.extend({userId}, _.pick(req.body, 'name')));
+		let task = _.pick(req.body, 'name');
+		let loc = req.body.loc;
 
-		console.log('new task', task);
-		console.log(req.user);
-
-		task.save(function(err, result){
-			if(err){
-				logger.error(err);
-				res.status(400).send(err);
-				return;
-			}
-
-			res.send(result);
-		});
+		console.log('task', task);
+		
+		app.helper.taskHelper.create(userId, task)
+		.then(function(obj){
+			console.log('created : ', obj);
+			return app.helper.taskHelper.createAction(obj._id, TaskActionType.named.create, loc)
+			.then(()=>obj);
+		})
+		.then((obj)=>res.send(obj))
+		.fail(err=>logger.error(err))
 	})
 
 	router.get('/tasks/:id', function(req, res){

@@ -24,6 +24,7 @@ export function fetchList(){
 
 let count = 0;
 export function makeNewItem(item){
+	console.log('makeNewItem : ', item);
 	return function(dispatch){
 		let tid = ++count;
 		// We need tid even if we already have task's id in Task model.
@@ -88,8 +89,9 @@ export function completeItem(taskId){
 function request(requestArg){
 	return getLocation()
 	.then(function(loc){
+		console.log('loc : ', loc);
 		requestArg.data = requestArg.data || {};
-		_.extend(requestArg, {loc: loc})
+		_.extend(requestArg.data, {loc: loc})
 		return $.ajax(requestArg);
 	})
 }
