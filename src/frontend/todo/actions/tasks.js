@@ -4,8 +4,6 @@ import { type } from './tasks_decl';
 import { getLocation } from '../../utility/location'
 import _ from 'underscore'
 
-console.log('type', type);
-
 export function fetchList(){
 	return (dispatch) => {
 		dispatch({
