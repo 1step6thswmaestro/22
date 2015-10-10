@@ -20,13 +20,11 @@ DECL('TASK_RECV_LOG', (state, action)=>{
 DECL('TASK_RECV_LOGS', (state, action)=>{
 	let newstate = Object.assign({}, state);
 	newstate[action.taskId] = action.list;
-	console.log(newstate[action.taskId]);
 	return newstate;
 })
 
 
 DECL('TASK_LOG_ERROR', (state, action)=>{
-	console.error(action.err);
 	return Object.assign({}, state, {
 	});
 });

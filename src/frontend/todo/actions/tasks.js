@@ -49,6 +49,45 @@ export function makeNewItem(item){
 	}
 }
 
+export function startItem(task){
+	return updateState(task, 'start');
+}
+
+export function pauseItem(task){
+	return updateState(task, 'pause');
+}
+
+export function resumeItem(task){
+	return updateState(task, 'resume');
+}
+
+export function postponeItem(item){
+	return updateState(task, 'postpone');
+}
+
+export function completeItem(task){
+	return updateState(task, 'complete');
+}
+
+function updateState(task, state){
+	return function(dispatch){
+		// No dispatch for remove request because there is no need to change state
+		// until we get response from server.
+		return request({
+			url: `/v1/tasks/${task._id}/${state}`
+			, type: 'put'
+		})
+		.then(result => {
+			console.log(result);
+			dispatch({type: type.TASK_RECV_ITEM, item: result.task});
+			dispatch({type: type.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
+		}, err => dispatch({type: type.TASK_ERROR, err}));
+	}
+}
+
+
+
+
 export function removeItem(task){
 	return function(dispatch){
 		// No dispatch for remove request because there is no need to change state
@@ -64,55 +103,14 @@ export function removeItem(task){
 	}
 }
 
-export function postponeItem(item){
-	return function(dispatch){
-		dispatch(type.TASK_POSTPONE_ITEM)
-
-		return request({
-			url: `/v1/task/${item.id}/postpone`
-			, type: 'put'
-		})
-		.then(_updateList, _error);
-	}
-}
-
-export function completeItem(task){
-	return request({
-		url: `/v1/tasks/${task.id}/complete`
-		, type: 'put'
-	})
-	.then(_updateItem, _error);
-}
-
 function request(requestArg){
 	return getLocation()
-	.then(function(loc){
+	.then(loc => {
 		requestArg.data = requestArg.data || {};
 		_.extend(requestArg.data, {loc: loc})
 		return $.ajax(requestArg);
 	})
 }
 
-function _updateList(result){
-	if(result.list){
-		dispatch({
-			type: type.TASK_RECV_LIST
-			, list: result.list
-		})
-	}
 
-	if(result.plist){
-		dispatch({
-			type: type.TASK_RECV_LIST_PRIORITIZED
-			, list: plist
-		})
-	}
-}
 
-function _updateItem(item){
-	dispatch({type: type.TASK_RECV_ITEM, item})
-}
-
-function _error(err){
-	dispatch({type: type.TASK_ERROR, err})
-}

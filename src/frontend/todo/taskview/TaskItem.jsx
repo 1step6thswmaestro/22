@@ -3,8 +3,9 @@ import MapImage from '../dialog/MapImage';
 import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
 import { getReadableDate } from '../../utility/date'
-import { completeItem, removeItem, postponeItem } from '../actions/tasks';
+import { startItem, pauseItem, completeItem, removeItem, postponeItem } from '../actions/tasks';
 import { fetchTaskLog } from '../actions/tasklog';
+import If from '../../utility/if'
 var TaskLogType = require('../../../constants/TaskLogType');
 
 class TaskItem extends React.Component{
@@ -17,22 +18,14 @@ class TaskItem extends React.Component{
 		dispatch(completeItem(this.props.task._id));
 	}
 
-	onStartToggle() {
-		var patchRequest;
-		if (this.state.taskOnProcess == false) {
-			var timestamp = Date.now();
-			patchRequest = {
-				timestampStart: timestamp,
-				taskOnProcess: true
-			};
-		}
-		else {
-			patchRequest = {
-				taskOnProcess: false
-			};
-		}
-		this.props.onUpdate(this.state._id, patchRequest);
-		this.setState(patchRequest);
+	start() {
+		const { dispatch } = this.props;
+		dispatch(startItem(this.props.task));
+	}
+
+	pause() {
+		const { dispatch } = this.props;
+		dispatch(pauseItem(this.props.task));
 	}
 
 	discard(){
@@ -45,7 +38,7 @@ class TaskItem extends React.Component{
 		dispatch(postponeItem(this.props.task));	
 	}
 
-	onToggleLocationButton(locName){
+	toggleLocationButton(locName){
 		var locList = ['home', 'school', 'work', 'etc'];
 		var locIndex = 0;
 		for (let i in locList){
@@ -59,7 +52,7 @@ class TaskItem extends React.Component{
 		dispatch(updateRelatedLocation(relatedLocation ^ (1 << (locList.length-1-locIndex))));
 	}
 
-	onExpandToggle(){
+	expand(){
 		const { dispatch } = this.props;
 
 		var newVal = (this.state.isExpanded||0) ^ 1;
@@ -138,14 +131,14 @@ class TaskItem extends React.Component{
 			completeButtonState = "btn-check";
 		}
 
-		if (task.taskOnProcess == true) {
+		if (task.state == TaskLogType.named.start.id) {
 			processButtonState = "btn-check";
 		}
 
 
 		return (
 			<div className="panel panel-default">
-				<div className="panel-heading" onClick={this.onExpandToggle.bind(this)}>
+				<div className="panel-heading" onClick={this.expand.bind(this)}>
 					<h2 className="task-name">{task.name}</h2>
 				</div>
 				<div className="panel-body">
@@ -157,16 +150,16 @@ class TaskItem extends React.Component{
 							<div className="task-relatedLocation">
 								작업 가능 장소 선택 :
 								<div className="btn-group">
-									<button className={"btn " + locButtonState.home} data-toggle="집" label="집" onClick={this.onToggleLocationButton.bind(this, 'home')}>
+									<button className={"btn " + locButtonState.home} data-toggle="집" label="집" onClick={this.toggleLocationButton.bind(this, 'home')}>
 										<span className="glyphicon glyphicon-home"></span>
 									</button>
-									<button className={"btn " + locButtonState.school} data-toggle="학교" label="학교" onClick={this.onToggleLocationButton.bind(this, 'school')}>
+									<button className={"btn " + locButtonState.school} data-toggle="학교" label="학교" onClick={this.toggleLocationButton.bind(this, 'school')}>
 										<span className="glyphicon glyphicon-book"></span>
 									</button>
-									<button className={"btn " + locButtonState.work} data-toggle="직장" label="직장" onClick={this.onToggleLocationButton.bind(this, 'work')}>
+									<button className={"btn " + locButtonState.work} data-toggle="직장" label="직장" onClick={this.toggleLocationButton.bind(this, 'work')}>
 										<span className="glyphicon glyphicon-briefcase"></span>
 									</button>
-									<button className={"btn " + locButtonState.etc} data-toggle="기타" label="기타" onClick={this.onToggleLocationButton.bind(this, 'etc')}>
+									<button className={"btn " + locButtonState.etc} data-toggle="기타" label="기타" onClick={this.toggleLocationButton.bind(this, 'etc')}>
 										<span className="glyphicon glyphicon-flash"></span>
 									</button>
 								</div>
@@ -194,7 +187,7 @@ class TaskItem extends React.Component{
 					</div>
 					<div>
 						<div className="btn-group">
-							<button className={"btn " + processButtonState} onClick={this.onStartToggle.bind(this)}>
+							<button className={"btn " + processButtonState} onClick={this.start.bind(this)}>
 								<span className="glyphicon glyphicon-play"></span> 시작
 							</button>
 							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
@@ -221,7 +214,6 @@ class TaskItem extends React.Component{
 		var locButtonState = this.getLocButtonStates(task.relatedLocation);
 
 		var completeButtonState = "btn-default";
-		var processButtonState = "btn-default";
 		if(task.timestampStart != null){
 			startDate = (
 				<div className="taskStartedDate">
@@ -239,21 +231,24 @@ class TaskItem extends React.Component{
 			completeButtonState = "btn-check";
 		}
 
-		if (task.taskOnProcess == true) {
-			processButtonState = "btn-check";
-		}
-
 		return (
 			<div className="panel panel-default">
-				<div className="panel-heading" onClick={this.onExpandToggle.bind(this)}>
+				<div className="panel-heading" onClick={this.expand.bind(this)}>
 					<h2 className="task-name">{task.name}</h2>
 				</div>
 				<div className="panel-body">
 					<div>
 						<div className="btn-group">
-							<button className={"btn " + processButtonState} onClick={this.onStartToggle.bind(this)}>
-								<span className="glyphicon glyphicon-play"></span> 시작
-							</button>
+							<If test={task.state != TaskLogType.named.start.id}>
+								<button className="btn btn-default" onClick={this.start.bind(this)}>
+									<span className="glyphicon glyphicon-play"></span> 시작
+								</button>
+							</If>
+							<If test={task.state == TaskLogType.named.start.id}>
+								<button className="btn btn-check" onClick={this.pause.bind(this)}>
+									<span className="glyphicon glyphicon-play"></span> 일시 정지
+								</button>	
+							</If>
 							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
 								<span className="glyphicon glyphicon-check"></span> 완료
 							</button>

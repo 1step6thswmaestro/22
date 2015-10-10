@@ -16,8 +16,6 @@ export class ActionGroup{
 	getReducer(defaultState){
 		var self = this;
 		return (state=defaultState, action)=>{
-			console.log(state, action);
-			console.log(this.handlers, action.type);
 			let reducer = this.handlers[action.type];
 			if(reducer){
 				return reducer(state, action);

@@ -64,7 +64,6 @@ class TodoApp extends React.Component{
 function mapStateToProps(state){
 	var props = Object.assign({}, state);
 	props.list = _.filter(state.tasks.list, item => !item.removed);
-	console.log('mapStateToProps : ', props);
 	return props;
 };
 

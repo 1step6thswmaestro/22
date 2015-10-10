@@ -34,8 +34,6 @@ class TaskView extends React.Component{
 		var tasklog = this.props.tasklog;
 		const { dispatch } = this.props;
 
-		console.log('tasklog : ', tasklog);
-
 	    function createTaskElements(list, logs){
 			return _.map(list, task => (
 		        <TaskItem key={task.id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} />));

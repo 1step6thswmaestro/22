@@ -1,5 +1,6 @@
 import { ActionGroup } from './common.js'
 import { reducer as TaskLogReducer } from './tasklog_decl.js'
+import _ from 'underscore'
 
 let group = new ActionGroup();
 let DECL = group.declare();
@@ -12,12 +13,15 @@ DECL('TASK_REQ_NEWITEM', (state, action)=>{
 });
 
 DECL('TASK_RECV_ITEM', (state, action)=>{
+	console.log('TASK_RECV_ITEM', state, action);
 	let newlist = state.list.map(function(item){
-		var _item = item;
-		if(action.tid && _item.tid == action.tid){
-			_.extend(_item, action.item);
+		if(action.tid && item.tid == action.tid){
+			_.extend(item, action.item);
 		}
-		return _item;
+		else if(item._id == action.item._id){
+			_.extend(item, action.item);
+		}
+		return item;
 	});
 	return Object.assign({}, state, {
 		list: newlist

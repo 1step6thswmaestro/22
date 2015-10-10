@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var TaskLogType = require('../constants/TaskLogType');
 
 module.exports = function(app){
 	var taskSchema = new Schema({
@@ -11,10 +12,9 @@ module.exports = function(app){
 		estimation: {type: Number, default: 1.0},	//unit-hour
 		duedate: {type: Date, default: function(){
 			return new Date(Date.now() + 24*60*60*1000);
-		}},
-		created: {type: Date, default: Date.now},
-		taskOnProcess: {type: Boolean, default: false},
-expectedDuration: {type: String, default: ""},
+		}},		
+		expectedDuration: {type: String, default: ""},
+		state: {type: Number, default: TaskLogType.named.create.id},
 
 		// Save related location as 4 bits. (home, school, work, etc)
 		// 0 means, no location is related to this task
