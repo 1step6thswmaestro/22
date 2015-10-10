@@ -50,9 +50,9 @@ class LocationAddress extends React.Component{
 
 	render() {
 		return (
-			<div className="location-address" onClick={this.onAddressClick.bind(this)}>{this.state.readableAddress}
+			<span className="location-address" onClick={this.onAddressClick.bind(this)}>{this.state.readableAddress}
 				{ this.state.viewImage ? <MapImage location={this.props.location} /> : null }
-			</div>
+			</span>
 		);
 	}
 };
