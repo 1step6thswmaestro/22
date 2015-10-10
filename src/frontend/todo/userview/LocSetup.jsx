@@ -1,5 +1,5 @@
 import React from 'react'
-import MapImage from '../utils/MapImage'
+import MapImage from '../dialog/MapImage'
 
 import _ from 'underscore'
 

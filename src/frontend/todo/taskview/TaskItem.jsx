@@ -1,52 +1,26 @@
 import React from 'react';
-import moment from 'moment';
-import MapImage from '../utils/MapImage';
+import MapImage from '../dialog/MapImage';
 import _ from 'underscore';
+import { getReadableDate } from '../../utility/date'
+import { completeItem, removeItem, postponeItem } from '../actions/tasks';
 
 class TaskItem extends React.Component{
-	constructor(props){
-		super(props);
-		this.state={
-		}; // define variable 'state'.
-
-		_.extend(this.state, props.task); // Init state.
+	constructor(){
+		super();
 	}
-	getReadableDate(unixTimestamp){
-		// Convert time format from DB (Unix Time), to readable format.
-		var readableData = '';
-		if(typeof unixTimestamp != 'undefined'){
-			if (unixTimestamp == null){
-				readableData = '미지정';
-			}
-			else{
-				readableData = moment(unixTimestamp).format("YY/MM/DD HH:mm");
-			}
-		}
-		else{
-			readableData = '오류: 정의 안됨';
-		}
-		return readableData;
+	
+	complete(){
+		dispatch(completeItem(this.props.task._id));
 	}
 
-	onCompleteToggle(){
-		var patchRequest;
-
-		if(this.state.timestampComplete == null){
-			var timestamp = Date.now();
-			patchRequest = {
-				timestampComplete: timestamp
-			};
-		}
-		else{
-			patchRequest = {
-				timestampComplete: null
-			};
-		}
-		this.props.onUpdate(this.state._id, patchRequest);
-		this.setState(patchRequest);
+	discard(){
+		const { dispatch } = this.props;
+		dispatch(removeItem(this.props.task._id));
 	}
-	onDiscard(){
-		this.props.onDiscard(this.state._id);
+
+	postpone(){
+		const { dispatch } = this.props;
+		dispatch(postponeItem(this.props.task._id));	
 	}
 
 	onToggleLocationButton(locName){
@@ -59,16 +33,8 @@ class TaskItem extends React.Component{
 			}
 		}
 		// Flip bit on locIndex
-		var newValue = this.state.relatedLocation ^ (1 << (locList.length-1-locIndex));
-
-		var patchRequest;
-		patchRequest = {
-			relatedLocation: newValue
-		}
-		this.props.onUpdate(this.state._id, patchRequest);
-		this.setState({
-			relatedLocation: newValue
-		});
+		const { dispatch } = this.props;
+		dispatch(updateRelatedLocation(relatedLocation ^ (1 << (locList.length-1-locIndex))));
 	}
 
 	getLocButtonStates(relatedLocation){
@@ -99,26 +65,24 @@ class TaskItem extends React.Component{
 	}
 
 	render() {
-		// console.log('In TaskItem render():');
-		// console.log(this.state);
-		var descStr = this.state.description || '';
+		var descStr = this.props.task.description || '';
 		var rawMarkup = marked(descStr.toString(), {sanitize: true});
 		var startDate, completeDate;
-		var locButtonState = this.getLocButtonStates(this.state.relatedLocation);
+		var locButtonState = this.getLocButtonStates(this.props.task.relatedLocation);
 
 		var completeButtonState = "btn-default";
-		if(this.state.timestampComplete != null){
+		if(this.props.task.timestampComplete != null){
 			startDate = (
 				<div className="taskStartedDate">
-					시작일: {this.getReadableDate(this.state.timestampStart)}
+					시작일: {getReadableDate(this.props.task.timestampStart)}
 				</div>
 			);
 		}
 
-		if(this.state.timestampComplete != null){
+		if(this.props.task.timestampComplete != null){
 			completeDate = (
 				<div className="task-complete-date">
-					완료일: {this.getReadableDate(this.state.timestampComplete)}
+					완료일: {getReadableDate(this.props.task.timestampComplete)}
 				</div>
 			);
 			completeButtonState = "btn-check";
@@ -127,7 +91,7 @@ class TaskItem extends React.Component{
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					<h2 className="task-name">{this.state.name}</h2>
+					<h2 className="task-name">{this.props.task.name}</h2>
 				</div>
 				<div className="panel-body">
 					<div className="row">
@@ -154,34 +118,34 @@ class TaskItem extends React.Component{
 							</div>
 							<div className="task-startlocation">
 								Created Location:
-								{ this.state.locationstampCreated ? <MapImage location={this.state.locationstampCreated} /> : null }
+								{ this.props.task.locationstampCreated ? <MapImage location={this.props.task.locationstampCreated} /> : null }
 								Complete Location:
-								{ this.state.locationstampComplete ? <MapImage location={this.state.locationstampComplete} /> : null }
+								{ this.props.task.locationstampComplete ? <MapImage location={this.props.task.locationstampComplete} /> : null }
 							</div>
 						</div>
 						<div className="card-contents col-md-4">
 							<div className="task-importance">
-								중요도: {this.state.importance}
+								중요도: {this.props.task.importance}
 							</div>
 							<div className="taskCreatedDate">
-								생성일: {this.getReadableDate(this.state.timestampCreated)}
+								생성일: {getReadableDate(this.props.task.timestampCreated)}
 							</div>
 							{startDate}
 							<div className="task-duedate">
-								마감일: {this.getReadableDate(this.state.timestampDuedate)}
+								마감일: {getReadableDate(this.props.task.timestampDuedate)}
 							</div>
 							{completeDate}
 						</div>
 					</div>
 					<div>
 						<div className="btn-group">
-							<button className={"btn " + completeButtonState} onClick={this.onCompleteToggle.bind(this)}>
+							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
 								<span className="glyphicon glyphicon-check"></span> 완료
 							</button>
-							<button className="btn btn-default" label="Remind me later" onClick={this.props.onPostpone}>
+							<button className="btn btn-default" label="Remind me later" onClick={this.postpone.bind(this)}>
 								<span className="glyphicon glyphicon-send"></span> 나중에 알림
 							</button>
-							<button className="btn btn-default" label="Discard this task" onClick={this.onDiscard.bind(this)}>
+							<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
 							</button>
 						</div>

@@ -2,12 +2,12 @@ import React from 'react'
 import TaskForm from './TaskForm';
 import TaskItem from './TaskItem'
 import TaskInputForm from './TaskInputForm'
-import MapImage from '../utils/MapImage'
+import MapImage from '../dialog/MapImage'
 
 import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
-import { fetchList, makeNewItem, removeItem, updateItem } from '../actions/tasks'
+import { fetchList, makeNewItem, removeItem } from '../actions/tasks'
 
 import _ from 'underscore'
 
@@ -23,25 +23,7 @@ class TaskView extends React.Component{
 		dispatch(fetchList());
 	}
 
-	discardTask(taskID){
-		const { dispatch } = this.props;
-		dispatch(removeItem(taskID));
-	}
-
-	updateTask(taskID, patch){
-		const { dispatch } = this.props;
-		dispatch(updateItem(taskID, patch));
-		if(patch.timestampComplete){
-			// When this function handles task completion.
-			patch['locationstampComplete'] = this.props.location;
-		}
-		else{
-			patch['locationstampComplete'] = null;
-		}
-	}
-
 	handleTaskSubmit(task) {
-		var taskWhole = taskPart;
 		const { dispatch } = this.props;
 		dispatch(makeNewItem(task));
 	}
@@ -49,6 +31,8 @@ class TaskView extends React.Component{
 	render() {
 		var self = this;
 		var tasks = this.props.tasks;
+
+		console.log('this.props', this.props)
 
 	    function createTaskElements(list){
 			return _.map(list, task => (

@@ -32,22 +32,18 @@ module.exports = function(router, app){
 		// This request create new task for the current user.
 		let userId = req.user._id;
 		let task = new Task(_.extend({userId}, _.pick(req.body, 'name')));
+
+		console.log('new task', task);
+		console.log(req.user);
+
 		task.save(function(err, result){
 			if(err){
+				logger.error(err);
 				res.status(400).send(err);
 				return;
 			}
 
 			res.send(result);
-		});
-	})
-
-	router.patch('/tasks/:id', function(req, res){
-		// This request do partial update on the task.
-		var set = req.body;
-		Task.update({user_id: req.user._id, _id: req.params.id},{$set: set}, function(err, numAffected) {
-			if (err) return res.status(400).send(err);
-			res.send(numAffected);
 		});
 	})
 

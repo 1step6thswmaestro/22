@@ -17,16 +17,6 @@ class TodoApp extends React.Component{
 	}
 
 	componentDidMount() {
-		if (navigator.geolocation) {
-	        navigator.geolocation.getCurrentPosition(function(position){
-				this.setState({
-					location: {
-						latitude: position.coords.latitude,
-						longitude: position.coords.longitude
-					}
-				});
-			}.bind(this));
-		}
 	}
 
 	toggleView(){

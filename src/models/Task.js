@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 module.exports = function(app){
 	var taskSchema = new Schema({
-		user_id: Schema.Types.ObjectId,
+		userId: Schema.Types.ObjectId,
 		name: String,
 		description: {type: String, default: ""},
 		importance: {type: Number, default: 0},
