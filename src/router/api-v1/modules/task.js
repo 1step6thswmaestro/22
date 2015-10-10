@@ -2,7 +2,8 @@
 
 var mongoose = require('mongoose');
 var Task = mongoose.model('Task');
-var TaskActionType = require('../../../constants/TaskActionType');
+var TaskLog = mongoose.model('TaskLog');
+var TaskActionType = require('../../../constants/TaskLogType');
 var Q = require('q');
 
 module.exports = function(router, app){
@@ -40,7 +41,7 @@ module.exports = function(router, app){
 		app.helper.taskHelper.create(userId, task)
 		.then(function(obj){
 			console.log('created : ', obj);
-			return app.helper.taskHelper.createAction(obj._id, TaskActionType.named.create, loc)
+			return app.helper.tasklog.create(obj.userId, obj._id, TaskActionType.named.create, loc)
 			.then(()=>obj);
 		})
 		.then((obj)=>res.send(obj))

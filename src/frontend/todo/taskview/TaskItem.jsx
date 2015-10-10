@@ -4,6 +4,8 @@ import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
 import { getReadableDate } from '../../utility/date'
 import { completeItem, removeItem, postponeItem } from '../actions/tasks';
+import { fetchTaskLog } from '../actions/tasklog';
+var TaskLogType = require('../../../constants/TaskLogType');
 
 class TaskItem extends React.Component{
 	constructor(){
@@ -58,10 +60,14 @@ class TaskItem extends React.Component{
 	}
 
 	onExpandToggle(){
+		const { dispatch } = this.props;
+
 		var newVal = (this.state.isExpanded||0) ^ 1;
 		this.setState({
 			isExpanded: newVal
 		})
+
+		dispatch(fetchTaskLog(this.props.task));
 	}
 
 	getLocButtonStates(relatedLocation){
@@ -89,6 +95,21 @@ class TaskItem extends React.Component{
 		relatedLocation = Math.floor(relatedLocation / 2);
 
 		return locButtonState;
+	}
+
+	getCreatedLocation(){
+		let task = this.props.task;
+		let logs = this.props.tasklog;
+
+		let log_created = _.findWhere(logs, {taskId: task._id});
+		let location;
+
+		if(log_created){
+			let longitude = log_created.loc.coordinates[0];
+			let latitude = log_created.loc.coordinates[1];
+			let location = {longitude, latitude};
+			return (<LocationAddress location={location} />);
+		}
 	}
 
 	getDetailView(){
@@ -121,6 +142,7 @@ class TaskItem extends React.Component{
 			processButtonState = "btn-check";
 		}
 
+
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading" onClick={this.onExpandToggle.bind(this)}>
@@ -149,10 +171,9 @@ class TaskItem extends React.Component{
 									</button>
 								</div>
 							</div>
-							<LocationAddress location={task.locationstampCreated} />
 							<div className="task-startlocation">
 								생성 시 위치:
-								{ task.locationstampCreated ? <LocationAddress location={task.locationstampCreated} /> : null }
+								{this.getCreatedLocation()}
 								완료 위치:
 								{ task.locationstampComplete ? <LocationAddress location={task.locationstampComplete} /> : null }
 							</div>

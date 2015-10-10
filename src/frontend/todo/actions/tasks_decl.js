@@ -1,4 +1,5 @@
 import { ActionGroup } from './common.js'
+import { reducer as TaskLogReducer } from './tasklog_decl.js'
 
 let group = new ActionGroup();
 let DECL = group.declare();

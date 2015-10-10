@@ -31,11 +31,14 @@ class TaskView extends React.Component{
 	render() {
 		var self = this;
 		var tasks = this.props.tasks;
+		var tasklog = this.props.tasklog;
 		const { dispatch } = this.props;
 
-	    function createTaskElements(list){
+		console.log('tasklog : ', tasklog);
+
+	    function createTaskElements(list, logs){
 			return _.map(list, task => (
-		        <TaskItem key={task.id} task={task} dispatch={dispatch} />));
+		        <TaskItem key={task.id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} />));
 	    }
 
 		return (
@@ -50,8 +53,8 @@ class TaskView extends React.Component{
 					</div>
 				</div>
 				<div className="task-list">
-					{createTaskElements(tasks.list)}
-					{createTaskElements(tasks.plist)}
+					{createTaskElements(tasks.list, tasklog)}
+					{createTaskElements(tasks.plist, tasklog)}
 				</div>
 			</div>
 		);

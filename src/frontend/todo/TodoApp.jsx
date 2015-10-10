@@ -37,7 +37,7 @@ class TodoApp extends React.Component{
 		var viewContent;
 		if(this.state.currentView == 'task'){
 			viewContent = (
-				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} location={this.state.location}/>
+				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} location={this.state.location}/>
 
 			);
 		}
@@ -64,6 +64,7 @@ class TodoApp extends React.Component{
 function mapStateToProps(state){
 	var props = Object.assign({}, state);
 	props.list = _.filter(state.tasks.list, item => !item.removed);
+	console.log('mapStateToProps : ', props);
 	return props;
 };
 
