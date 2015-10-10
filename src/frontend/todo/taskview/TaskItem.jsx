@@ -35,12 +35,12 @@ class TaskItem extends React.Component{
 
 	discard(){
 		const { dispatch } = this.props;
-		dispatch(removeItem(this.props.task._id));
+		dispatch(removeItem(this.props.task));
 	}
 
 	postpone(){
 		const { dispatch } = this.props;
-		dispatch(postponeItem(this.props.task._id));	
+		dispatch(postponeItem(this.props.task));	
 	}
 
 	onToggleLocationButton(locName){

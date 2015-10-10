@@ -1,3 +1,5 @@
+'use strict'
+
 import { type } from './tasks_decl';
 import { getLocation } from '../../utility/location'
 import _ from 'underscore'
@@ -13,7 +15,6 @@ export function fetchList(){
 		return $.ajax('/v1/tasks')
 		.then(
 			result => {
-				console.log('result', result);
 				dispatch({type: type.TASK_RECV_LIST, list: result.list});
 				dispatch({type: type.TASK_RECV_LIST_PRIORITIZED, list: result.plist})
 			}
@@ -24,7 +25,6 @@ export function fetchList(){
 
 let count = 0;
 export function makeNewItem(item){
-	console.log('makeNewItem : ', item);
 	return function(dispatch){
 		let tid = ++count;
 		// We need tid even if we already have task's id in Task model.
@@ -51,16 +51,16 @@ export function makeNewItem(item){
 	}
 }
 
-export function removeItem(taskId){
+export function removeItem(task){
 	return function(dispatch){
-		// No dispatch fore remove request because there is no need to change state
+		// No dispatch for remove request because there is no need to change state
 		// until we get response from server.
 		return $.ajax({
-			url: '/v1/tasks/${taskId}'
+			url: `/v1/tasks/${task._id}`
 			, type: 'delete'
 		})
 		.then(
-			dispatch({type: type.TASK_REMOVE_ITEM, taskId})
+			dispatch({type: type.TASK_REMOVE_ITEM, taskId: task._id})
 			, err => dispatch({type: type.TASK_ERROR, err})
 		);
 	}
@@ -71,16 +71,16 @@ export function postponeItem(item){
 		dispatch(type.TASK_POSTPONE_ITEM)
 
 		return request({
-			url: '/v1/task/${item.id}/postpone'
+			url: `/v1/task/${item.id}/postpone`
 			, type: 'put'
 		})
 		.then(_updateList, _error);
 	}
 }
 
-export function completeItem(taskId){
+export function completeItem(task){
 	return request({
-		url: '/v1/tasks/${taskId}/complete'
+		url: `/v1/tasks/${task.id}/complete`
 		, type: 'put'
 	})
 	.then(_updateItem, _error);
@@ -89,7 +89,6 @@ export function completeItem(taskId){
 function request(requestArg){
 	return getLocation()
 	.then(function(loc){
-		console.log('loc : ', loc);
 		requestArg.data = requestArg.data || {};
 		_.extend(requestArg.data, {loc: loc})
 		return $.ajax(requestArg);
