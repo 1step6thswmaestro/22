@@ -48,18 +48,6 @@ class TaskInputForm extends React.Component{
 							<div className="modal-body">
 								<div className="task-box">
 									<TaskForm ref="taskForm"/>
-									<div className="card-control">
-										<div className="toolbar">
-											<div className="row">
-												<div className="col-md-6">
-													<button className="btn btn-default postpone" onClick={this.props.onPostpone}>Remined me later</button>
-												</div>
-												<div className="col-md-6">
-													<button className="btn btn-default discard" onClick={this.props.onDiscard}>Discard this task</button>
-												</div>
-											</div>
-										</div>
-									</div>
 								</div>
 							</div>
 							<div className="modal-footer">
