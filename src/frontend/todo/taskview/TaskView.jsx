@@ -41,15 +41,12 @@ class TaskView extends React.Component{
 
 		return (
 			<div className="task-view">
-				<div className="task-box">
-					<div className="row">
-						<div className="col-md-4">
-							<TaskInputForm
-								onTaskSubmit={this.handleTaskSubmit.bind(this)}
-							/>
-						</div>
-					</div>
-				</div>
+				<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" data-toggle="modal" data-target="#taskInputForm">
+					Add New Task
+				</button>
+				<TaskInputForm
+					onTaskSubmit={this.handleTaskSubmit.bind(this)}
+				/>
 				<div className="task-list">
 					{createTaskElements(tasks.list, tasklog)}
 					{createTaskElements(tasks.plist, tasklog)}

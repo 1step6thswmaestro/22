@@ -165,10 +165,14 @@ class TaskItem extends React.Component{
 								</div>
 							</div>
 							<div className="task-startlocation">
-								생성 시 위치:
-								{this.getCreatedLocation()}
-								완료 위치:
-								{ task.locationstampComplete ? <LocationAddress location={task.locationstampComplete} /> : null }
+								<p>
+								생성 시 위치: 
+								{ this.state.locationstampCreated ? <LocationAddress location={this.state.locationstampCreated} /> : null }
+								</p>
+								<p>
+								완료 위치: 
+								{ this.state.locationstampComplete ? <LocationAddress location={this.state.locationstampComplete} /> : null }
+								</p>
 							</div>
 						</div>
 						<div className="card-contents col-md-4">

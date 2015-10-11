@@ -37,24 +37,34 @@ class TaskInputForm extends React.Component{
 		// TODO: I want to fire onClick event when user press ctrl+enter key.
 
 		return (
-			<div className="card">
-				<div className='card-contents'>
-					<TaskForm ref='taskForm'/>
-
-					<div className="card-control">
-						<div className="toolbar">
-							<div className='row'>
-								<div className='col-md-6'>
-									<button className="btn btn-default postpone" onClick={this.props.onPostpone}>Remined me later</button>
-								</div>
-								<div className='col-md-6'>
-									<button className="btn btn-default discard" onClick={this.props.onDiscard}>Discard this task</button>
+			<div className="modal fade" id="taskInputForm" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+				<div className="modal-dialog" role="document">
+					<div className="modal-content">
+						<div className="modal-contents">
+							<div className="modal-header">
+								<button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 className="modal-title" id="gridSystemModalLabel">새 작업 추가하기</h4>
+							</div>
+							<div className="modal-body">
+								<div className="task-box">
+									<TaskForm ref="taskForm"/>
+									<div className="card-control">
+										<div className="toolbar">
+											<div className="row">
+												<div className="col-md-6">
+													<button className="btn btn-default postpone" onClick={this.props.onPostpone}>Remined me later</button>
+												</div>
+												<div className="col-md-6">
+													<button className="btn btn-default discard" onClick={this.props.onDiscard}>Discard this task</button>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
-							<div className='row'>
-								<div className='col-md-12'>
-									<button className='btn btn-default' onClick={this.handleSubmit.bind(this)}>Done</button>
-								</div>
+							<div className="modal-footer">
+								<button type="button" className="btn btn-default" data-dismiss="modal">취소</button>
+								<button type="button" className="btn btn-primary" onClick={this.handleSubmit.bind(this)} data-dismiss="modal">완료</button>
 							</div>
 						</div>
 					</div>
