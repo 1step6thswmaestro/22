@@ -71,8 +71,12 @@ export function completeItem(task){
 
 function updateState(task, state){
 	return function(dispatch){
-		// No dispatch for remove request because there is no need to change state
-		// until we get response from server.
+		dispatch({
+			type: type.TASK_REQ_UPDATE
+			, item: task
+			, doc: {state: state}
+		})
+
 		return request({
 			url: `/v1/tasks/${task._id}/${state}`
 			, type: 'put'
@@ -81,12 +85,12 @@ function updateState(task, state){
 			console.log(result);
 			dispatch({type: type.TASK_RECV_ITEM, item: result.task});
 			dispatch({type: type.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
-		}, err => dispatch({type: type.TASK_ERROR, err}));
+		}, err => {
+			dispatch({type: type.TASK_ERROR, err});
+			dispatch({type: type.TASK_RECV_ITEM, item: task});
+		});
 	}
 }
-
-
-
 
 export function removeItem(task){
 	return function(dispatch){

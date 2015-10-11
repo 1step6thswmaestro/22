@@ -13,13 +13,12 @@ DECL('TASK_REQ_NEWITEM', (state, action)=>{
 });
 
 DECL('TASK_RECV_ITEM', (state, action)=>{
-	console.log('TASK_RECV_ITEM', state, action);
 	let newlist = state.list.map(function(item){
-		if(action.tid && item.tid == action.tid){
-			_.extend(item, action.item);
-		}
-		else if(item._id == action.item._id){
-			_.extend(item, action.item);
+		if(action.tid && item.tid == action.tid
+			|| item._id == action.item._id){
+
+			item = Object.assign({}, action.item);
+			item.loading = false;
 		}
 		return item;
 	});
@@ -59,6 +58,22 @@ DECL('TASK_REMOVE_ITEM', (state, action)=>{
 		return item._id!=action.taskId;
 	});
 
+	return Object.assign({}, state, {
+		list: newlist
+		, isFetching: false
+	});
+})
+
+DECL('TASK_REQ_UPDATE', (state, action)=>{
+	let newlist = state.list.map(function(item){
+		if(item._id == action.item._id){
+			item = Object.assign({}, item);
+			_.extend(item, action.doc);
+			item.loading = true;
+		}
+		
+		return item;
+	});
 	return Object.assign({}, state, {
 		list: newlist
 		, isFetching: false

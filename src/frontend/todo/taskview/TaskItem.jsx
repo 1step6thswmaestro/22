@@ -238,7 +238,12 @@ class TaskItem extends React.Component{
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading" onClick={this.expand.bind(this)}>
-					<h2 className="task-name">{task.name}</h2>
+					<h2 className="task-name">
+						{task.name}
+						<If test={task.loading}>
+							<i className='fa fa-spinner fa-spin'></i>
+						</If>
+					</h2>
 				</div>
 				<div className="panel-body">
 					<div>
