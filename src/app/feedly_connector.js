@@ -86,7 +86,7 @@ feedly_connector.prototype.update_feeds = function(rss, callback){
 			if ( error){
 				logger.error(error);
 			}
-			callback(rss);
+			callback(num);
 		}
 	)
 
