@@ -9,10 +9,8 @@ function init(app){
 	}
 
 	TaskLogHelper.prototype.find = function(userId, query, proj, opt){
-		console.log(Object.assign({userId}, query));
 		return Q.nbind(TaskLog.find, TaskLog)(Object.assign({userId}, query), proj, opt)
 		.then(function(list){
-			console.log(list);
 			return list;
 		})
 	}

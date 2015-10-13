@@ -6,11 +6,14 @@ var TaskLog = mongoose.model('TaskLog');
 var TaskLogType = require('../../../constants/TaskLogType');
 var Q = require('q');
 var express = require('express');
+var tokenizer = require('../../../taskprocess/tokenizer');
 
 module.exports = function(_router, app){
 	let helper = app.helper;
 	let router = express.Router();
 	_router.use('/tasks', router);
+	var taskTokenizer = new tokenizer(app);
+
 
 	router.get('/testcommand_droptasks', function(req, res){
 		// This request removes every tasks related to the current user.
@@ -97,5 +100,19 @@ module.exports = function(_router, app){
 			res.send(results);
 		})
 		.fail(err=>logger.error(err))
+	})
+
+	router.get('/:_id/update', function(req, res){
+		app.helper.taskHelper.find(req.user._id, {_id: req.params._id})
+		.then(function(tasks){
+			var task = tasks[0];
+			console.log('update : ', task);
+			if(task){
+				taskTokenizer.processTask(req.user, task);
+			}
+		})
+		.fail(err=>logger.error(err, err.stack));
+
+		res.send();
 	})
 }
