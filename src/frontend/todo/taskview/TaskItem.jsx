@@ -239,13 +239,14 @@ class TaskItem extends React.Component{
 			<div className="panel panel-default">
 				<div className="panel-heading" onClick={this.expand.bind(this)}>
 					<h2 className="task-name">
-						{task.name}
+						{task.name} 
 						<If test={task.loading}>
 							<i className='fa fa-spinner fa-spin'></i>
 						</If>
 					</h2>
 				</div>
 				<div className="panel-body">
+					{task._id}
 					<div>
 						<div className="btn-group">
 							<If test={task.state != TaskLogType.named.start.id}>

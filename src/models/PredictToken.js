@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 module.exports = function(app){
 	var predictTokenSchema = new Schema({
 		userId: Schema.Types.ObjectId,
-		taskID: Schema.Types.ObjectId,
+		taskId: Schema.Types.ObjectId,
 		text: {type: String},
 		duration: {type: Date},
 		date: {type: Date},

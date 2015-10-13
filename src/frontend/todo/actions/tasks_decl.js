@@ -6,8 +6,10 @@ let group = new ActionGroup();
 let DECL = group.declare();
 
 DECL('TASK_REQ_NEWITEM', (state, action)=>{
+	let item = action.item;
+	item.loading = true;
 	return Object.assign({}, state, {
-		list: [...state.list, action.item]
+		list: [...state.list, item]
 		, isFetching: true
 	});
 });

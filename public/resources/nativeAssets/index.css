@@ -173,6 +173,9 @@ ul {
 .checkbox-success input[type="radio"]:checked + label::after {
   color: #fff; }
 
+#taskAddBtn {
+  margin: 12px 0 12px 0; }
+
 .card {
   border-radius: 2px;
   box-sizing: border-box;

@@ -40,14 +40,16 @@ module.exports = function(_router, app){
 	router.post('/', function(req, res){
 		// This request create new task for the current user.
 		let userId = req.user._id;
-		let task = _.pick(req.body, 'name');
+		let task = _.pick(req.body, 'name', 'description', 'created', 'importance', 'duedate');
+		task.lastProcessed = task.created;
+		let created = req.body.created;
 		let loc = req.body.loc;
 
 		console.log('task', task);
 		
 		app.helper.taskHelper.create(userId, task)
 		.then(function(obj){
-			return app.helper.tasklog.create(obj.userId, obj._id, TaskLogType.named.create, loc)
+			return app.helper.tasklog.create(obj.userId, obj._id, TaskLogType.named.create, {loc, time: created})
 			.then(()=>obj);
 		})
 		.then((obj)=>res.send(obj))

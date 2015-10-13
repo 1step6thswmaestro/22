@@ -19,6 +19,13 @@ function init(app){
 		})
 	}
 
+	PredictTokenHelper.prototype.find = function(userId, query, proj, opt){
+		return Q.nbind(PredictToken.find, PredictToken)(Object.assign({userId}, query), proj, opt)
+		.then(function(list){
+			return list;
+		})
+	}
+
 	app.helper.predictToken = new PredictTokenHelper();
 }
 

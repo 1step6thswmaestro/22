@@ -15,14 +15,18 @@ function init(app){
 		})
 	}
 
-	TaskLogHelper.prototype.create = function(userId, taskId, type, loc){
+	TaskLogHelper.prototype.create = function(userId, taskId, type, opt){
+		opt = opt || {};
+
 		let obj = {
 			userId
 			, taskId
 			, type: type.id
+			, time: opt.time
 		}
 
-		if(loc){
+		if(opt.loc){
+			let loc = opt.loc;
 			obj.loc = {
 		      type: 'Point',
 		      coordinates: [parseFloat(loc[0]||loc.lon), parseFloat(loc[1]||loc.lat)]

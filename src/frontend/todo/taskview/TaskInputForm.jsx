@@ -16,6 +16,7 @@ class TaskInputForm extends React.Component{
 			description: ''
 		};
 	}
+	
 	handleSubmit() {
 		if (this.refs.taskForm.isValid()) {
 			this.props.onTaskSubmit(this.refs.taskForm.getFormData());

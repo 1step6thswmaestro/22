@@ -1,5 +1,6 @@
 import React from "react"
 import DateTime from '../dialog/DateTime'
+import DateTimePicker from '../dialog/DateTimePicker'
 
 // Task edit template.
 // If it looks pretty, then we can use same edite template for displaying existing tasks.
@@ -107,17 +108,16 @@ class TaskForm extends React.Component{
 	getFormData(){
 		var name = this.refs.name.state.value;
 		var description = this.refs.description.state.value;
-		// Convert moment objects to Unix Time.
-		var timestampDuedate = this.refs.dueDate.state.value.valueOf();
-		var timestampDuedate = this.refs.dueDate.state.value.valueOf();
-		var relatedLocation = this.state.relatedLocation;
-		return {name, description, timestampDuedate, relatedLocation};
+		var created = this.refs.created.getValue();
+		var duedate = this.refs.duedate.getValue();
+		return {name, description, duedate, created};
 	}
 
 	clearForm(){
 		this.refs.name.clear();
 		this.refs.description.clear();
-		this.refs.dueDate.clear();
+		this.refs.created.clear();
+		this.refs.duedate.clear();
 		this.setState({
 			relatedLocation: 0
 		});
@@ -183,7 +183,12 @@ class TaskForm extends React.Component{
 				</div>
 				<div className='row'>
 					<div className='col-md-12'>
-						<DateTime ref="dueDate" placeholder="Due Date"/>
+						<DateTimePicker ref='created' default={Date.now()} label='created'/>
+					</div>
+				</div>
+				<div className='row'>
+					<div className='col-md-12'>
+						<DateTimePicker ref='duedate' default={Date.now()} label='due date'/>
 					</div>
 				</div>
 				<div className='row'>
