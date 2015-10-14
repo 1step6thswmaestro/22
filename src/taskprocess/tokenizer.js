@@ -12,7 +12,23 @@ class Tokenizer{
 	}
 
 	tokenizeText(text){
-		return text.split(' ');
+		var texts = [];
+		var tokens = text.split(' ');
+		
+
+		function grab(tokens){
+			console.log('grab : ', tokens);
+
+			let head = tokens[0];
+			if(tokens.length<=1){
+				return ['', head];
+			}
+			var _tokens = grab(tokens.slice(1, tokens.length));
+
+			return _.flatten(_.map(_tokens, token=>[head+' '+token, token]));
+		}
+
+		return grab(tokens);
 	}
 
 	getTimeDivision(time){
@@ -27,9 +43,16 @@ class Tokenizer{
 		return (new Date(time * (30 * 60 * 1000))).getDay();
 	}
 
-	makeTokens(task, log, time){
-		let textTokens = this.tokenizeText(task.name);
+	makeTokens(task, log, time, force){
 		let self = this;
+
+		if(!force && TaskLogType.indexed[log.type].tokenize === false){
+			return;
+		}
+		
+		let textTokens = this.tokenizeText(task.name);
+
+		console.log('makeTokens', log.type);
 
 		let tokens = _.map(textTokens, text => {
 			let obj = {
@@ -40,6 +63,7 @@ class Tokenizer{
 				priority: task.priority,
 				weekday: self.getWeekDayFromToken(time),
 				time: time,
+				daytime: time%48,
 				status: log.type,
 				loc: log.loc,
 			};
@@ -62,31 +86,41 @@ class Tokenizer{
 
 		let p0 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$gt: lastTime}}, undefined, {sort: {time: -1}});
 		let p1 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$lte: lastTime}}, undefined, {limit: 1});
-		let p2 = this.app.helper.predictToken.find(task.userId, {taskId: task._id}, undefined, {sort: {time: 1}, limit: 1});
+		// let p2 = this.app.helper.predictToken.find(task.userId, {taskId: task._id}, undefined, {sort: {time: 1}, limit: 1});
 
-		return Q.spread([p0, p1, p2], function(logs, lastlog, earleastToken){
+		return Q.spread([p0, p1], function(logs, lastlog){
+			console.log(arguments);
 			lastlog = lastlog[0];
 			var promises = [];
 			_.each(logs, (log) => {
-				console.log(_.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1));
+				console.log('p0', _.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1));
 				_.each(_.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1), time=>{
 					//TODO
 					//need to ignore mistaken action
-					console.log('p0', task, log, time);
+					// console.log('p0', task, log, time);
 					promises.push(self.makeTokens(task, log, time));
 				});
 
 				_time = log.time;
 			});
 
+
+			//create token
 			if(lastlog){
-				console.log('earleastToken : ', earleastToken);
-				earleastToken = earleastToken[0];
-				console.log(self.getTimeDivision(_time), self.getTimeDivision(lastTime), earleastToken!=null?0:1);
-				_.each(_.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime) - (earleastToken!=null?0:1), -1), time=>{
+				console.log('p1', task.created, task.lastProcessed)
+				console.log(task.created.getTime(), task.lastProcessed.getTime(), task.created.getTime() == task.lastProcessed.getTime());
+				if(task.created.getTime() == task.lastProcessed.getTime()){
+					console.log(task, lastlog, self.getTimeDivision(lastlog.time));
+					promises.push(self.makeTokens(task, lastlog, self.getTimeDivision(lastlog.time), true));
+				}
+			}
+
+			if(lastlog){
+				console.log('p2', _.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime), -1));
+				_.each(_.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime), -1), time=>{
 					//TODO
 					//need to ignore mistaken action
-					console.log('p1', task, lastlog, time);
+					// console.log('p2', task, lastlog, time);
 					promises.push(self.makeTokens(task, lastlog, time));
 				});
 			}

@@ -8,7 +8,7 @@ module.exports = function(app){
 		name: String,
 		description: {type: String, default: ""},
 		importance: {type: Number, default: 0},
-		priority: {type: Number, default: 1.0},
+		priorityScore: {type: Number, default: 1.0},
 		estimation: {type: Number, default: 1.0},	//unit-hour
 		duedate: {type: Date, default: function(){
 			return new Date(Date.now() + 24*60*60*1000);

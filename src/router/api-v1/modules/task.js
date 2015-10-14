@@ -85,7 +85,10 @@ module.exports = function(_router, app){
 		}
 
 		var p0 = helper.taskHelper.update(req.user._id, {_id: req.params._id}, {state: taskType.id});
-		var p1 = helper.tasklog.create(req.user._id, req.params._id, TaskLogType.named[req.params.command], req.body.loc);
+		var p1 = helper.tasklog.create(req.user._id, req.params._id, TaskLogType.named[req.params.command], {
+			loc: req.body.loc
+			, time: req.body.time
+		});
 
 		Q.all([p0, p1])
 		.then(function(results){

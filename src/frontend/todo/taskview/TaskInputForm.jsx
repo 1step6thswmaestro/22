@@ -32,13 +32,17 @@ class TaskInputForm extends React.Component{
 		}
 	}
 
+	setDate(date){
+		this.refs.taskForm.setDate(date);
+	}
+
 	render() {
 		// NOTE: Check if there is snippet for assigning location from address or getting current location. -->
 
 		// TODO: I want to fire onClick event when user press ctrl+enter key.
 
 		return (
-			<div className="modal fade" id="taskInputForm" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+			<div className="modal fade" tabIndex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
 				<div className="modal-dialog" role="document">
 					<div className="modal-content">
 						<div className="modal-contents">
@@ -48,7 +52,7 @@ class TaskInputForm extends React.Component{
 							</div>
 							<div className="modal-body">
 								<div className="task-box">
-									<TaskForm ref="taskForm"/>
+									<TaskForm ref="taskForm" global={this.props.global}/>
 								</div>
 							</div>
 							<div className="modal-footer">

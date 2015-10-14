@@ -8,6 +8,9 @@ let store = configureStore({
 	list: []
   }
 });
+
+global.store = store;
+
 React.render(
 	<Provider store={store}>
 		{() => <TodoApp />}

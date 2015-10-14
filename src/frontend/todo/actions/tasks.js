@@ -70,7 +70,7 @@ export function completeItem(task){
 }
 
 function updateState(task, state){
-	return function(dispatch){
+	return function(dispatch, getState){
 		dispatch({
 			type: type.TASK_REQ_UPDATE
 			, item: task
@@ -80,6 +80,9 @@ function updateState(task, state){
 		return request({
 			url: `/v1/tasks/${task._id}/${state}`
 			, type: 'put'
+			, data: {
+				time: getState().global.time
+			}
 		})
 		.then(result => {
 			console.log(result);
