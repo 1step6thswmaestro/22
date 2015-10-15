@@ -26,6 +26,8 @@ module.exports = function(_router, app){
 	router.get('/', function(req, res){
 		// This request returns all tasks that are saved for the user.
 
+		console.log('/', req.user);
+
 		Q.all([helper.taskHelper.find(req.user._id)
 			, helper.priTaskHelper.find(req.user._id)])
 		.then(results=>res.send({list: results[0], plist: results[1]}));
@@ -38,6 +40,8 @@ module.exports = function(_router, app){
 	})
 
 	router.post('/', function(req, res){
+		console.log(req.user);
+		return;
 		// This request create new task for the current user.
 		let userId = req.user._id;
 		let task = _.pick(req.body, 'name', 'description', 'created', 'importance', 'duedate');

@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import TaskView from './taskview/TaskView'
 import UserView from './userview/UserView'
 
+import Timeline from '../timeline/timeline'
+
 import _ from 'underscore'
 
 class TodoApp extends React.Component{
@@ -55,6 +57,7 @@ class TodoApp extends React.Component{
 						Click HERE to Toggle UserView/TaskView
 					</div>
 				</header>
+				<Timeline viewBoxObject={{x: 0, y: 0, width: 500, height: 300}}/>
 				{viewContent}
 			</div>
 		);
