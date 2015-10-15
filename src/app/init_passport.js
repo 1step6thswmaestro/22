@@ -1,3 +1,5 @@
+'use strict'
+
 var passport	= require('passport')
 	, mongoose	= require('mongoose')
 	, Account	= mongoose.model('Account')
@@ -9,8 +11,8 @@ module.exports = function(core_object){
 		done(null, user._id);
 	});
 
-	passport.deserializeUser(function(id, done){
-		Account.findOne(id, done);
+	passport.deserializeUser(function(_id, done){
+		Account.findOne({_id}, done);
 	});
 
 	passport.use(new LocalStrategy({
