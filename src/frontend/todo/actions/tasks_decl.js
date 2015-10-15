@@ -35,6 +35,12 @@ DECL('TASK_REQ_LIST', (state, action)=>{
 	});
 });
 
+DECL('TASK_REQ_PLIST', (state, action)=>{
+	return Object.assign({}, state, {
+		isFetching: true
+	});
+});
+
 DECL('TASK_RECV_LIST', (state, action)=>{
 	return Object.assign({}, state, {
 		list: action.list

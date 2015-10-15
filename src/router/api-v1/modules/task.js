@@ -25,14 +25,15 @@ module.exports = function(_router, app){
 
 	router.get('/', function(req, res){
 		// This request returns all tasks that are saved for the user.
-
+		console.log(req.query, req.queries);
 		Q.all([helper.taskHelper.find(req.user._id)
-			, helper.priTaskHelper.find(req.user._id)])
+			, helper.priTaskHelper.find(req.user._id, undefined, parseInt(req.query.time))])
 		.then(results=>res.send({list: results[0], plist: results[1]}));
 	})
 
 	router.get('/prioritized', function(req, res){
-		helper.priTaskHelper.find(req.user._id)
+		console.log(req.query, req.queries);
+		helper.priTaskHelper.find(req.user._id, undefined, parseInt(req.query.time))
 		.then(result=>res.send({plist: result}));
 
 	})

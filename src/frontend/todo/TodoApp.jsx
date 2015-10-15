@@ -11,6 +11,8 @@ import DateTimePicker from './dialog/DateTimePicker'
 
 import { setGlobalTime } from './actions/global'
 
+import { fetchPrioritizedList } from './actions/tasks'
+
 class TodoApp extends React.Component{
 	constructor(){
 		super();
@@ -41,6 +43,8 @@ class TodoApp extends React.Component{
 		const { dispatch } = this.props;
 		dispatch(setGlobalTime(time.valueOf()));
 		console.error('global', this.props);
+
+		dispatch(fetchPrioritizedList());
 	}
 
 	render() {

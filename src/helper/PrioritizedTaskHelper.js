@@ -5,6 +5,7 @@ var Task = mongoose.model('Task');
 var Q = require('q');
 
 var RandomPriorityStrategy = require('../task_strategy/RandomPriorityStrategy')
+var TokenBasedPriorityStrategy = require('../task_strategy/TokenBasedPriorityStrategy')
 
 function init(app){
 	var helper = app.helper;
@@ -13,17 +14,21 @@ function init(app){
 	function PrioritizedTaskHelper(){
 	}
 
-	PrioritizedTaskHelper.prototype.update = function(userId){
-		let time = Date.now();
-		if(lastUpdateTime[userId] && (time-lastUpdateTime[userId])<=3000){
-			return Q()
-		}
+	PrioritizedTaskHelper.prototype.update = function(userId, time){
+		let currentTime = Date.now();
+		// if(lastUpdateTime[userId] && (currentTime-lastUpdateTime[userId])<=3000){
+		// 	return Q()
+		// }
 
-		lastUpdateTime[userId] = time;
+		lastUpdateTime[userId] = currentTime;
 
-		let scoringStrategy = new RandomPriorityStrategy();
+		// let scoringStrategy = new RandomPriorityStrategy(app);
+		let scoringStrategy = new TokenBasedPriorityStrategy(app);
 
-		return helper.taskHelper.find(userId)
+		return Q(scoringStrategy.ready(userId, time))
+		.then(function(){
+			return helper.taskHelper.find(userId)
+		})
 		.then(function(tasks){
 			return Q.all(_.map(tasks, task=>{
 				return Q.nbind(Task.findByIdAndUpdate, Task)(task.id, {priorityScore: scoringStrategy.calculate(task)});
@@ -32,8 +37,8 @@ function init(app){
 		.fail(err=>logger.error(err));
 	}	
 
-	PrioritizedTaskHelper.prototype.find = function(userId, query){
-		return this.update(userId)
+	PrioritizedTaskHelper.prototype.find = function(userId, query, time){
+		return this.update(userId, time)
 		.then(function(results){
 			return helper.taskHelper.find(userId, query, null, {sort: {priorityScore: -1}})
 		});
