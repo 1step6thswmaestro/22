@@ -60,11 +60,13 @@ function copy_files(root, src_files, dest_file){
         path.dirname = path.dirname.split('/')[0];
     }))
     .pipe(gulp.dest(dest_file))
+    .on('error', function(err){ console.log(err.message); })
 }
 
 function compile_sass_concat(root, src_files, dest_file){
     return gulp.src(src_files)
         .pipe(sass({includePaths: [__base_dir]}))
+        .on('error', function(err){ console.log(err.message); })
         .pipe(concat(path.basename(dest_file)))
         .pipe(gulp.dest(path.dirname(dest_file)))
 }
@@ -75,10 +77,13 @@ function compile_jsx(root, src_files, dest_file){
         extensions: ['.jsx', 'js'],
         debug: true
       })
+      .on('error', function(err){ console.log(err.message); })
       .transform(babelify)
+      .on('error', function(err){ console.log(err.message); })
       .bundle()
+      .on('error', function(err){ console.log(err.message); })
       .pipe(source(path.basename(dest_file)))
-      .pipe(gulp.dest(path.dirname(dest_file)));
+      .pipe(gulp.dest(path.dirname(dest_file)))
 }
 
 ///////////////////////////////////////////////////////////////
