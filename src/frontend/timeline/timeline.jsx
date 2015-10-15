@@ -23,11 +23,11 @@ export default class Timeline extends React.Component{
 
 		// Calculate inner chart dimensions
 
-		var width = this.getOuterDimensions().width;
-		var height = this.getOuterDimensions().height;
+		var width = this.props.width;
+		var height = this.props.height;		
 		var innerWidth, innerHeight;
-		innerWidth = this.getOuterDimensions().width - props.margins.left - props.margins.right;
-		innerHeight = this.getOuterDimensions().height - props.margins.top - props.margins.bottom;
+		innerWidth = width - props.margins.left - props.margins.right;
+		innerHeight = height - props.margins.top - props.margins.bottom;
 
 		var yScale = d3.scale.linear()
 			.range([innerHeight, 0]);
@@ -60,51 +60,47 @@ export default class Timeline extends React.Component{
 
 		var trans = `translate(${ props.margins.left },${ props.margins.top })`;
 		return (
-			<div>
-				<svg width={width} height={height}>
-					<g transform={trans} className={props.className}>
-						<XAxis
-							xAxisClassName='rd3-areachart-xaxis'
-							xScale={xScale}
-							xAxisTickValues={props.xAxisTickValues}
-							xAxisTickInterval={xAxisTickInterval}
-							xAxisTickCount={props.xAxisTickCount}
-							xAxisLabel={props.xAxisLabel}
-							xAxisLabelOffset={props.xAxisLabelOffset}
-							tickFormatting={props.xAxisFormatter}
-							xOrient={props.xOrient}
-							yOrient={props.yOrient}
-							margins={props.margins}
-							width={innerWidth}
-							height={innerHeight}
-							gridVertical={props.gridVertical}
-							gridVerticalStroke={props.gridVerticalStroke}
-							gridVerticalStrokeWidth={props.gridVerticalStrokeWidth}
-							gridVerticalStrokeDash={props.gridVerticalStrokeDash}
-							stroke='black'
-						/>
-						<YAxis
-							yAxisClassName='rd3-areachart-yaxis'
-							yScale={yScale}
-							yAxisTickValues={props.yAxisTickValues}
-							yAxisTickInterval={props.yAxisTickInterval}
-							yAxisTickCount={props.yAxisTickCount}
-							yAxisLabel={props.yAxisLabel}
-							yAxisLabelOffset={props.yAxisLabelOffset}
-							tickFormatting={props.yAxisFormatter}
-							xOrient={props.xOrient}
-							yOrient={props.yOrient}
-							margins={props.margins}
-							width={innerWidth}
-							height={props.height}
-							gridHorizontal={props.gridHorizontal}
-							gridHorizontalStroke={props.gridHorizontalStroke}
-							gridHorizontalStrokeWidth={props.gridHorizontalStrokeWidth}
-							gridHorizontalStrokeDash={props.gridHorizontalStrokeDash}
-						/>
-			  		</g>
-				</svg>
-		  </div>
+			<g transform={trans} className={props.className}>
+				<XAxis
+					xAxisClassName='rd3-areachart-xaxis'
+					xScale={xScale}
+					xAxisTickValues={props.xAxisTickValues}
+					xAxisTickInterval={xAxisTickInterval}
+					xAxisTickCount={props.xAxisTickCount}
+					xAxisLabel={props.xAxisLabel}
+					xAxisLabelOffset={props.xAxisLabelOffset}
+					tickFormatting={props.xAxisFormatter}
+					xOrient={props.xOrient}
+					yOrient={props.yOrient}
+					margins={props.margins}
+					width={innerWidth}
+					height={innerHeight}
+					gridVertical={props.gridVertical}
+					gridVerticalStroke={props.gridVerticalStroke}
+					gridVerticalStrokeWidth={props.gridVerticalStrokeWidth}
+					gridVerticalStrokeDash={props.gridVerticalStrokeDash}
+					stroke='black'
+				/>
+				<YAxis
+					yAxisClassName='rd3-areachart-yaxis'
+					yScale={yScale}
+					yAxisTickValues={props.yAxisTickValues}
+					yAxisTickInterval={props.yAxisTickInterval}
+					yAxisTickCount={props.yAxisTickCount}
+					yAxisLabel={props.yAxisLabel}
+					yAxisLabelOffset={props.yAxisLabelOffset}
+					tickFormatting={props.yAxisFormatter}
+					xOrient={props.xOrient}
+					yOrient={props.yOrient}
+					margins={props.margins}
+					width={innerWidth}
+					height={props.height}
+					gridHorizontal={props.gridHorizontal}
+					gridHorizontalStroke={props.gridHorizontalStroke}
+					gridHorizontalStrokeWidth={props.gridHorizontalStrokeWidth}
+					gridHorizontalStrokeDash={props.gridHorizontalStrokeDash}
+				/>
+	  		</g>
 		);
 	}
 };
@@ -114,13 +110,18 @@ Timeline.propTypes = {
 	interpolate:       React.PropTypes.bool,
 	interpolationType: React.PropTypes.string,
 	hoverAnimation:    React.PropTypes.bool,
+	width:    			React.PropTypes.number,
+	height:    			React.PropTypes.number,
 };
 
 Timeline.defaultProps = {
-	margins: {top: 10, right: 20, bottom: 40, left: 45},
+	margins: {top: 10, right: 10, bottom: 25, left: 25},
 	yAxisTickCount: 4,
 	interpolate: false,
 	interpolationType: null,
 	className: 'rd3-areachart',
-	hoverAnimation: true
+	hoverAnimation: true,
+	width: 300,
+	height: 100
+
 };
