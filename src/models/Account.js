@@ -34,6 +34,7 @@ module.exports = function(){
 			latitude: Number,
 			required: false
 		}
+		, locations: String
 	});
 
 	accountSchema.methods = {

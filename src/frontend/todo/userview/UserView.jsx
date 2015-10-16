@@ -2,6 +2,7 @@ import React from 'react'
 import MapImage from '../dialog/MapImage'
 import LocationAddress from '../dialog/LocationAddress'
 import LocSetup from './LocSetup'
+import LocClusterView from './LocClusterView'
 
 import _ from 'underscore'
 
@@ -30,6 +31,7 @@ class UserView extends React.Component{
 					</table>
 				</div>
 				<LocSetup location = {this.props.location}/>
+				<LocClusterView />
 				<h3> 이벤트 로그 </h3>
 			</div>
 		);
