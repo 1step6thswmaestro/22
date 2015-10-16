@@ -8,6 +8,8 @@ import { startItem, pauseItem, completeItem, removeItem, postponeItem } from '..
 import { fetchTaskLog } from '../actions/tasklog';
 import If from '../../utility/if'
 var TaskLogType = require('../../../constants/TaskLogType');
+import SvgContainer from '../../d3/SvgContainer'
+import Timeline from '../../timeline/timeline'
 
 class TaskItem extends React.Component{
 	constructor(){
@@ -145,6 +147,8 @@ class TaskItem extends React.Component{
 			processButtonState = "btn-check";
 		}
 
+		let logs = this.props.tasklog || [];
+
 
 		return (
 			<div className="panel panel-default">
@@ -152,6 +156,13 @@ class TaskItem extends React.Component{
 					<h2 className="task-name">{task.name}</h2>
 				</div>
 				<div className="panel-body">
+					<div className="row">
+						<div className='col-md-12'>
+							<SvgContainer width='100%' height='120px'>
+								<Timeline logs={logs}/>
+							</SvgContainer>
+						</div>
+					</div>
 					<div className="row">
 						<div className="col-md-8">
 							<div className="task-description">
