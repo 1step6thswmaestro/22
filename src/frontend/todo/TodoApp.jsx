@@ -51,7 +51,7 @@ class TodoApp extends React.Component{
 			<div className="task-container">
 				<header>
 					<h1>Give Me Task</h1>
-					<div className="view-toggle" onClick={this.toggleView.bind(this)}>
+					<div className="view-toggle" onClick={this.toggleView.bind(this)} onTouchStart={this.toggleView.bind(this)}>
 						Click HERE to Toggle UserView/TaskView
 					</div>
 				</header>
