@@ -17,8 +17,6 @@ class Tokenizer{
 		
 
 		function grab(tokens){
-			console.log('grab : ', tokens);
-
 			let head = tokens[0];
 			if(tokens.length<=1){
 				return ['', head];
@@ -51,8 +49,6 @@ class Tokenizer{
 		}
 		
 		let textTokens = this.tokenizeText(task.name);
-
-		console.log('makeTokens', log.type);
 
 		let tokens = _.map(textTokens, text => {
 			let obj = {
@@ -104,11 +100,10 @@ class Tokenizer{
 		// let p2 = this.app.helper.predictToken.find(task.userId, {taskId: task._id}, undefined, {sort: {time: 1}, limit: 1});
 
 		return Q.spread([p0, p1], function(logs, lastlog){
-			console.log(arguments);
 			lastlog = lastlog[0];
 			var promises = [];
 			_.each(logs, (log) => {
-				console.log('p0', self.getTimeDivision(_time), self.getTimeDivision(log.time), _.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1));
+				// console.log('p0', self.getTimeDivision(_time), self.getTimeDivision(log.time), _.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1));
 				_.each(_.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1), time=>{
 					//TODO
 					//need to ignore mistaken action
@@ -131,7 +126,7 @@ class Tokenizer{
 			}
 
 			if(lastlog){
-				console.log('p2', _.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime), -1));
+				// console.log('p2', _.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime), -1));
 				_.each(_.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime), -1), time=>{
 					//TODO
 					//need to ignore mistaken action

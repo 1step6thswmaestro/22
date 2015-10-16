@@ -37,7 +37,6 @@ function init(app){
 		}
 
 		obj = new TaskLog(obj);
-		console.log(obj);
 
 		return Q.nbind(obj.save, obj)();
 	}

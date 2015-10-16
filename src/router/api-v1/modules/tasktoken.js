@@ -29,8 +29,6 @@ module.exports = function(router, app){
 		let timeDivision = taskTokenizer.getTimeDivision(time);
 		let daytime = timeDivision%48;
 
-		console.log({timeDivision, daytime});
-
 		app.helper.predictToken.find(req.user._id, {
 			daytime: {$gte: daytime-2, $lte: daytime+2}
 		}, undefined, {sort: {time: 1}})
@@ -41,12 +39,9 @@ module.exports = function(router, app){
 	})
 
 	router.get('/tasktoken/time/:time?', function(req, res){
-		console.log(req.params);
 		let time = parseInt(req.params.time) || Date.now();
 		let timeDivision = taskTokenizer.getTimeDivision(time);
 		let daytime = timeDivision%48;
-
-		console.log({timeDivision, daytime, time: new Date(time)});
 
 		app.helper.predictToken.find(req.user._id, {
 			daytime: {$gte: daytime-2, $lte: daytime+2}

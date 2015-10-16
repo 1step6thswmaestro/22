@@ -33,7 +33,6 @@ module.exports = function(_router, app){
 	})
 
 	router.get('/prioritized', function(req, res){
-		console.log(req.query, req.queries);
 		helper.priTaskHelper.find(req.user._id, undefined, parseInt(req.query.time))
 		.then(result=>res.send({plist: result}));
 
@@ -46,8 +45,6 @@ module.exports = function(_router, app){
 		task.lastProcessed = task.created;
 		let created = req.body.created;
 		let loc = req.body.loc;
-
-		console.log('task', task);
 
 		app.helper.taskHelper.create(userId, task)
 		.then(function(obj){
@@ -74,9 +71,6 @@ module.exports = function(_router, app){
 	})
 
 	router.put('/:_id/:command', function(req, res, next){
-		console.log('command', req.params);
-		console.log(req.body);
-
 		if(!TaskLogType.named[req.params.command]){
 			next();
 			return;
