@@ -1,4 +1,5 @@
 import React from 'react';
+import DocView from './DocView';
 import MapImage from '../dialog/MapImage';
 import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
@@ -13,7 +14,7 @@ class TaskItem extends React.Component{
 		super();
 		this.state = {};
 	}
-	
+
 	complete(){
 		dispatch(completeItem(this.props.task._id));
 	}
@@ -35,7 +36,7 @@ class TaskItem extends React.Component{
 
 	postpone(){
 		const { dispatch } = this.props;
-		dispatch(postponeItem(this.props.task));	
+		dispatch(postponeItem(this.props.task));
 	}
 
 	toggleLocationButton(locName){
@@ -170,7 +171,7 @@ class TaskItem extends React.Component{
 								{ this.getCreatedLocation() }
 								</p>
 								<p>
-								완료 위치: 
+								완료 위치:
 								{ task.locationstampComplete ? <LocationAddress location={task.locationstampComplete} /> : null }
 								</p>
 							</div>
@@ -204,6 +205,7 @@ class TaskItem extends React.Component{
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
 							</button>
 						</div>
+						<DocView taskID = {this.props.task._id}/>
 					</div>
 				</div>
 			</div>
@@ -239,7 +241,7 @@ class TaskItem extends React.Component{
 			<div className="panel panel-default">
 				<div className="panel-heading" onClick={this.expand.bind(this)}>
 					<h2 className="task-name">
-						{task.name} 
+						{task.name}
 						<If test={task.loading}>
 							<i className='fa fa-spinner fa-spin'></i>
 						</If>
@@ -257,7 +259,7 @@ class TaskItem extends React.Component{
 							<If test={task.state == TaskLogType.named.start.id}>
 								<button className="btn btn-check" onClick={this.pause.bind(this)}>
 									<span className="glyphicon glyphicon-play"></span> 일시 정지
-								</button>	
+								</button>
 							</If>
 							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
 								<span className="glyphicon glyphicon-check"></span> 완료

@@ -25,8 +25,6 @@ class LocationAddress extends React.Component{
 		var url = "https://apis.daum.net/local/geo/coord2addr?apikey=" + api + "&longitude=" + this.props.location.longitude + "&latitude=" + this.props.location.latitude + "&inputCoordSystem=" + coordSystem + "&output=json";
 		var address = "Now loading...";
 		var data;
-		console.log(this.props.location);
-		console.log(url);
 		$.ajax({
 			headers: {'Access-Control-Allow-Origin': '*'},
 			dataType: "jsonp",
