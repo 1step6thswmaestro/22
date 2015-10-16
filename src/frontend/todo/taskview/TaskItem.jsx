@@ -181,11 +181,11 @@ class TaskItem extends React.Component{
 								중요도: {task.importance}
 							</div>
 							<div className="taskCreatedDate">
-								생성일: {getReadableDate(task.timestampCreated)}
+								생성일: {getReadableDate(task.created)}
 							</div>
 							{startDate}
 							<div className="task-duedate">
-								마감일: {getReadableDate(task.timestampDuedate)}
+								마감일: {getReadableDate(task.duedate)}
 							</div>
 							{completeDate}
 						</div>
@@ -275,7 +275,6 @@ class TaskItem extends React.Component{
 				</div>
 			</div>
 		);
-
 	}
 
 	render() {
@@ -289,9 +288,7 @@ class TaskItem extends React.Component{
 			viewContent = this.getSimpleView();
 		}
 		return viewContent;
-
 	}
-
 };
 
 export default TaskItem;
