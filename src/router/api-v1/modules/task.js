@@ -25,14 +25,15 @@ module.exports = function(_router, app){
 
 	router.get('/', function(req, res){
 		// This request returns all tasks that are saved for the user.
-
+		console.log(req.query, req.queries);
 		Q.all([helper.taskHelper.find(req.user._id)
-			, helper.priTaskHelper.find(req.user._id)])
+			, helper.priTaskHelper.find(req.user._id, undefined, parseInt(req.query.time))])
 		.then(results=>res.send({list: results[0], plist: results[1]}));
 	})
 
 	router.get('/prioritized', function(req, res){
-		helper.priTaskHelper.find(req.user._id)
+		console.log(req.query, req.queries);
+		helper.priTaskHelper.find(req.user._id, undefined, parseInt(req.query.time))
 		.then(result=>res.send({plist: result}));
 
 	})
@@ -85,7 +86,10 @@ module.exports = function(_router, app){
 		}
 
 		var p0 = helper.taskHelper.update(req.user._id, {_id: req.params._id}, {state: taskType.id});
-		var p1 = helper.tasklog.create(req.user._id, req.params._id, TaskLogType.named[req.params.command], req.body.loc);
+		var p1 = helper.tasklog.create(req.user._id, req.params._id, TaskLogType.named[req.params.command], {
+			loc: req.body.loc
+			, time: req.body.time
+		});
 
 		Q.all([p0, p1])
 		.then(function(results){

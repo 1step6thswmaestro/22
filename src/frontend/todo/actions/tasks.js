@@ -5,18 +5,50 @@ import { getLocation } from '../../utility/location'
 import _ from 'underscore'
 
 export function fetchList(){
-	return (dispatch) => {
+	return (dispatch, getState) => {
 		dispatch({
 			type: type.TASK_REQ_LIST
 		});
 
-		return $.ajax('/v1/tasks')
+		console.log(getState());
+
+		return $.ajax({
+			url: '/v1/tasks'
+			, type: 'get'
+			, data:{
+				time: getState().global.time
+			}
+		})
 		.then(
 			result => {
 				dispatch({type: type.TASK_RECV_LIST, list: result.list});
 				dispatch({type: type.TASK_RECV_LIST_PRIORITIZED, list: result.plist})
 			}
-			, err => disptch({type: type.TASK_ERROR, err})
+			, err => dispatch({type: type.TASK_ERROR, err})
+		)
+	}
+}
+
+export function fetchPrioritizedList(){
+	return (dispatch, getState) => {
+		dispatch({
+			type: type.TASK_REQ_PLIST
+		});
+
+		console.log(getState());
+
+		return $.ajax({
+			url: '/v1/tasks/prioritized'
+			, type: 'get'
+			, data:{
+				time: getState().global.time
+			}
+		})
+		.then(
+			result => {
+				dispatch({type: type.TASK_RECV_LIST_PRIORITIZED, list: result.plist})
+			}
+			, err => dispatch({type: type.TASK_ERROR, err})
 		)
 	}
 }
@@ -70,7 +102,7 @@ export function completeItem(task){
 }
 
 function updateState(task, state){
-	return function(dispatch){
+	return function(dispatch, getState){
 		dispatch({
 			type: type.TASK_REQ_UPDATE
 			, item: task
@@ -80,6 +112,9 @@ function updateState(task, state){
 		return request({
 			url: `/v1/tasks/${task._id}/${state}`
 			, type: 'put'
+			, data: {
+				time: getState().global.time
+			}
 		})
 		.then(result => {
 			console.log(result);

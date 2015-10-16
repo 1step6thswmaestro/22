@@ -1,5 +1,4 @@
 import { ActionGroup } from './common.js'
-import { reducer as TaskLogReducer } from './tasklog_decl.js'
 import _ from 'underscore'
 
 let group = new ActionGroup();
@@ -31,6 +30,12 @@ DECL('TASK_RECV_ITEM', (state, action)=>{
 });
 
 DECL('TASK_REQ_LIST', (state, action)=>{
+	return Object.assign({}, state, {
+		isFetching: true
+	});
+});
+
+DECL('TASK_REQ_PLIST', (state, action)=>{
 	return Object.assign({}, state, {
 		isFetching: true
 	});

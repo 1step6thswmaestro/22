@@ -7,6 +7,12 @@ import UserView from './userview/UserView'
 
 import _ from 'underscore'
 
+import DateTimePicker from './dialog/DateTimePicker'
+
+import { setGlobalTime } from './actions/global'
+
+import { fetchPrioritizedList } from './actions/tasks'
+
 class TodoApp extends React.Component{
 	constructor(){
 		super();
@@ -33,17 +39,26 @@ class TodoApp extends React.Component{
 		});
 	}
 
+	setGlobalTime(time){
+		const { dispatch } = this.props;
+		dispatch(setGlobalTime(time.valueOf()));
+		console.error('global', this.props);
+
+		dispatch(fetchPrioritizedList());
+	}
+
 	render() {
 		var viewContent;
+
 		if(this.state.currentView == 'task'){
 			viewContent = (
-				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} location={this.state.location}/>
+				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global}/>
 
 			);
 		}
 		else if(this.state.currentView == 'user'){
 			viewContent = (
-				<UserView dispatch={this.props.dispatch}  location={this.state.location} />
+				<UserView dispatch={this.props.dispatch}  location={this.state.location} global={this.props.global}/>
 			);
 		}
 
@@ -55,6 +70,8 @@ class TodoApp extends React.Component{
 						Click HERE to Toggle UserView/TaskView
 					</div>
 				</header>
+				<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
+				{this.props.global.time}
 				{viewContent}
 			</div>
 		);

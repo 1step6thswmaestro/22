@@ -141,6 +141,11 @@ class TaskForm extends React.Component{
 		});
 	}
 
+	setDate(date){
+		this.refs.created.setDate(date);
+		this.refs.duedate.setDate(this.refs.created.getValue() + (24*60*60*1000));
+	}
+
 
 	getLocButtonStates(relatedLocation){
 		var locButtonState={
@@ -174,6 +179,7 @@ class TaskForm extends React.Component{
 		// See original work from here. http://codepen.io/arqex/pen/BNRNBw
 
 		var locButtonState = this.getLocButtonStates(this.state.relatedLocation);
+		console.log(this.props);
 		return (
 			<div className='form-group-attached'>
 				<div className='row'>
@@ -182,13 +188,11 @@ class TaskForm extends React.Component{
 					</div>
 				</div>
 				<div className='row'>
-					<div className='col-md-12'>
-						<DateTimePicker ref='created' default={Date.now()} label='created'/>
+					<div className='col-md-6'>
+						<DateTimePicker ref='created' default={this.props.global.time} label='created'/>
 					</div>
-				</div>
-				<div className='row'>
-					<div className='col-md-12'>
-						<DateTimePicker ref='duedate' default={Date.now()} label='due date'/>
+					<div className='col-md-6'>
+						<DateTimePicker ref='duedate' default={this.props.global.time+(24*60*1000)} label='due date'/>
 					</div>
 				</div>
 				<div className='row'>

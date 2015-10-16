@@ -1,15 +1,10 @@
 import React from "react"
 import moment from "moment"
+import If from "../../utility/if"
 
 class DateTimePicker extends React.Component{
 	constructor(props){
 		super(props);
-
-		console.log(this.props);
-
-		this.state = {
-			default: this.props.default || Date.now()
-		}
 	}
 
 	getEl(){
@@ -21,12 +16,29 @@ class DateTimePicker extends React.Component{
 	}
 
 	componentDidMount() {
-	    this.getEl().datetimepicker();
+		var opt;
+
+		if(this.props.type=='inline'){
+			opt = {
+				inline: true,
+                sideBySide: true
+			}
+		}
+	    this.getEl().datetimepicker(opt);
+
 	    this.init();
+
+	    if(this.props.onChange){
+		    this.getEl().on("dp.change", e=>this.props.onChange(e.date));
+	    }
 	}
 
 	init(){
-		this.getData().date(new Date(this.state.default));
+		this.setDate(this.props.default);
+	}
+
+	setDate(date){
+		this.getData().date(new Date(date || Date.now()));
 	}
 	
 	getValue(){
@@ -38,11 +50,10 @@ class DateTimePicker extends React.Component{
 	}
 
 	clear(){
-		this.state.default = this.props.default || Date.now();
 		this.init();
 	}
 
-	render(){
+	getDefaultView(){
 		return (
 			<div class="form-group">
 				<label>{this.props.label}</label>
@@ -54,6 +65,25 @@ class DateTimePicker extends React.Component{
                 </div>
             </div>
 		);
+	}
+
+	getInlineView(){
+		return (
+			<div ref='datetimepicker'></div>
+		)
+	}
+
+	render(){
+		return (
+			<div>
+				<If test={!this.props.type || this.props.type=='default'}>
+					{this.getDefaultView()}
+				</If>
+				<If test={this.props.type == 'inline'}>
+					{this.getInlineView()}
+				</If>
+			</div>
+		)
 	}
 }
 
