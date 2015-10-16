@@ -33,6 +33,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "devDependencies": {
+    "gulp-notify": "^2.2.0",
     "redux-devtools": "^2.1.5"
   },
   "scripts": {
