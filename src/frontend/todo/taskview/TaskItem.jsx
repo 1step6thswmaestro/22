@@ -148,7 +148,7 @@ class TaskItem extends React.Component{
 				<div className="panel-body">
 					<div className="row">
 						<div className='col-md-12'>
-							<SvgContainer width='100%' height='200px'>
+							<SvgContainer width='100%' height='120px'>
 								<Timeline logs={logs}/>
 							</SvgContainer>
 						</div>

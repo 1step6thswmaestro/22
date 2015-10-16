@@ -5,6 +5,7 @@ import d3 from 'd3'
 import { Chart, XAxis, YAxis } from '../d3/common';
 import { ViewBoxMixin } from '../d3/mixins';
 import _ from 'underscore';
+var TaskLogType = require('../../constants/TaskLogType');
 
 export default class Timeline extends React.Component{
 	constructor(props){
@@ -12,8 +13,8 @@ export default class Timeline extends React.Component{
 		Object.assign(this, ViewBoxMixin);
 
 		this.state = {
-			tickInterval: {unit: 'hour', interval: 1}
-			, domainSize: 8
+			tickInterval: {unit: 'hour', interval: 6}
+			, domainSize: 24
 			, leftOffset: 0
 		}
   	}
@@ -26,7 +27,9 @@ export default class Timeline extends React.Component{
 
 	makeDragBehavior(){
   		let self = this;
-  		let scale;
+  		
+  		let domain, range;
+
 		let leftmost;
 		let origin;
 
@@ -39,7 +42,8 @@ export default class Timeline extends React.Component{
 			console.log('dragstart', d, d3.event);
 
 			d3.event.sourceEvent.stopPropagation();
-			scale = Object.assign({}, self.state.xScale);
+			domain = _.map(self.state.domain);
+			range = _.map(self.state.range);
 			leftmost = undefined;
 			origin = undefined;
 		
@@ -48,6 +52,9 @@ export default class Timeline extends React.Component{
 			let $el = React.findDOMNode(self.refs.background);
 			console.log({$el});
 			var cur = d3.mouse($el);
+
+			console.log(self.state, range, domain);
+			let scale = d3.time.scale().range(range).domain(domain);
 
 			leftmost = leftmost || scale.invert(0);
 			origin = origin || scale.invert(cur[0]);
@@ -63,7 +70,35 @@ export default class Timeline extends React.Component{
 		.on('dragend', function(d){
 		})
 		;
-	}  	
+	} 
+
+	renderLogs(){
+		let items = _.map(this.state.logs, log=>{
+			let begin = new Date(log._time.begin);
+			let end = new Date(log._time.end);
+			console.log(log, begin, end);
+			let x0 = this.state.xScale(begin);
+			let x1 = this.state.xScale(end);
+			let width = x1-x0;
+			if(x0<0){
+				x0 = 0;
+				width = 7;
+			}
+			if(x0 > this.state.range[1]-7){
+				x0 = this.state.range[1]-7;
+				width = 7;
+			}
+
+			return (
+				<rect x={x0} width={width} fill='black' y='10' height='50'>
+				</rect>
+			)
+		})
+
+		return (
+			{items}
+		)
+	}
 
 	render() {
 		var props = this.props;
@@ -78,6 +113,37 @@ export default class Timeline extends React.Component{
 		}
 
 		var interpolationType = props.interpolationType || (props.interpolate ? 'cardinal' : 'linear');
+
+
+		let logs = [];
+		let last;
+		console.log(_.range(0, this.props.logs.length-1), this.props.logs);
+		for(var i in _.range(0, this.props.logs.length-1)){
+			let cur = this.props.logs[i];
+			let next = this.props.logs[i+1];
+
+			reduceLogs(cur, next);
+		}
+
+		function reduceLogs(cur, next){
+			last = last || cur;
+			last._time = last._time || {};
+
+			let type = cur.type;
+			if(type == TaskLogType.named.create.id 
+				|| type == TaskLogType.named.start.id){
+				last._time.begin = cur.time;
+			}
+			else if(type == TaskLogType.named.pause.id 
+				|| type == TaskLogType.named.pause.id){
+				last._time.end = cur.time;
+				logs.push(last);
+				last = undefined;
+			}
+		}
+		this.state.logs = logs;
+
+
 
 		console.log('getOuterDimensions', this.getOuterDimensions());
 
@@ -98,6 +164,7 @@ export default class Timeline extends React.Component{
 		var domainSize = this.state.domainSize*60*60*1000;
 		var leftDomainWindow = [domainWindow[0], domainWindow[1]-domainSize];
 		var leftCursor = this.state.leftCursor || leftDomainWindow[0];
+		this.state.leftCursor = leftCursor;
 		console.log({xValues, domainWindow, domainSize, leftDomainWindow, leftCursor})
 		console.log(leftCursor, leftCursor.getTime());
 		var domain = [new Date(leftCursor), new Date(leftCursor.getTime() + domainSize)];
@@ -105,9 +172,12 @@ export default class Timeline extends React.Component{
 
 		var xScale = this.state.xScale || d3.time.scale()
 		this.state.xScale = xScale;
-		xScale.range([0, innerWidth]);
+		this.state.range = [0, innerWidth];
+		xScale.range(this.state.range);
 
-		xScale.domain(domain);
+		this.state.domain = domain;
+		xScale.domain(this.state.domain);
+
 		console.log('domain : ', domain);
 		// xScale.domain(xValues);
 		yScale.domain([0, d3.sum(yMaxValues)]);
@@ -127,6 +197,7 @@ export default class Timeline extends React.Component{
 				<text x="0" y="0" font-size="55">
 			    	{`${domain[0]}, ${domain[1]}`}
 			  	</text>
+			  	{this.renderLogs()}
 				<XAxis
 					xAxisClassName='rd3-areachart-xaxis'
 					xScale={xScale}
@@ -189,6 +260,7 @@ Timeline.defaultProps = {
 	className: 'rd3-areachart',
 	hoverAnimation: true,
 	width: 300,
-	height: 100
+	height: 100,
+	xAxisTickCount: 6
 
 };
