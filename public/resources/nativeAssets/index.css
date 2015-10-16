@@ -237,3 +237,8 @@ textarea:focus, input:focus {
   width: 1 00%;
   display: block;
   border: none; }
+
+.task-log-elem {
+  fill: #5763DD; }
+  .task-log-elem:hover {
+    fill: #4F9ADD; }

@@ -26,6 +26,10 @@ function init(app){
 		})
 	}
 
+	PredictTokenHelper.prototype.remove = function(userId, query){
+		return Q.nbind(PredictToken.remove, PredictToken)(Object.assign({userId}, query));
+	}
+
 	app.helper.predictToken = new PredictTokenHelper();
 }
 

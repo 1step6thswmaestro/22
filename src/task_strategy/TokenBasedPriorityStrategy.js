@@ -29,6 +29,8 @@ TokenBasedPriorityStrategy.prototype.calculate = function(task){
 	let score = 0.0;
 	let tokens = this.tokenGroups[TaskLogType.named.start.id];
 
+	console.log(tokens);
+
 	_.each(tokens, (count, text)=>{
 		if(task.name.search(text)>=0){
 			score += count;

@@ -76,6 +76,19 @@ class Tokenizer{
 		}));
 	}
 
+	processTaskById(user, taskId){
+		let self = this;
+		
+		return app.helper.taskHelper.find(user._id, {_id: taskId})
+		.then(function(tasks){
+			var task = tasks[0];
+			if(task){
+				return self.processTask(req.user, task);
+			}
+		})
+		.fail(err=>logger.error(err, err.stack));
+	}
+
 	processTask(user, task){
 		let self = this;
 		let app = this.app;
@@ -83,6 +96,8 @@ class Tokenizer{
 		let currentTime = new Date(Date.now());
 		let _time = currentTime;
 		let lastTime = new Date(task.lastProcessed);
+
+		console.log({lastTime});
 
 		let p0 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$gt: lastTime}}, undefined, {sort: {time: -1}});
 		let p1 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$lte: lastTime}}, undefined, {limit: 1});
@@ -93,7 +108,7 @@ class Tokenizer{
 			lastlog = lastlog[0];
 			var promises = [];
 			_.each(logs, (log) => {
-				console.log('p0', _.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1));
+				console.log('p0', self.getTimeDivision(_time), self.getTimeDivision(log.time), _.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1));
 				_.each(_.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1), time=>{
 					//TODO
 					//need to ignore mistaken action
@@ -107,8 +122,8 @@ class Tokenizer{
 
 			//create token
 			if(lastlog){
-				console.log('p1', task.created, task.lastProcessed)
-				console.log(task.created.getTime(), task.lastProcessed.getTime(), task.created.getTime() == task.lastProcessed.getTime());
+				// console.log('p1', task.created, task.lastProcessed)
+				// console.log(task.created.getTime(), task.lastProcessed.getTime(), task.created.getTime() == task.lastProcessed.getTime());
 				if(task.created.getTime() == task.lastProcessed.getTime()){
 					console.log(task, lastlog, self.getTimeDivision(lastlog.time));
 					promises.push(self.makeTokens(task, lastlog, self.getTimeDivision(lastlog.time), true));
@@ -131,6 +146,33 @@ class Tokenizer{
 			return app.helper.taskHelper.update(user._id, {_id: task._id}, {lastProcessed: currentTime})
 		})
 		.fail(logger.error)
+	}
+
+	resetTaskById(user, taskId){
+		let self = this;
+		let app = this.app;
+		
+		return app.helper.taskHelper.find(user._id, {_id: taskId})
+		.then(function(tasks){
+			var task = tasks[0];
+			if(task){
+				return self.resetTask(user, task);
+			}
+		})
+		.fail(err=>logger.error(err, err.stack));
+	}
+
+	resetTask(user, task){
+		let self = this;
+		let app = this.app;
+
+		let p0 = app.helper.predictToken.remove(user._id, {taskId: task._id});
+		let p1 = app.helper.taskHelper.findOneAndUpdate(user._id, {_id: task._id}, {lastProcessed: task.created});
+
+		return Q.spread([p0, p1], function(result0, task){
+			task.lastProcessed = task.created;
+			self.processTask(user, task);
+		})
 	}
 }
 

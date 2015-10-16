@@ -21,8 +21,7 @@ export default class Timeline extends React.Component{
 
 	componentDidMount(){
 		let $el = React.findDOMNode(this.refs.background);
-		console.log('dom : ', $el);
-	    d3.select($el).call(this.makeDragBehavior());
+	    d3.select($el.parentNode).call(this.makeDragBehavior());
 	}
 
 	makeDragBehavior(){
@@ -39,8 +38,6 @@ export default class Timeline extends React.Component{
 		// 	return {x:0, y:0}
 		// })
 		.on('dragstart', function(d){
-			console.log('dragstart', d, d3.event);
-
 			d3.event.sourceEvent.stopPropagation();
 			domain = _.map(self.state.domain);
 			range = _.map(self.state.range);
@@ -50,18 +47,14 @@ export default class Timeline extends React.Component{
 		})
 		.on('drag', function(d){
 			let $el = React.findDOMNode(self.refs.background);
-			console.log({$el});
 			var cur = d3.mouse($el);
 
-			console.log(self.state, range, domain);
 			let scale = d3.time.scale().range(range).domain(domain);
 
 			leftmost = leftmost || scale.invert(0);
 			origin = origin || scale.invert(cur[0]);
 			let cursor = scale.invert(cur[0]);
 
-
-			console.log(leftmost, cursor, origin, leftmost + (cursor-origin));
 
 			self.setState({leftCursor: new Date(cursor.getTime() + (leftmost.getTime()-origin.getTime()))});
 
@@ -76,21 +69,34 @@ export default class Timeline extends React.Component{
 		let items = _.map(this.state.logs, log=>{
 			let begin = new Date(log._time.begin);
 			let end = new Date(log._time.end);
-			console.log(log, begin, end);
 			let x0 = this.state.xScale(begin);
 			let x1 = this.state.xScale(end);
 			let width = x1-x0;
-			if(x0<0){
+
+			if(x0 < 0){
+				width += x0;
+				x0 = 0;
+			}
+
+			if(x1<7){
 				x0 = 0;
 				width = 7;
 			}
+
+			if(x1 > this.state.range[1]){
+				width -= (x1-this.state.range[1]);
+			}
+
 			if(x0 > this.state.range[1]-7){
 				x0 = this.state.range[1]-7;
 				width = 7;
 			}
 
+			console.log(x0, x1, width, this.state.range);
+
+
 			return (
-				<rect x={x0} width={width} fill='black' y='10' height='50'>
+				<rect className='task-log-elem' x={x0} width={width} y='20' height='30'>
 				</rect>
 			)
 		})
@@ -102,10 +108,8 @@ export default class Timeline extends React.Component{
 
 	render() {
 		var props = this.props;
-		console.log('props : ', props);
 
 		if(!this.props.logs || !this.props.logs.length){
-			console.log('this.props.logs : ', this.props.logs);
 			return (<g>
 				<rect ref='background' width='100%' height='100%' fill='#fff'>
 				</rect>
@@ -114,38 +118,38 @@ export default class Timeline extends React.Component{
 
 		var interpolationType = props.interpolationType || (props.interpolate ? 'cardinal' : 'linear');
 
+		console.log(this.props.logs);
+
 
 		let logs = [];
 		let last;
-		console.log(_.range(0, this.props.logs.length-1), this.props.logs);
-		for(var i in _.range(0, this.props.logs.length-1)){
-			let cur = this.props.logs[i];
-			let next = this.props.logs[i+1];
-
-			reduceLogs(cur, next);
+		for(var i in this.props.logs){
+			iterateLogs(this.props.logs[i]);
+		}
+		if(last){
+			last._time.end = Date.now();
+			logs.push(last);
+			last = undefined;
 		}
 
-		function reduceLogs(cur, next){
-			last = last || cur;
+		function iterateLogs(log){
+			last = last || log;
 			last._time = last._time || {};
 
-			let type = cur.type;
-			if(type == TaskLogType.named.create.id 
-				|| type == TaskLogType.named.start.id){
-				last._time.begin = cur.time;
+			let type = log.type;
+			if(type == TaskLogType.named.start.id){
+				last._time.begin = last._time.begin || log.time;
 			}
 			else if(type == TaskLogType.named.pause.id 
 				|| type == TaskLogType.named.pause.id){
-				last._time.end = cur.time;
+				last._time.end = log.time;
 				logs.push(last);
 				last = undefined;
 			}
+
 		}
 		this.state.logs = logs;
-
-
-
-		console.log('getOuterDimensions', this.getOuterDimensions());
+		console.log(this.state.logs);
 
 		// Calculate inner chart dimensions
 
@@ -165,8 +169,6 @@ export default class Timeline extends React.Component{
 		var leftDomainWindow = [domainWindow[0], domainWindow[1]-domainSize];
 		var leftCursor = this.state.leftCursor || leftDomainWindow[0];
 		this.state.leftCursor = leftCursor;
-		console.log({xValues, domainWindow, domainSize, leftDomainWindow, leftCursor})
-		console.log(leftCursor, leftCursor.getTime());
 		var domain = [new Date(leftCursor), new Date(leftCursor.getTime() + domainSize)];
 		var yMaxValues = [10];
 
@@ -178,7 +180,6 @@ export default class Timeline extends React.Component{
 		this.state.domain = domain;
 		xScale.domain(this.state.domain);
 
-		console.log('domain : ', domain);
 		// xScale.domain(xValues);
 		yScale.domain([0, d3.sum(yMaxValues)]);
 
@@ -186,8 +187,6 @@ export default class Timeline extends React.Component{
 			.x(props.xAccessor)
 			.y(props.yAccessor)
 			.values((d)=> { return d.values; });
-
-		console.log('props : ', {innerWidth, innerHeight}, props.height);
 
 		var trans = `translate(${ props.margins.left },${ props.margins.top })`;
 		return (

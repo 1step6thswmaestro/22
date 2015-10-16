@@ -22,7 +22,10 @@ function init(app){
 			userId
 			, taskId
 			, type: type.id
-			, time: opt.time
+		}
+
+		if(opt.time){
+			obj.time = opt.time;
 		}
 
 		if(opt.loc){
@@ -34,6 +37,7 @@ function init(app){
 		}
 
 		obj = new TaskLog(obj);
+		console.log(obj);
 
 		return Q.nbind(obj.save, obj)();
 	}

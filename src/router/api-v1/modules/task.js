@@ -40,9 +40,7 @@ module.exports = function(_router, app){
 	})
 
 	router.post('/', function(req, res){
-		console.log(req.user);
-		return;
-		// This request create new task for the current user.t
+		// This request create new task for the current user.
 		let userId = req.user._id;
 		let task = _.pick(req.body, 'name', 'description', 'created', 'importance', 'duedate');
 		task.lastProcessed = task.created;
@@ -67,6 +65,8 @@ module.exports = function(_router, app){
 
 	router.delete('/:id', function(req, res){
 		// This request delete specific task.
+		//TODO
+		//remove related datas
 		Task.remove({userId: req.user._id, _id: req.params.id}, function(err){
 			if (err) return res.status(400).send(err);
 			res.send({});
@@ -104,24 +104,10 @@ module.exports = function(_router, app){
 				}
 			})
 		})
-		.then(function(results){
-			console.log(results);
-			res.send(results);
+		.then(function(result){
+			taskTokenizer.processTask(req.user, result.task)
+			res.send(result);
 		})
 		.fail(err=>logger.error(err))
-	})
-
-	router.get('/:_id/update', function(req, res){
-		app.helper.taskHelper.find(req.user._id, {_id: req.params._id})
-		.then(function(tasks){
-			var task = tasks[0];
-			console.log('update : ', task);
-			if(task){
-				taskTokenizer.processTask(req.user, task);
-			}
-		})
-		.fail(err=>logger.error(err, err.stack));
-
-		res.send();
 	})
 }

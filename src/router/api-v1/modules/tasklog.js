@@ -26,4 +26,12 @@ module.exports = function(router, app){
 		helper.tasklog.find(req.user._id, {taskId})
 		.then(list=>res.send(list));
 	})
+
+	router.get('/tasklog/task/:taskId', function(req, res){
+		console.log('tasklog', req.params);
+
+		const taskId = req.params.taskId;
+		helper.tasklog.find(req.user._id, {taskId})
+		.then(list=>res.send(list));
+	})
 }

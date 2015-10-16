@@ -42,8 +42,8 @@ class TaskItem extends React.Component{
 		dispatch(postponeItem(this.props.task));
 	}
 
-	update(){
-		$.ajax(`/v1/tasks/${this.props.task._id}/update`);
+	reset(){
+		$.ajax(`/v1/tasktoken/task/${this.props.task._id}/reset`);
 	}
 
 	toggleLocationButton(locName){
@@ -290,8 +290,8 @@ class TaskItem extends React.Component{
 							<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
 							</button>
-							<button className="btn btn-default" label="Discard this task" onClick={this.update.bind(this)}>
-								<span className="glyphicon glyphicon-trash"></span> 업데이트
+							<button className="btn btn-default" label="Discard this task" onClick={this.reset.bind(this)}>
+								<span className="glyphicon glyphicon-trash"></span> reset
 							</button>
 							<a href={`/v1/tasktoken/task/${task._id}/`}>
 								<button className="btn btn-default" label="Discard this task">
@@ -301,6 +301,11 @@ class TaskItem extends React.Component{
 							<a href={`/v1/tasktoken/time/${this.props.global.time?this.props.global.time:''}`}>
 								<button className="btn btn-default" label="Discard this task">
 									<span className="glyphicon glyphicon-trash"></span> show tokens2
+								</button>
+							</a>
+							<a href={`/v1/tasklog/task/${task._id}/`}>
+								<button className="btn btn-default" label="Discard this task">
+									<span className="glyphicon glyphicon-trash"></span> show logs
 								</button>
 							</a>
 						</div>

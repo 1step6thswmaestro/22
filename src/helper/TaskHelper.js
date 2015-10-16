@@ -26,6 +26,10 @@ function init(app){
 		return Q.nbind(Task.update, Task)(Object.assign({userId}, query), {$set: doc});
 	}
 
+	TaskHelper.prototype.findOneAndUpdate = function(userId, query, doc){
+		return Q.nbind(Task.findOneAndUpdate, Task)(Object.assign({userId}, query), {$set: doc});
+	}
+
 	app.helper.taskHelper = new TaskHelper();
 }
 

@@ -18,3 +18,11 @@ textarea:focus, input:focus{
 	display: block;
 	border: none;
 }
+
+.task-log-elem{
+	fill: #5763DD;
+	
+	&:hover{
+		fill: #4F9ADD;
+	}
+}

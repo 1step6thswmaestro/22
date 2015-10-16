@@ -8,6 +8,12 @@ module.exports = function(router, app){
 
 	var taskTokenizer = new tokenizer(app);
 
+	router.get('/tasktoken/task/:_id/reset', function(req, res){
+		taskTokenizer.resetTaskById(req.user, req.params._id);
+
+		res.send();
+	})
+
 	router.get('/tasktoken/task/:taskId/', function(req, res){
 		app.helper.predictToken.find(req.user._id, {
 			taskId: req.params.taskId
