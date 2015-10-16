@@ -4,6 +4,7 @@ import React from 'react'
 import d3 from 'd3'
 import { Chart, XAxis, YAxis } from '../d3/common';
 import { ViewBoxMixin } from '../d3/mixins';
+import _ from 'underscore';
 
 export default class Timeline extends React.Component{
 	constructor(props){
@@ -14,7 +15,7 @@ export default class Timeline extends React.Component{
 
 	render() {
 		var props = this.props;
-		var xAxisTickInterval = {unit: 'hour', interval: 6}
+		var xAxisTickInterval = {unit: 'day', interval: 2}
 		console.log('props : ', props);
 
 		var interpolationType = props.interpolationType || (props.interpolate ? 'cardinal' : 'linear');
@@ -32,13 +33,12 @@ export default class Timeline extends React.Component{
 		var yScale = d3.scale.linear()
 			.range([innerHeight, 0]);
 
-		var xValues = [new Date('2014-03-08T12:00:00.000Z'), new Date('2014-03-10T00:00:00.000Z')];
-		// var xValues = [10, 20, 30];
-		var yValues = [];
+		//var xValues = [new Date('2014-03-08T12:00:00.000Z'), new Date('2014-03-10T00:00:00.000Z')];
+		var xValues = _.map(this.props.logs, log=>new Date(log.time));
 		var yMaxValues = [10];
 
 		var xScale;
-		console.log(xValues, Object.prototype.toString.call(xValues[0]), xAxisTickInterval);
+		console.log('xValues : ', xValues, Object.prototype.toString.call(xValues[0]), xAxisTickInterval);
 		if (xValues.length > 0 && Object.prototype.toString.call(xValues[0]) === '[object Date]' && xAxisTickInterval) {
 			xScale = d3.time.scale()
 				.range([0, innerWidth]);
@@ -46,6 +46,8 @@ export default class Timeline extends React.Component{
 			xScale = d3.scale.linear()
 				.range([0, innerWidth]);
 		}
+
+		console.log('extent : ', d3.extent(xValues));
 
 		xScale.domain(d3.extent(xValues));
 		// xScale.domain(xValues);
@@ -81,6 +83,7 @@ export default class Timeline extends React.Component{
 					gridVerticalStrokeDash={props.gridVerticalStrokeDash}
 					stroke='black'
 				/>
+
 				<YAxis
 					yAxisClassName='rd3-areachart-yaxis'
 					yScale={yScale}

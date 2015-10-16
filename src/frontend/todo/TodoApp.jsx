@@ -5,11 +5,7 @@ import { connect } from 'react-redux';
 import TaskView from './taskview/TaskView'
 import UserView from './userview/UserView'
 
-import Timeline from '../timeline/timeline'
-
 import _ from 'underscore'
-
-import SvgContainer from '../d3/SvgContainer'
 
 class TodoApp extends React.Component{
 	constructor(){
@@ -59,9 +55,6 @@ class TodoApp extends React.Component{
 						Click HERE to Toggle UserView/TaskView
 					</div>
 				</header>
-				<SvgContainer width='100%' height='200px'>
-					<Timeline/>
-				</SvgContainer>
 				{viewContent}
 			</div>
 		);
