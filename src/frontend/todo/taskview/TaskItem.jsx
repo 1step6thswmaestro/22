@@ -4,7 +4,7 @@ import MapImage from '../dialog/MapImage';
 import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
 import { getReadableDate } from '../../utility/date'
-import { startItem, modifyItem, pauseItem, completeItem, removeItem, postponeItem } from '../actions/tasks';
+import { startItem, pauseItem, completeItem, removeItem, postponeItem } from '../actions/tasks';
 import { fetchTaskLog } from '../actions/tasklog';
 import If from '../../utility/if'
 var TaskLogType = require('../../../constants/TaskLogType');
@@ -43,7 +43,8 @@ class TaskItem extends React.Component{
 	}
 
 	modify() {
-		this.props.onTaskModify();
+		const { dispatch } = this.props;
+		this.props.onTaskModify(this.props.task, this.render());
 	}
 
 	reset(){
@@ -70,7 +71,7 @@ class TaskItem extends React.Component{
 		var newVal = (this.state.isExpanded||0) ^ 1;
 		this.setState({
 			isExpanded: newVal
-		})
+		});
 
 		dispatch(fetchTaskLog(this.props.task));
 	}

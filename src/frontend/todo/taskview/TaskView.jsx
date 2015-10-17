@@ -28,7 +28,9 @@ class TaskView extends React.Component{
 	}
 
 	showInputDialog(){
-		console.log(this.refs.taskinputform);
+		this.refs.taskinputform.setState({
+			modifyMode: false
+		});
 		this.refs.taskinputform.setDate(this.props.global.time);
 
 		var modal = $(React.findDOMNode(this.refs.taskinputform));
@@ -39,14 +41,18 @@ class TaskView extends React.Component{
 		});
 	}
 
-	showModifyDialog() {
+	showModifyDialog(task, callback) {
+		this.refs.taskinputform.setState({
+			modifyMode: true,
+			task: task,
+			callback: callback
+		});
 		var modal = $(React.findDOMNode(this.refs.taskinputform));
 		modal.modal({
 			backdrop: true
 			, keyboard: true
 			, show: true
 		});
-		modal.find('.modal-title').text("작업 수정하기");
 	}
 
 	render() {

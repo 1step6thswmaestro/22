@@ -1,6 +1,7 @@
 import React from "react"
 import DateTime from "../dialog/DateTime"
 import DateTimePicker from "../dialog/DateTimePicker"
+import { modifyItem } from '../actions/tasks';
 
 // This class make card shaped for the new task which is waiting for user input.
 class MyInput extends React.Component{
@@ -24,21 +25,20 @@ class MyInput extends React.Component{
 	}
 
 	render(){
-			return (
-				<div className='form-group'>
-					<input
-						className="form-control"
-						type="text"
-						value={this.state.value}
-						onChange={this.handleChange.bind(this)}
-						placeholder={this.props.placeholder}
-						defaultValue={this.props.initValue}
-						/>
-				</div>
-			);
+		return (
+			<div className='form-group'>
+				<input
+					className="form-control"
+					type="text"
+					value={this.state.value}
+					onChange={this.handleChange.bind(this)}
+					placeholder={this.props.placeholder}
+					defaultValue={this.props.value}
+				/>
+			</div>
+		);
 	}
 };
-
 
 class MyTextarea extends React.Component{
 	constructor(){
@@ -61,15 +61,15 @@ class MyTextarea extends React.Component{
 	}
 
 	render(){
-			return (
-				<textarea
-					className="form-control"
-					value={this.state.value}
-					onChange={this.handleChange.bind(this)}
-					placeholder={this.props.placeholder}
-					defaultValue={this.props.initValue}
-					/>
-			);
+		return (
+			<textarea
+				className="form-control"
+				value={this.state.value}
+				onChange={this.handleChange.bind(this)}
+				placeholder={this.props.placeholder}
+				defaultValue={this.props.value}
+			/>
+		);
 	}
 };
 
@@ -78,11 +78,20 @@ class TaskInputForm extends React.Component{
 	constructor(){
 		super();
 		this.state = {
-			relatedLocation: 0
+			relatedLocation: 0,
+			modifyMode: false,
+			task: null,
+			callback: null
 		};
 	}
 
-	handleSubmit() {
+	handleSubmitModify() {
+		let modifiedTask = this.getFormData();
+		modifiedTask['_id'] = this.state.task._id;
+		modifyItem(modifiedTask, this.state.callback);
+	}
+
+	handleSubmitAdd() {
 		if (this.refs.taskForm.isValid()) {
 			this.props.onTaskSubmit(this.refs.taskForm.getFormData());
 			this.refs.taskForm.clearForm();
@@ -196,6 +205,7 @@ class TaskInputForm extends React.Component{
 		// NOTE: Check if there is snippet for assigning location from address or getting current location. -->
 		// TODO: I want to fire onClick event when user press ctrl+enter key.
 		var locButtonState = this.getLocButtonStates(this.state.relatedLocation);
+		var modifyMode = this.state.modifyMode;
 
 		return (
 			<div className="modal fade" tabIndex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
@@ -204,14 +214,14 @@ class TaskInputForm extends React.Component{
 						<div className="modal-contents">
 							<div className="modal-header">
 								<button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								<h4 className="modal-title" id="gridSystemModalLabel">새 작업 추가하기</h4>
+								<h4 className="modal-title" id="gridSystemModalLabel">{modifyMode?"할 일 수정하기":"새로운 할 일 추가"}</h4>
 							</div>
 							<div className="modal-body">
 								<div className="task-box">
-									<div className='form-group-attached'>
+									<div className="form-group-attached">
 										<div className="row">
 											<div className="col-md-12">
-												<MyInput ref="name" placeholder="Task Name" />
+												<MyInput ref="name" placeholder="Task Name" value={modifyMode?this.state.task.name:""} />
 											</div>
 										</div>
 										<div className="row">
@@ -225,7 +235,7 @@ class TaskInputForm extends React.Component{
 										<div className="row">
 											<div className="col-md-12">
 												<div className="form-group">
-													<MyTextarea ref="description" placeholder="Task Description"/>
+													<MyTextarea ref="description" placeholder="Task Description" value={modifyMode?this.state.task.description:""} />
 												</div>
 											</div>
 										</div>
@@ -254,7 +264,7 @@ class TaskInputForm extends React.Component{
 							</div>
 							<div className="modal-footer">
 								<button type="button" className="btn btn-default" data-dismiss="modal">취소</button>
-								<button type="button" className="btn btn-primary" onClick={this.handleSubmit.bind(this)} data-dismiss="modal">완료</button>
+								<button type="button" className="btn btn-primary" onClick={modifyMode?this.handleSubmitModify.bind(this):this.handleSubmitAdd.bind(this)} data-dismiss="modal">완료</button>
 							</div>
 						</div>
 					</div>

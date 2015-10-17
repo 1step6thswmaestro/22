@@ -81,6 +81,19 @@ export function makeNewItem(item){
 	}
 }
 
+export function modifyItem(task, callback){
+	return request({
+		url: '/v1/tasks/modify'
+		, type: 'post'
+		, data: task
+	})
+	.then(result => {
+		dispatch({type: type.TASK_MODIFY_ITEM, task});
+	}, err => {
+		dispatch({type: type.TASK_ERROR, err});
+	});
+}
+
 export function startItem(task){
 	return updateState(task, 'start');
 }
