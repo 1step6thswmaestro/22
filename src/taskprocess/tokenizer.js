@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var TaskLogType = require('../constants/TaskLogType');
 var PredictToken = require('../models/PredictToken');
 var Q = require('q');
+var py_interpreter = require('../app/python_interpreter');
 
 class Tokenizer{
 	constructor(app){
@@ -14,7 +15,13 @@ class Tokenizer{
 	tokenizeText(text){
 		var texts = [];
 		var tokens = text.split(' ');
-		
+		return Q(grab(tokens));
+
+		// return py_interpreter.analyze_morphem(text)
+		// .then(tokens=>{
+		// 	console.log('tokens : ', tokens);
+		// 	return grab(tokens);
+		// });
 
 		function grab(tokens){
 			let head = tokens[0];
@@ -25,8 +32,6 @@ class Tokenizer{
 
 			return _.flatten(_.map(_tokens, token=>[head+' '+token, token]));
 		}
-
-		return grab(tokens);
 	}
 
 	getTimeDivision(time){

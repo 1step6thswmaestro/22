@@ -53,6 +53,7 @@ module.exports = function(router, app){
 
 	
 	router.get('/tasktoken/test/:str', function(req, res){
-		res.send(taskTokenizer.tokenizeText(req.params.str));
+		taskTokenizer.tokenizeText(req.params.str)
+		.then(tokens=>res.send(tokens));
 	})
 }
