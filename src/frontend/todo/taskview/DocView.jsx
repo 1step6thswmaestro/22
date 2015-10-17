@@ -15,12 +15,13 @@ class DocItem extends React.Component{
 			id: docID,
 			user_id: 'dummyID'
 		};
-		// Put lucene server address here.
-		var url = "http://localhost:8888";
+		// formatting /search/<user_id>/<doc_id>
+		var url = "http://localhost:5000/searchLog/"+data.user_id+"/"+data.id;
 
 		$.ajax({
 			url: url,
-			data: data
+			cache: false,
+			method: 'POST'
 		})
 		.then(
 			function(data){
@@ -48,6 +49,7 @@ class DocView extends React.Component{
 	constructor(){
 		super();
 		this.state = {
+			waitMessage: '문서 가져오는 중...',
 			docList: ''
 		};
 	}
@@ -56,52 +58,35 @@ class DocView extends React.Component{
 		// Request related document from server.
 		this.getDocumentList(function(docs){
 			this.setState({
+				waitMessage: '',
 				docList: docs
 			})
 		}.bind(this));
 	}
 
 	getDocumentList(callback){
-		// Dummy work
-		var data={
-			total: 2,
-			hits: [
-				{
-					_id : '001',
-					title : '네이버로 가는 일번문서',
-					summary : '일번문서는 내용이 존재한다.',
-					link : 'http://naver.com'
-				},
-				{
-					_id : '002',
-					title : '구글로 가는 이번문서',
-					summary : '이번문서 또한 내용이 존재한다.',
-					link : 'http://google.com'
-				}
-			]
-		};
-		callback(data.hits);
-		return;
-		// --- Dummy ends here ---
-
-
-		var data = {
-			query: '한국',
-			user_id: 'dummyID'
-		};
-		// Put lucene server address here.
-		var url = "http://localhost:8888";
+		// formatting /search/<user_id>/<query>
+		var query = this.props.keyword;
+		
+		var url = "http://127.0.0.1:5000/search/"+"dummyID"+"/"+query;
 
 		$.ajax({
 			url: url,
-			data: data
+			cache: false,
+			method: 'POST'
 		})
 		.then(
 			function(data){
 				// var name 'total' is useless.
-				callback(data.hits);
+				if(data == null) {
+					console.error('Json error');
+				}
+				else {
+					var json_data = data['hits'];
+					callback(json_data);
+				}
 			}
-			, function(XMLHttpRequest, textStatus, errorThrown) {
+			, function(reuqest, textStatus, errorThrown) {
 				console.error(url);
 				console.error(errorThrown);
 			}
@@ -117,7 +102,7 @@ class DocView extends React.Component{
 
 		return (
 			<div className="doc-view">
-				<h4>참고하세요!</h4>
+				<h4>참고하세요! {this.state.waitMessage}</h4>
 				{createDocElements(this.state.docList)}
 			</div>
 		);

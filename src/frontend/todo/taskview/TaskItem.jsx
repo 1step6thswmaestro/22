@@ -225,7 +225,7 @@ class TaskItem extends React.Component{
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
 							</button>
 						</div>
-						<DocView taskID = {this.props.task._id}/>
+						<DocView taskID = {this.props.task._id} keyword = {task.name + task.description}/>
 					</div>
 				</div>
 			</div>
