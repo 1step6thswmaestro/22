@@ -1,22 +1,87 @@
-import React from 'react'
-
-// TaskIputForm gives consistent look with other task items.
-// We are going to use same card shape design for the input form.
+import React from "react"
+import DateTime from "../dialog/DateTime"
+import DateTimePicker from "../dialog/DateTimePicker"
 
 // This class make card shaped for the new task which is waiting for user input.
-// There are other class that make card form for existing tasks. So design must be consistent.
+class MyInput extends React.Component{
+	constructor(){
+		super();
+		this.state = {
+			value: ''
+		};
+	}
 
-import TaskForm from './TaskForm'
+	handleChange(evt){
+		this.setState({
+			value: evt.target.value
+		});
+	}
 
+	clear(){
+		this.setState({
+			value: ''
+		});
+	}
+
+	render(){
+			return (
+				<div className='form-group'>
+					<input
+						className="form-control"
+						type="text"
+						value={this.state.value}
+						onChange={this.handleChange.bind(this)}
+						placeholder={this.props.placeholder}
+						defaultValue={this.props.initValue}
+						/>
+				</div>
+			);
+	}
+};
+
+
+class MyTextarea extends React.Component{
+	constructor(){
+		super();
+		this.state = {
+			value: ''
+		};
+	}
+
+	handleChange(evt){
+		this.setState({
+			value: evt.target.value
+		});
+	}
+
+	clear(){
+		this.setState({
+			value: ''
+		});
+	}
+
+	render(){
+			return (
+				<textarea
+					className="form-control"
+					value={this.state.value}
+					onChange={this.handleChange.bind(this)}
+					placeholder={this.props.placeholder}
+					defaultValue={this.props.initValue}
+					/>
+			);
+	}
+};
+
+// Task add and modify template.
 class TaskInputForm extends React.Component{
 	constructor(){
 		super();
 		this.state = {
-			name: '',
-			description: ''
+			relatedLocation: 0
 		};
 	}
-	
+
 	handleSubmit() {
 		if (this.refs.taskForm.isValid()) {
 			this.props.onTaskSubmit(this.refs.taskForm.getFormData());
@@ -36,10 +101,101 @@ class TaskInputForm extends React.Component{
 		this.refs.taskForm.setDate(date);
 	}
 
+	isValid(){
+		var name = undefined;
+		if(this.refs.name.state)
+			name = this.refs.name.state.value;
+
+		var errors = {};
+		// Do validity check for every form here.
+
+		if (!name){
+			errors['name'] = 'name' + ' field is required';
+		}
+
+		this.setState({errors: errors});
+
+		var isValid = true;
+		for (let error in errors) {
+			isValid = false;
+			break;
+		}
+		return isValid;
+	}
+
+	getFormData(){
+		var name = this.refs.name.state.value;
+		var description = this.refs.description.state.value;
+		var created = this.refs.created.getValue();
+		var duedate = this.refs.duedate.getValue();
+		return {name, description, duedate, created};
+	}
+
+	clearForm(){
+		this.refs.name.clear();
+		this.refs.description.clear();
+		this.refs.created.clear();
+		this.refs.duedate.clear();
+		this.setState({
+			relatedLocation: 0
+		});
+	}
+
+	onToggleLocationButton(locName){
+		var locList = ['home', 'school', 'work', 'etc'];
+		var locIndex = 0;
+		for (let i in locList){
+			if (locList[i] == locName){
+				locIndex = i;
+				break;
+			}
+		}
+
+		// Flip bit on locIndex
+		var newValue = this.state.relatedLocation ^ (1 << (locList.length-1-locIndex));
+		console.log(this.state.relatedLocation + '->' + newValue);
+		this.setState({
+			relatedLocation: newValue
+		});
+	}
+
+	setDate(date){
+		this.refs.created.setDate(date);
+		this.refs.duedate.setDate(this.refs.created.getValue() + (24*60*60*1000));
+	}
+
+
+	getLocButtonStates(relatedLocation){
+		var locButtonState={
+			home: "btn-default",
+			school: "btn-default",
+			work: "btn-default",
+			etc: "btn-default"
+		};
+
+		if (relatedLocation % 2 == 1)
+			locButtonState.etc = "btn-check";
+		relatedLocation = Math.floor(relatedLocation / 2);
+
+		if (relatedLocation % 2 == 1)
+			locButtonState.work = "btn-check";
+		relatedLocation = Math.floor(relatedLocation / 2);
+
+		if (relatedLocation % 2 == 1)
+			locButtonState.school = "btn-check";
+		relatedLocation = Math.floor(relatedLocation / 2);
+
+		if (relatedLocation % 2 == 1)
+			locButtonState.home = "btn-check";
+		relatedLocation = Math.floor(relatedLocation / 2);
+
+		return locButtonState;
+	}
+
 	render() {
 		// NOTE: Check if there is snippet for assigning location from address or getting current location. -->
-
 		// TODO: I want to fire onClick event when user press ctrl+enter key.
+		var locButtonState = this.getLocButtonStates(this.state.relatedLocation);
 
 		return (
 			<div className="modal fade" tabIndex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
@@ -52,7 +208,48 @@ class TaskInputForm extends React.Component{
 							</div>
 							<div className="modal-body">
 								<div className="task-box">
-									<TaskForm ref="taskForm" global={this.props.global} />
+									<div className='form-group-attached'>
+										<div className="row">
+											<div className="col-md-12">
+												<MyInput ref="name" placeholder="Task Name" />
+											</div>
+										</div>
+										<div className="row">
+											<div className="col-md-6">
+												<DateTimePicker ref="created" default={this.props.global.time} label='created'/>
+											</div>
+											<div className="col-md-6">
+												<DateTimePicker ref="duedate" default={this.props.global.time+(24*60*1000)} label='due date'/>
+											</div>
+										</div>
+										<div className="row">
+											<div className="col-md-12">
+												<div className="form-group">
+													<MyTextarea ref="description" placeholder="Task Description"/>
+												</div>
+											</div>
+										</div>
+
+										<div className="row">
+											<div className="col-md-12">
+												작업 가능 장소 선택 :
+												<div className="btn-group">
+													<button className={"btn " + locButtonState.home} data-toggle="집" label="집" onClick={this.onToggleLocationButton.bind(this, 'home')}>
+														<span className="glyphicon glyphicon-home"></span>
+													</button>
+													<button className={"btn " + locButtonState.school} data-toggle="학교" label="학교" onClick={this.onToggleLocationButton.bind(this, 'school')}>
+														<span className="glyphicon glyphicon-book"></span>
+													</button>
+													<button className={"btn " + locButtonState.work} data-toggle="직장" label="직장" onClick={this.onToggleLocationButton.bind(this, 'work')}>
+														<span className="glyphicon glyphicon-briefcase"></span>
+													</button>
+													<button className={"btn " + locButtonState.etc} data-toggle="기타" label="기타" onClick={this.onToggleLocationButton.bind(this, 'etc')}>
+														<span className="glyphicon glyphicon-flash"></span>
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<div className="modal-footer">
