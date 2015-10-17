@@ -49,6 +49,7 @@ class DocView extends React.Component{
 	constructor(){
 		super();
 		this.state = {
+			waitMessage: '문서 가져오는 중...',
 			docList: ''
 		};
 	}
@@ -57,6 +58,7 @@ class DocView extends React.Component{
 		// Request related document from server.
 		this.getDocumentList(function(docs){
 			this.setState({
+				waitMessage: '',
 				docList: docs
 			})
 		}.bind(this));
@@ -64,7 +66,9 @@ class DocView extends React.Component{
 
 	getDocumentList(callback){
 		// formatting /search/<user_id>/<query>
-		var url = "http://127.0.0.1:5000/search/"+"dummyID"+"/"+"한국";
+		var query = this.props.keyword;
+		
+		var url = "http://127.0.0.1:5000/search/"+"dummyID"+"/"+query;
 
 		$.ajax({
 			url: url,
@@ -91,7 +95,6 @@ class DocView extends React.Component{
 
 	render() {
 		function createDocElements(list){
-			console.log('in create' + list)
 			return _.map(list, doc => (
 		        <DocItem key={doc._id} doc={doc} />
 			));
@@ -99,7 +102,7 @@ class DocView extends React.Component{
 
 		return (
 			<div className="doc-view">
-				<h4>참고하세요!</h4>
+				<h4>참고하세요! {this.state.waitMessage}</h4>
 				{createDocElements(this.state.docList)}
 			</div>
 		);
