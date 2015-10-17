@@ -119,8 +119,6 @@ class TaskItem extends React.Component{
 
 	getDetailView(){
 		var task = this.props.task;
-		var descStr = task.description || '';
-		var rawMarkup = marked(descStr.toString(), {sanitize: true});
 		var startDate, completeDate;
 		var locButtonState = this.getLocButtonStates(task.relatedLocation);
 
@@ -166,7 +164,7 @@ class TaskItem extends React.Component{
 					<div className="row">
 						<div className="col-md-8">
 							<div className="task-description">
-								<span dangerouslySetInnerHTML={{__html: rawMarkup}} />
+								<span>{task.description}</span>
 							</div>
 							<div className="task-relatedLocation">
 								작업 가능 장소 선택 :
@@ -235,7 +233,6 @@ class TaskItem extends React.Component{
 	getSimpleView(){
 		var task = this.props.task;
 		var descStr = task.description || '';
-		var rawMarkup = marked(descStr.toString(), {sanitize: true});
 		var startDate, completeDate;
 		var locButtonState = this.getLocButtonStates(task.relatedLocation);
 
