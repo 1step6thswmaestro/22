@@ -65,6 +65,12 @@ export default class Timeline extends React.Component{
 		;
 	} 
 
+	clickLog(log){
+		this.setState({
+			leftCursor: new Date(log._time.begin)
+		});
+	}
+
 	renderLogs(){
 		let items = _.map(this.state.logs, log=>{
 			let begin = new Date(log._time.begin);
@@ -96,7 +102,7 @@ export default class Timeline extends React.Component{
 
 
 			return (
-				<rect className='task-log-elem' x={x0} width={width} y='20' height='30'>
+				<rect className='task-log-elem' x={x0} width={width} y='20' height='30' onClick={this.clickLog.bind(this, log)}>
 				</rect>
 			)
 		})
