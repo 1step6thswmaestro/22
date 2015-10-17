@@ -4,7 +4,7 @@ import MapImage from '../dialog/MapImage';
 import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
 import { getReadableDate } from '../../utility/date'
-import { startItem, pauseItem, completeItem, removeItem, postponeItem } from '../actions/tasks';
+import { startItem, modifyItem, pauseItem, completeItem, removeItem, postponeItem } from '../actions/tasks';
 import { fetchTaskLog } from '../actions/tasklog';
 import If from '../../utility/if'
 var TaskLogType = require('../../../constants/TaskLogType');
@@ -40,6 +40,10 @@ class TaskItem extends React.Component{
 	postpone(){
 		const { dispatch } = this.props;
 		dispatch(postponeItem(this.props.task));
+	}
+
+	modify() {
+		this.props.onTaskModify();
 	}
 
 	reset(){
@@ -289,6 +293,9 @@ class TaskItem extends React.Component{
 							</button>
 							<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
+							</button>
+							<button className="btn btn-default" label="Discard this task" onClick={this.modify.bind(this)}>
+								<span className="glyphicon glyphicon-pencil"></span> 수정
 							</button>
 							<button className="btn btn-default" label="Discard this task" onClick={this.reset.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> reset

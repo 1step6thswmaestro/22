@@ -52,7 +52,7 @@ class TaskInputForm extends React.Component{
 							</div>
 							<div className="modal-body">
 								<div className="task-box">
-									<TaskForm ref="taskForm" global={this.props.global}/>
+									<TaskForm ref="taskForm" global={this.props.global} />
 								</div>
 							</div>
 							<div className="modal-footer">

@@ -28,14 +28,26 @@ class TaskView extends React.Component{
 		dispatch(makeNewItem(task));
 	}
 
-	showDialog(){
+	showInputDialog(){
 		console.log(this.refs.taskinputform);
 		this.refs.taskinputform.setDate(this.props.global.time);
-		$(React.findDOMNode(this.refs.taskinputform)).modal({
+
+		var modal = $(React.findDOMNode(this.refs.taskinputform));
+		modal.modal({
 			backdrop: true
 			, keyboard: true
 			, show: true
-		})
+		});
+	}
+
+	showModifyDialog() {
+		var modal = $(React.findDOMNode(this.refs.taskinputform));
+		modal.modal({
+			backdrop: true
+			, keyboard: true
+			, show: true
+		});
+		modal.find('.modal-title').text("작업 수정하기");
 	}
 
 	render() {
@@ -47,16 +59,17 @@ class TaskView extends React.Component{
 
 	    function createTaskElements(list, logs){
 			return _.map(list, task => (
-		        <TaskItem key={task.id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} global={global} />));
+		        <TaskItem key={task.id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} global={global} onTaskModify={self.showModifyDialog.bind(self)} />)
+			);
 	    }
 
 		return (
 			<div className="task-view">
-				<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showDialog.bind(this)}>
+				<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showInputDialog.bind(this)}>
 					Add New Task
 				</button>
 				<TaskInputForm
-					ref='taskinputform'
+					ref="taskinputform"
 					onTaskSubmit={this.handleTaskSubmit.bind(this)}
 					global={this.props.global}
 				/>
