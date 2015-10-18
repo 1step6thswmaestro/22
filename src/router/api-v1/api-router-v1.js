@@ -13,7 +13,7 @@ module.exports = function(app){
 			'userId': req.user._id,
 			'loc': {
 				type: 'Point',
-				coordinates: [ req.body.lat, req.body.lon ]
+				coordinates: [ Number(req.body.lat), Number(req.body.lon) ]
 			 }
 		});
 		newLog.save(function (err, obj){

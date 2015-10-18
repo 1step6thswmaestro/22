@@ -81,10 +81,6 @@ class LocClusterView extends React.Component{
 	    else
 	        return "rgb(0, 0, 0)";      //Black
 	}
-	onButtonClick(){
-		alert("Not Implemented yet.");
-		console.log("Request event data process to server.");
-	}
 
 	render() {
 		// I don't know how to dynamically adjust height. So right now, I give it
@@ -95,7 +91,6 @@ class LocClusterView extends React.Component{
 		};
 		return (
 			<div class="clusterview" style={divStyle}>
-				<button type="button" onClick={this.onButtonClick}> [DEV]Process Event Data</button>
 				<div ref="map" id="map-canvas"  style={divStyle}>
 				</div>
 			</div>
