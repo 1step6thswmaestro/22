@@ -34,7 +34,8 @@ module.exports = function(){
 			latitude: Number,
 			required: false
 		}
-		, locations: String
+		, locAllInfo: String
+		, locClusterKey: String
 	});
 
 	accountSchema.methods = {

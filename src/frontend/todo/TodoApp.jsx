@@ -52,8 +52,10 @@ class TodoApp extends React.Component{
 
 		if(this.state.currentView == 'task'){
 			viewContent = (
+				<div>
+				<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
 				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global}/>
-
+				</div>
 			);
 		}
 		else if(this.state.currentView == 'user'){
@@ -70,8 +72,6 @@ class TodoApp extends React.Component{
 						Click HERE to Toggle UserView/TaskView
 					</div>
 				</header>
-				<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
-				{this.props.global.time}
 				{viewContent}
 			</div>
 		);
