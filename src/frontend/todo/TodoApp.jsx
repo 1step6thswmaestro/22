@@ -13,6 +13,8 @@ import { setGlobalTime } from './actions/global'
 
 import { fetchPrioritizedList } from './actions/tasks'
 
+import { getLocation } from '../utility/location'
+
 class TodoApp extends React.Component{
 	constructor(){
 		super();
@@ -23,6 +25,46 @@ class TodoApp extends React.Component{
 	}
 
 	componentDidMount() {
+		getLocation()
+		.then(loc => {
+			this.sendStillAlive();
+			this.setState({
+				location: loc
+			});
+
+			// Send still alive signal on every 5 min.
+			// NOTE: When user inactive the tab in Chrome, the timer is paused.
+			setInterval(this.sendStillAlive, 5*60*1000);
+		});
+
+
+	}
+
+	sendStillAlive(){
+		getLocation()
+		.then(loc => {
+			if (loc.lat == 0 || loc.lon == 0) {
+				return
+			}
+			$.ajax({
+				url: '/v1/connections/alive'
+				, type: 'POST'
+				, data:{
+					lat: loc.lat,
+					lon: loc.lon
+				}
+			})
+			.then(
+				result => {}
+				, err => {console.log(err);}
+			)
+			if (loc.lat != this.state.location.lat || loc.lon != this.state.location.lon){
+				// Only update when location is changed.
+				this.setState({
+					location: loc
+				});
+			}
+		});
 	}
 
 	toggleView(){

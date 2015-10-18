@@ -179,7 +179,6 @@ class TaskForm extends React.Component{
 		// See original work from here. http://codepen.io/arqex/pen/BNRNBw
 
 		var locButtonState = this.getLocButtonStates(this.state.relatedLocation);
-		console.log(this.props);
 		return (
 			<div className='form-group-attached'>
 				<div className='row'>
