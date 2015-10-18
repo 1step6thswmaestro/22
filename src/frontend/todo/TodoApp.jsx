@@ -102,7 +102,7 @@ class TodoApp extends React.Component{
 		}
 		else if(this.state.currentView == 'user'){
 			viewContent = (
-				<UserView dispatch={this.props.dispatch}  location={this.state.location} global={this.props.global}/>
+				<UserView dispatch={this.props.dispatch} global={this.props.global}/>
 			);
 		}
 
