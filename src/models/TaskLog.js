@@ -7,7 +7,10 @@ module.exports = function(app){
 		taskId: Schema.Types.ObjectId
 		, userId: Schema.Types.ObjectId
 		, type: Number
-		, loc: { type: { type: String }, coordinates: [ ] }
+		// A GeoJSON geometry object.
+		// http://geojson.org/geojson-spec.html
+		// Example data: {type : "Point", coordinates: [100.0, 0.0]}
+		, loc: { type: String, coordinates: [ ] }
 		, time: {type: Date, default: Date.now}
 	});
 

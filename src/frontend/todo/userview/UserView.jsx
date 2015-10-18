@@ -1,7 +1,7 @@
 import React from 'react'
-import MapImage from '../dialog/MapImage'
 import LocationAddress from '../dialog/LocationAddress'
 import LocSetup from './LocSetup'
+import LocAsk from './LocAsk'
 import LocClusterView from './LocClusterView'
 
 import _ from 'underscore'
@@ -19,6 +19,8 @@ class UserView extends React.Component{
 		// TODO: show recent event log, that is recieved from server.
 		return (
 			<div className="user-view">
+				<h3> 새로 생긴 위치 클러스터 </h3>
+				<LocAsk />
 				<h3> 저장된 위치 정보 </h3>
 				<div className='current-location'>
 					<table>
@@ -30,6 +32,7 @@ class UserView extends React.Component{
 						</tr>
 					</table>
 				</div>
+
 				<LocSetup location = {this.props.location}/>
 				<LocClusterView />
 				<h3> 이벤트 로그 </h3>

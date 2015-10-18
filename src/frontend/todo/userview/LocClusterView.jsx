@@ -18,11 +18,8 @@ class LocClusterView extends React.Component{
 			center: seoul
 		});
 
-		// Add data
-		console.log('Load my Point of Interest');
-
 		// map.data.loadGeoJson('https://storage.googleapis.com/maps-devrel/google.json');
-		map.data.loadGeoJson('v1/locations.json');
+		map.data.loadGeoJson('v1/alllocations.json');
 
 		// Color each letter gray. Change the color when the isColorful property
 		// is set to true.
@@ -37,6 +34,26 @@ class LocClusterView extends React.Component{
 				strokeWeight: 2
 			});
 		}.bind(this));
+
+		$.getJSON('v1/keylocations.json', function( data ) {
+			var items = [];
+			$.each( data, function( key, val ) {
+				// Convert data type from {type : "Point", coordinates: [37.531767, 126.913857]}
+				// to { "coordinate": { "lat": 37.528901654859453, "lng": 126.97144059041139 } }
+				var newVal = {
+					coordinate: {
+						lat: val.coordinates[0],
+						lng: val.coordinates[1]
+					}
+				};
+
+				var marker = new google.maps.Marker({
+					position: newVal.coordinate,
+					map: map
+				});
+			});
+		});
+
 		this.setState({
 			map: map
 		})

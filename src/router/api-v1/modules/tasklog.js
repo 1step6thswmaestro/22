@@ -11,11 +11,21 @@ module.exports = function(router, app){
 	let helper = app.helper;
 
 
-	// I put this address resolver here, becuase locations.json is created from tasklogs.
-	router.get('/locations.json', function(req, res){
+	// I put this address resolver here, becuase allLocations.json is created from tasklogs.
+	router.get('/alllocations.json', function(req, res){
 		Account.findOne({'_id' :req.user._id}, function (err, account){
 			if (err) return handleError(err);
-			res.send(account.locations);
+			console.log(req.user._id);
+			console.log(account.locAllInfo);
+			res.send(account.locAllInfo);
+		});
+	})
+
+	// I put this address resolver here, becuase keyLocations.json is created from tasklogs.
+	router.get('/keylocations.json', function(req, res){
+		Account.findOne({'_id' :req.user._id}, function (err, account){
+			if (err) return handleError(err);
+			res.send(account.locClusterKey);
 		});
 	})
 
