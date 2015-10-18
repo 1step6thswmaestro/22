@@ -10,7 +10,7 @@ module.exports = function(app){
 		// A GeoJSON geometry object.
 		// http://geojson.org/geojson-spec.html
 		// Example data: {type : "Point", coordinates: [100.0, 0.0]}
-		, loc: { type: String, coordinates: [ ] }
+		, loc: { type: { type: String }, coordinates: [ ] }
 		, time: {type: Date, default: Date.now}
 	});
 
