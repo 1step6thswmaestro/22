@@ -81,14 +81,13 @@ class TaskInputForm extends React.Component{
 			relatedLocation: 0,
 			modifyMode: false,
 			task: null,
-			callback: null
 		};
 	}
 
 	handleSubmitModify() {
 		let modifiedTask = this.getFormData();
 		modifiedTask['_id'] = this.state.task._id;
-		modifyItem(modifiedTask, this.state.callback);
+		modifyItem(modifiedTask);
 	}
 
 	handleSubmitAdd() {
