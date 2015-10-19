@@ -55,6 +55,17 @@ module.exports = function(_router, app){
 		.fail(err=>logger.error(err))
 	})
 
+	router.post('/modify', function(req, res){
+		// This request create new task for the current user.
+		let task = _.pick(req.body, '_id', 'name', 'description');
+		
+		var modifiedTask = Task(task).toObject();
+		delete modifiedTask._id;
+		Task.update({ _id: task._id }, modifiedTask, { multi: true }, function(err) {
+			if(err) throw err;
+		});
+	})
+
 	router.get('/:id', function(req, res){
 		// This request returns error. At this moment, we don't support for this kind of operation.
 		res.send('SORRY! You cannot access taskid: ' + req.params.id + '<br/>This not a valid access method.');

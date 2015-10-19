@@ -42,6 +42,11 @@ class TaskItem extends React.Component{
 		dispatch(postponeItem(this.props.task));
 	}
 
+	modify() {
+		const { dispatch } = this.props;
+		this.props.onTaskModify(this.props.task, this.render());
+	}
+
 	reset(){
 		$.ajax(`/v1/tasktoken/task/${this.props.task._id}/reset`);
 	}
@@ -66,7 +71,7 @@ class TaskItem extends React.Component{
 		var newVal = (this.state.isExpanded||0) ^ 1;
 		this.setState({
 			isExpanded: newVal
-		})
+		});
 
 		dispatch(fetchTaskLog(this.props.task));
 	}
@@ -286,6 +291,9 @@ class TaskItem extends React.Component{
 							</button>
 							<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
+							</button>
+							<button className="btn btn-default" label="Discard this task" onClick={this.modify.bind(this)}>
+								<span className="glyphicon glyphicon-pencil"></span> 수정
 							</button>
 							<button className="btn btn-default" label="Discard this task" onClick={this.reset.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> reset
