@@ -13,6 +13,8 @@ import { setGlobalTime } from './actions/global'
 
 import { fetchPrioritizedList } from './actions/tasks'
 
+import { getLocation } from '../utility/location'
+
 class TodoApp extends React.Component{
 	constructor(){
 		super();
@@ -23,6 +25,46 @@ class TodoApp extends React.Component{
 	}
 
 	componentDidMount() {
+		getLocation()
+		.then(loc => {
+			this.sendStillAlive();
+			this.setState({
+				location: loc
+			});
+
+			// Send still alive signal on every 5 min.
+			// NOTE: When user inactive the tab in Chrome, the timer is paused.
+			setInterval(this.sendStillAlive, 5*60*1000);
+		});
+
+
+	}
+
+	sendStillAlive(){
+		getLocation()
+		.then(loc => {
+			if (loc.lat == 0 || loc.lon == 0) {
+				return
+			}
+			$.ajax({
+				url: '/v1/connections/alive'
+				, type: 'POST'
+				, data:{
+					lat: loc.lat,
+					lon: loc.lon
+				}
+			})
+			.then(
+				result => {}
+				, err => {console.log(err);}
+			)
+			if (loc.lat != this.state.location.lat || loc.lon != this.state.location.lon){
+				// Only update when location is changed.
+				this.setState({
+					location: loc
+				});
+			}
+		});
 	}
 
 	toggleView(){
@@ -52,13 +94,15 @@ class TodoApp extends React.Component{
 
 		if(this.state.currentView == 'task'){
 			viewContent = (
+				<div>
+				<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
 				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global}/>
-
+				</div>
 			);
 		}
 		else if(this.state.currentView == 'user'){
 			viewContent = (
-				<UserView dispatch={this.props.dispatch}  location={this.state.location} global={this.props.global}/>
+				<UserView dispatch={this.props.dispatch} global={this.props.global}/>
 			);
 		}
 
@@ -70,8 +114,6 @@ class TodoApp extends React.Component{
 						Click HERE to Toggle UserView/TaskView
 					</div>
 				</header>
-				<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
-				{this.props.global.time}
 				{viewContent}
 			</div>
 		);
