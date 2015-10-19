@@ -81,7 +81,7 @@ export function makeNewItem(item){
 	}
 }
 
-export function modifyItem(task, callback){
+export function modifyItem(task){
 	return request({
 		url: '/v1/tasks/modify'
 		, type: 'post'
