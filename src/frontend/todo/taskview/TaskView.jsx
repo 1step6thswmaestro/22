@@ -41,11 +41,10 @@ class TaskView extends React.Component{
 		});
 	}
 
-	showModifyDialog(task, callback) {
+	showModifyDialog(task) {
 		this.refs.taskinputform.setState({
 			modifyMode: true,
 			task: task,
-			callback: callback
 		});
 		var modal = $(React.findDOMNode(this.refs.taskinputform));
 		modal.modal({
