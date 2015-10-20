@@ -91,13 +91,13 @@ class TaskInputForm extends React.Component{
 	}
 
 	handleSubmitAdd() {
-		if (this.refs.taskForm.isValid()) {
-			this.props.onTaskSubmit(this.refs.taskForm.getFormData());
-			this.refs.taskForm.clearForm();
+		if (this.isValid()) {
+			this.props.onTaskSubmit(this.getFormData());
+			this.clearForm();
 		}
 		else{
 			var errormsg='';
-			var errors = this.refs.taskForm.state.errors;
+			var errors = this.state.errors;
 			for (var error in errors) {
 				errormsg=errormsg+errors[error]+'\n';
 			}
@@ -106,7 +106,8 @@ class TaskInputForm extends React.Component{
 	}
 
 	setDate(date){
-		this.refs.taskForm.setDate(date);
+		this.refs.created.setDate(date);
+		this.refs.duedate.setDate(this.refs.created.getValue() + (24*60*60*1000));
 	}
 
 	isValid(){
