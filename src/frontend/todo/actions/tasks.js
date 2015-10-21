@@ -204,6 +204,39 @@ function updateStateWithAction(task, actionType){
 	}
 }
 
+export function getRemainTime(task, logs) {
+	function dateToMillisec(date) {
+		return new Date(date);
+	}
+
+	var remainTime = ((dateToMillisec(task.duedate) - Date.now()) / 1000 / 60 / 60).toFixed(1);
+	var estimationTime = 2;
+
+	var logReq = '/v1/tasklog/' + task._id;
+
+	var activatedTime = 0;
+
+	let from = 0;
+	let lognum = logs.length;
+	while (from < lognum) {
+		if (logs[from].type == 200) {
+			let to = from + 1;
+			while (to < logs.length) {
+				if (logs[to].type == 300) {
+					activatedTime += (dateToMillisec(logs[to].time) - dateToMillisec(logs[from].time));
+					from = to;
+					break;
+				}
+			}
+		}
+		from += 1;
+	}
+	activatedTime /= (1000 * 60 * 60).toFixed(1);
+
+	let result = remainTime - estimationTime + activatedTime;
+	return result;
+}
+
 export function removeItem(task){
 	return function(dispatch){
 		// No dispatch for remove request because there is no need to change state
