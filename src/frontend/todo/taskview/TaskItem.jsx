@@ -43,7 +43,7 @@ class TaskItem extends React.Component{
 	}
 
 	modify() {
-		this.props.onTaskModify(this.props.task, this.render());
+		this.props.onTaskModify(this.props.task);
 	}
 
 	reset(){
