@@ -83,15 +83,14 @@ class TodoApp extends React.Component{
 
 	setGlobalTime(time){
 		const { dispatch } = this.props;
-		dispatch(setGlobalTime(time.valueOf()));
-		console.error('global', this.props);
-
+		var unixtime= time.valueOf();
+		dispatch(setGlobalTime(unixtime));
 		dispatch(fetchPrioritizedList());
 	}
 
 	render() {
 		var viewContent;
-		
+
 		if(this.state.currentView == 'task'){
 			viewContent = (
 				<div>

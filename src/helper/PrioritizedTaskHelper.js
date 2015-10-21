@@ -10,7 +10,7 @@ var TokenBasedPriorityStrategy = require('../task_strategy/TokenBasedPriorityStr
 function init(app){
 	var helper = app.helper;
 	var lastUpdateTime = {}
-	
+
 	function PrioritizedTaskHelper(){
 	}
 
@@ -35,12 +35,15 @@ function init(app){
 			}));
 		})
 		.fail(err=>logger.error(err));
-	}	
+	}
 
 	PrioritizedTaskHelper.prototype.find = function(userId, query, time){
 		return this.update(userId, time)
 		.then(function(results){
-			return helper.taskHelper.find(userId, query, null, {sort: {priorityScore: -1}})
+			var scoreLabel = 'timePreferenceScore.'.concat(time);
+			var opt = {sort: {}};
+			opt.sort[scoreLabel]=-1;
+			return helper.taskHelper.find(userId, query, null, opt)
 		});
 	}
 

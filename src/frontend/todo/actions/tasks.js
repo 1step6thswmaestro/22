@@ -14,8 +14,6 @@ export function fetchOngoingList(){
 			type: type.TASK_REQ_ONGOING_LIST
 		});
 
-		console.log(getState());
-
 		return $.ajax({
 			url: '/v1/tasks/ongoing'
 			, type: 'get'
@@ -38,9 +36,6 @@ export function fetchList(){
 		dispatch({
 			type: type.TASK_REQ_LIST
 		});
-
-		console.log(getState());
-
 		return $.ajax({
 			url: '/v1/tasks'
 			, type: 'get'
@@ -63,9 +58,6 @@ export function fetchPrioritizedList(){
 		dispatch({
 			type: type.TASK_REQ_PLIST
 		});
-
-		console.log(getState());
-
 		return $.ajax({
 			url: '/v1/tasks/prioritized'
 			, type: 'get'

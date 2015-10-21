@@ -9,11 +9,14 @@ var Q = require('q');
 var express = require('express');
 var tokenizer = require('../../../taskprocess/tokenizer');
 
+var TimeslotUpdater = require('../../../taskprocess/TimeslotUpdater');
+
 module.exports = function(_router, app){
 	let helper = app.helper;
 	let router = express.Router();
 	_router.use('/tasks', router);
-	var taskTokenizer = new tokenizer(app);
+	// var taskTokenizer = new tokenizer(app);
+	var timslotUpdater = new TimeslotUpdater(app);
 
 
 	router.get('/testcommand_droptasks', function(req, res){
@@ -25,9 +28,20 @@ module.exports = function(_router, app){
 	})
 
 	router.get('/', function(req, res){
+		var time;
+		if (typeof req.query.time == 'undefined')
+		{
+			time = new Date(Date.now());
+		}
+		else{
+			time = new Date(Number(req.query.time));
+		}
+		var timeslotIdx = time.getHours()*2 + Math.floor(time.getMinutes()/30);
+
 		// This request returns all tasks that are saved for the user.
 		Q.all([helper.taskHelper.find(req.user._id, {state: {$ne: TaskState.named.started.id}})
-			, helper.priTaskHelper.find(req.user._id, {state: {$ne: TaskState.named.started.id}}, parseInt(req.query.time))])
+			, helper.priTaskHelper.find(req.user._id, undefined, timeslotIdx)])
+			//, helper.priTaskHelper.find(req.user._id, {state: {$ne: TaskState.named.started.id}}, timeslotIdx)])
 		.then(results=>res.send({list: results[0], plist: results[1]}));
 	})
 
@@ -37,9 +51,18 @@ module.exports = function(_router, app){
 	})
 
 	router.get('/prioritized', function(req, res){
-		helper.priTaskHelper.find(req.user._id, undefined, parseInt(req.query.time))
-		.then(result=>res.send({plist: result}));
-
+		var time;
+		if (typeof req.query.time == 'undefined')
+		{
+			time = new Date(Date.now());
+		}
+		else{
+			time = new Date(Number(req.query.time));
+		}
+		var timeslotIdx = time.getHours()*2 + Math.floor(time.getMinutes()/30);
+		helper.priTaskHelper.find(req.user._id, undefined, timeslotIdx)
+		.then(result=>res.send({plist: result}))
+		.fail(err=>res.send(err));
 	})
 
 	router.post('/', function(req, res){
@@ -112,7 +135,7 @@ module.exports = function(_router, app){
 			})
 		})
 		.then(function(result){
-			taskTokenizer.processTask(req.user, result.task)
+			timslotUpdater.updateTimeslot(result.log);
 			res.send(result);
 		})
 		.fail(err=>logger.error(err))

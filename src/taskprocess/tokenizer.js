@@ -52,7 +52,7 @@ class Tokenizer{
 		if(!force && TaskLogType.indexed[log.type].tokenize === false){
 			return;
 		}
-		
+
 		let textTokens = this.tokenizeText(task.name);
 
 		let tokens = _.map(textTokens, text => {
@@ -79,7 +79,7 @@ class Tokenizer{
 
 	processTaskById(user, taskId){
 		let self = this;
-		
+
 		return app.helper.taskHelper.find(user._id, {_id: taskId})
 		.then(function(tasks){
 			var task = tasks[0];
@@ -93,7 +93,7 @@ class Tokenizer{
 	processTask(user, task){
 		let self = this;
 		let app = this.app;
-		
+
 		let currentTime = new Date(Date.now());
 		let _time = currentTime;
 		let lastTime = new Date(task.lastProcessed);
@@ -151,7 +151,7 @@ class Tokenizer{
 	resetTaskById(user, taskId){
 		let self = this;
 		let app = this.app;
-		
+
 		return app.helper.taskHelper.find(user._id, {_id: taskId})
 		.then(function(tasks){
 			var task = tasks[0];
