@@ -4,7 +4,7 @@ import MapImage from '../dialog/MapImage';
 import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
 import { getReadableDate } from '../../utility/date'
-import { startItem, pauseItem, completeItem, removeItem, postponeItem } from '../actions/tasks';
+import { startItem, pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
 import { fetchTaskLog } from '../actions/tasklog';
 import If from '../../utility/if'
 var TaskLogType = require('../../../constants/TaskLogType');
@@ -122,6 +122,10 @@ class TaskItem extends React.Component{
 		}
 	}
 
+	getRemainTime() {
+		return getRemainTime(this.props.task, this.props.tasklog);
+	}
+
 	getDetailView(){
 		var task = this.props.task;
 		var startDate, completeDate;
@@ -209,6 +213,9 @@ class TaskItem extends React.Component{
 							{startDate}
 							<div className="task-duedate">
 								마감일: {getReadableDate(task.duedate)}
+							</div>
+							<div>
+								남은시간: { this.getRemainTime() } 시간
 							</div>
 							{completeDate}
 						</div>
