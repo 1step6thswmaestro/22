@@ -43,7 +43,6 @@ class TaskItem extends React.Component{
 	}
 
 	modify() {
-		const { dispatch } = this.props;
 		this.props.onTaskModify(this.props.task, this.render());
 	}
 

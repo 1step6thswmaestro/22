@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var Task = mongoose.model('Task');
 var TaskLog = mongoose.model('TaskLog');
 var TaskLogType = require('../../../constants/TaskLogType');
+var TaskState = require('../../../constants/TaskState');
 var Q = require('q');
 var express = require('express');
 var tokenizer = require('../../../taskprocess/tokenizer');
@@ -25,11 +26,14 @@ module.exports = function(_router, app){
 
 	router.get('/', function(req, res){
 		// This request returns all tasks that are saved for the user.
-
-
-		Q.all([helper.taskHelper.find(req.user._id)
-			, helper.priTaskHelper.find(req.user._id, undefined, parseInt(req.query.time))])
+		Q.all([helper.taskHelper.find(req.user._id, {state: {$ne: TaskState.named.started.id}})
+			, helper.priTaskHelper.find(req.user._id, {state: {$ne: TaskState.named.started.id}}, parseInt(req.query.time))])
 		.then(results=>res.send({list: results[0], plist: results[1]}));
+	})
+
+	router.get('/ongoing', function(req, res){
+		helper.taskHelper.find(req.user._id, {state: TaskState.named.started.id})
+		.then(result=>res.send({list: result}));
 	})
 
 	router.get('/prioritized', function(req, res){
@@ -56,21 +60,18 @@ module.exports = function(_router, app){
 	})
 
 	router.post('/modify', function(req, res){
-		// This request create new task for the current user.
+		// This request modifies given task's name and description field.
 		let task = _.pick(req.body, '_id', 'name', 'description');
-		
+
 		var modifiedTask = Task(task).toObject();
+		// TODO: Check if modfiedTask does not overwrite, other field such as state.
+		// If not, please comment the behavior because code make reader confusing.
+		console.log(modifiedTask);
 		delete modifiedTask._id;
 		Task.update({ _id: task._id }, modifiedTask, { multi: true }, function(err) {
 			if(err) throw err;
 		});
 	})
-
-	router.get('/:id', function(req, res){
-		// This request returns error. At this moment, we don't support for this kind of operation.
-		res.send('SORRY! You cannot access taskid: ' + req.params.id + '<br/>This not a valid access method.');
-	})
-
 	router.delete('/:id', function(req, res){
 		// This request delete specific task.
 		//TODO
@@ -82,19 +83,20 @@ module.exports = function(_router, app){
 	})
 
 	router.put('/:_id/:command', function(req, res, next){
+		// Handle event related to task. Update task according to the event type.
+
 		if(!TaskLogType.named[req.params.command]){
+			// Undefined command recieved.
 			next();
 			return;
 		}
 
-		var type = TaskLogType.named[req.params.command];
-		var taskType = type;
-		if(type.state){
-			taskType = TaskLogType.named[type.state];
-		}
+		var commandType = TaskLogType.named[req.params.command];
+		var nextState = TaskState.named[commandType.nextState];
 
-		var p0 = helper.taskHelper.update(req.user._id, {_id: req.params._id}, {state: taskType.id});
-		var p1 = helper.tasklog.create(req.user._id, req.params._id, TaskLogType.named[req.params.command], {
+		var p0 = helper.taskHelper.update(req.user._id, {_id: req.params._id}, {state: nextState.id});
+
+		var p1 = helper.tasklog.create(req.user._id, req.params._id, commandType, {
 			loc: req.body.loc
 			, time: req.body.time
 		});
