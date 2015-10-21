@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var TaskLogType = require('../constants/TaskLogType');
+var TaskState = require('../constants/TaskState');
 
 module.exports = function(app){
 	var taskSchema = new Schema({
@@ -12,9 +12,11 @@ module.exports = function(app){
 		estimation: {type: Number, default: 1.0},	//unit-hour
 		duedate: {type: Date, default: function(){
 			return new Date(Date.now() + 24*60*60*1000);
-		}},		
+		}},
 		expectedDuration: {type: String, default: ""},
-		state: {type: Number, default: TaskLogType.named.create.id},
+
+		// State codes are defined in src/constants/TaskState.js
+		state: {type: Number, default: TaskState.named.created.id},
 
 		// Save related location as 4 bits. (home, school, work, etc)
 		// 0 means, no location is related to this task

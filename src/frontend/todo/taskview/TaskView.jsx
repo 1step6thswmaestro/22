@@ -6,7 +6,7 @@ import MapImage from '../dialog/MapImage'
 import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
-import { fetchList, makeNewItem, removeItem } from '../actions/tasks'
+import { fetchList, fetchOngoingList, makeNewItem, removeItem } from '../actions/tasks'
 
 import _ from 'underscore'
 
@@ -20,6 +20,7 @@ class TaskView extends React.Component{
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch(fetchList());
+		dispatch(fetchOngoingList());
 	}
 
 	handleTaskSubmit(task) {
@@ -54,6 +55,22 @@ class TaskView extends React.Component{
 		});
 	}
 
+	createTaskElements(list, logs){
+		const { dispatch } = this.props;
+
+		return _.map(list, task => (
+			<TaskItem
+				key={task.id}
+				task={task}
+				tasklog={logs[task._id]}
+				dispatch={dispatch}
+				global={global}
+				onTaskModify={this.showModifyDialog.bind(this)}
+			/>
+			)
+		);
+	}
+
 	render() {
 		var self = this;
 		var tasks = this.props.tasks;
@@ -61,11 +78,7 @@ class TaskView extends React.Component{
 		var global = this.props.global;
 		const { dispatch } = this.props;
 
-	    function createTaskElements(list, logs){
-			return _.map(list, task => (
-		        <TaskItem key={task.id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} global={global} onTaskModify={self.showModifyDialog.bind(self)} />)
-			);
-	    }
+
 
 		return (
 			<div className="task-view">
@@ -77,13 +90,22 @@ class TaskView extends React.Component{
 					onTaskSubmit={this.handleTaskSubmit.bind(this)}
 					global={this.props.global}
 				/>
-				<div className="task-list">
+				<div className="task-list-ongoing">
+					현재 진행중인 작업:
 					<div className="row">
 						<div className="col-md-6">
-							{createTaskElements(tasks.list, tasklog)}
+							{this.createTaskElements(tasks.ongoinglist, tasklog)}
+						</div>
+					</div>
+				</div>
+				<div className="task-list">
+					작업 목록:
+					<div className="row">
+						<div className="col-md-6">
+							{this.createTaskElements(tasks.list, tasklog)}
 						</div>
 						<div className="col-md-6">
-							{createTaskElements(tasks.plist, tasklog)}
+							{this.createTaskElements(tasks.plist, tasklog)}
 						</div>
 					</div>
 				</div>
