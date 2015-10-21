@@ -42,7 +42,7 @@ DECL('TASK_RECV_UPDATED_ITEM', (state, action)=>{
 	var newOngoingList, newList;
 
 	if (action.isPrevStateStarted){
-		if(action.isUpdated){
+		if(action.isStateUpdated){
 			// It is in the ongoinglist. So move it to the list.
 			if (state.list.length != 0){
 				newList = state.list.slice();
@@ -71,7 +71,7 @@ DECL('TASK_RECV_UPDATED_ITEM', (state, action)=>{
 		}
 	}
 	else{
-		if(action.isUpdated){
+		if(action.isStateUpdated){
 			// It is in the list. So move it to the ongoinglist.
 			if (state.ongoinglist.length != 0){
 				newOngoingList = state.ongoinglist.slice();
@@ -159,6 +159,7 @@ DECL('TASK_REMOVE_ITEM', (state, action)=>{
 	});
 })
 
+// Use to update both state and values of task.
 DECL('TASK_REQ_UPDATE', (state, action)=>{
 	let newlist = state.list.map(function(item){
 		if(item._id == action.item._id){

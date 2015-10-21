@@ -111,16 +111,39 @@ export function makeNewItem(item){
 }
 
 export function modifyItem(task){
-	return request({
-		url: '/v1/tasks/modify'
-		, type: 'post'
-		, data: task
-	})
-	.then(result => {
-		dispatch({type: type.TASK_MODIFY_ITEM, task});
-	}, err => {
-		dispatch({type: type.TASK_ERROR, err});
-	});
+	return function(dispatch, getState){
+
+		// Show loading symbol until we get server response.
+		dispatch({
+			type: type.TASK_REQ_UPDATE
+			, item: task
+		})
+
+		return request({
+			url: '/v1/tasks/modify'
+			, type: 'post'
+			, data: task
+		})
+		.then(result => {
+			dispatch({
+				type: type.TASK_RECV_UPDATED_ITEM,
+				item: result,
+				isPrevStateStarted: task.state == TaskState.named.started.id,
+				isContentUpdated: true
+			});
+			dispatch({type: type.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
+		}, err => {
+			dispatch({type: type.TASK_ERROR, err});
+
+			// Even if request for state change failed. We change state from loading to finished.
+			dispatch({
+				type: type.TASK_RECV_UPDATED_ITEM,
+				item: task,
+				isPrevStateStarted: task.state == TaskState.named.started.id,
+				isContentUpdated: false
+			});
+		});
+	}
 }
 
 export function startItem(task){
@@ -164,7 +187,7 @@ function updateStateWithAction(task, actionType){
 				type: type.TASK_RECV_UPDATED_ITEM,
 				item: result.task,
 				isPrevStateStarted: task.state == TaskState.named.started.id,
-				isUpdated: true
+				isStateUpdated: true
 			});
 			dispatch({type: type.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
 		}, err => {
@@ -175,7 +198,7 @@ function updateStateWithAction(task, actionType){
 				type: type.TASK_RECV_UPDATED_ITEM,
 				item: task,
 				isPrevStateStarted: task.state == TaskState.named.started.id,
-				isUpdated: false
+				isStateUpdated: false
 			});
 		});
 	}
