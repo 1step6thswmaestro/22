@@ -29,6 +29,7 @@ function init(app){
 		})
 		.then(function(tasks){
 			return Q.all(_.map(tasks, task=>{
+				// Get logs and calculate priority of each task.
 				Q(helper.tasklog.find(userId, {taskId: task._id}))
 				.then(function(logs){
 					return Q.nbind(Task.findByIdAndUpdate, Task)(task.id, {priorityScore: scoringStrategy.calculate(task, logs)});

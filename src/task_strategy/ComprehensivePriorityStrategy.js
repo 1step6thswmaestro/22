@@ -1,14 +1,14 @@
 'use strict'
 
-var TokenizerClass = require('../taskprocess/tokenizer');
 var TaskLogType = require('../constants/TaskLogType');
 var _ = require('underscore');
 
 function ComprehensivePriorityStrategy(app){
 	this.app = app;
-	this.tokenizer = new TokenizerClass(app);
 }
 
+// Return idle time upon consideration of remain time, performed time, and estimated time of task.
+// Hour unit, rounded to the first decimal place.
 function getRemainTime(task, logs) {
 	function dateToMillisec(date) {
 		return new Date(date);
