@@ -16,12 +16,13 @@ class DocItem extends React.Component{
 			user_id: 'dummyID'
 		};
 		// formatting /search/<user_id>/<doc_id>
-		var url = encodeURI("http://localhost:5000/searchLog/"+data.user_id+"/"+data.id);
+		var url = encodeURI("http://localhost:5000/searchLog/"+data.user_id+"/"+data.id+"/");
 
 		$.ajax({
 			url: url,
 			cache: false,
-			method: 'POST'
+			method: 'POST',
+			crossDomain: true
 		})
 		.then(
 			function(data){
@@ -68,12 +69,13 @@ class DocView extends React.Component{
 		// formatting /search/<user_id>/<query>
 		var query = this.props.keyword;
 		
-		var url = encodeURI("http://127.0.0.1:5000/search/"+"dummyID"+"/"+query);
+		var url = encodeURI("http://localhost:5000/search/"+"dummyID"+"/"+query+"/");
 
 		$.ajax({
 			url: url,
 			cache: false,
-			method: 'POST'
+			method: 'POST',
+			crossDomain: true
 		})
 		.then(
 			function(data){
