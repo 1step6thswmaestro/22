@@ -4,8 +4,7 @@ var mongoose = require('mongoose');
 var Task = mongoose.model('Task');
 var Q = require('q');
 
-var RandomPriorityStrategy = require('../task_strategy/RandomPriorityStrategy')
-var TokenBasedPriorityStrategy = require('../task_strategy/TokenBasedPriorityStrategy')
+var ComprehensivePriorityStrategy = require('../task_strategy/ComprehensivePriorityStrategy')
 
 function init(app){
 	var helper = app.helper;
@@ -22,16 +21,18 @@ function init(app){
 
 		lastUpdateTime[userId] = currentTime;
 
-		// let scoringStrategy = new RandomPriorityStrategy(app);
-		let scoringStrategy = new TokenBasedPriorityStrategy(app);
+		let scoringStrategy = new ComprehensivePriorityStrategy(app);
 
 		return Q(scoringStrategy.ready(userId, time))
 		.then(function(){
-			return helper.taskHelper.find(userId)
+			return helper.taskHelper.find(userId);
 		})
 		.then(function(tasks){
 			return Q.all(_.map(tasks, task=>{
-				return Q.nbind(Task.findByIdAndUpdate, Task)(task.id, {priorityScore: scoringStrategy.calculate(task)});
+				Q(helper.tasklog.find(userId, {taskId: task._id}))
+				.then(function(logs){
+					return Q.nbind(Task.findByIdAndUpdate, Task)(task.id, {priorityScore: scoringStrategy.calculate(task, logs)});
+				})
 			}));
 		})
 		.fail(err=>logger.error(err));
@@ -40,7 +41,7 @@ function init(app){
 	PrioritizedTaskHelper.prototype.find = function(userId, query, time){
 		return this.update(userId, time)
 		.then(function(results){
-			return helper.taskHelper.find(userId, query, null, {sort: {priorityScore: -1}})
+			return helper.taskHelper.find(userId, query, null, {sort: {priorityScore: 1}})
 		});
 	}
 

@@ -211,9 +211,6 @@ export function getRemainTime(task, logs) {
 
 	var remainTime = ((dateToMillisec(task.duedate) - Date.now()) / 1000 / 60 / 60).toFixed(1);
 	var estimationTime = 2;
-
-	var logReq = '/v1/tasklog/' + task._id;
-
 	var activatedTime = 0;
 
 	let from = 0;
