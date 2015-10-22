@@ -4,6 +4,35 @@ import { type } from './tasks_decl';
 import { getLocation } from '../../utility/location'
 import _ from 'underscore'
 
+var TaskLogType = require('../../../constants/TaskLogType');
+var TaskState = require('../../../constants/TaskState');
+
+
+export function fetchOngoingList(){
+	return (dispatch, getState) => {
+		dispatch({
+			type: type.TASK_REQ_ONGOING_LIST
+		});
+
+		console.log(getState());
+
+		return $.ajax({
+			url: '/v1/tasks/ongoing'
+			, type: 'get'
+			// Seems unnecessary.
+			//, data:{
+			//	time: getState().global.time
+			//}
+		})
+		.then(
+			result => {
+				dispatch({type: type.TASK_RECV_ONGOING_LIST, list: result.list});
+			}
+			, err => dispatch({type: type.TASK_ERROR, err})
+		)
+	}
+}
+
 export function fetchList(){
 	return (dispatch, getState) => {
 		dispatch({
@@ -75,69 +104,144 @@ export function makeNewItem(item){
 			, data: item
 		})
 		.then(
-			item => dispatch({type: type.TASK_RECV_ITEM, item, tid})
+			item => dispatch({type: type.TASK_RECV_NEWITEM, item, tid})
 			, err => dispatch({type: type.TASK_ERROR, err})
 		);
 	}
 }
 
 export function modifyItem(task){
-	return request({
-		url: '/v1/tasks/modify'
-		, type: 'post'
-		, data: task
-	})
-	.then(result => {
-		dispatch({type: type.TASK_MODIFY_ITEM, task});
-	}, err => {
-		dispatch({type: type.TASK_ERROR, err});
-	});
-}
-
-export function startItem(task){
-	return updateState(task, 'start');
-}
-
-export function pauseItem(task){
-	return updateState(task, 'pause');
-}
-
-export function resumeItem(task){
-	return updateState(task, 'resume');
-}
-
-export function postponeItem(item){
-	return updateState(task, 'postpone');
-}
-
-export function completeItem(task){
-	return updateState(task, 'complete');
-}
-
-function updateState(task, state){
 	return function(dispatch, getState){
+
+		// Show loading symbol until we get server response.
 		dispatch({
 			type: type.TASK_REQ_UPDATE
 			, item: task
-			, doc: {state: state}
 		})
 
 		return request({
-			url: `/v1/tasks/${task._id}/${state}`
+			url: '/v1/tasks/modify'
+			, type: 'post'
+			, data: task
+		})
+		.then(result => {
+			dispatch({
+				type: type.TASK_RECV_UPDATED_ITEM,
+				item: result,
+				isPrevStateStarted: task.state == TaskState.named.started.id,
+				isContentUpdated: true
+			});
+			dispatch({type: type.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
+		}, err => {
+			dispatch({type: type.TASK_ERROR, err});
+
+			// Even if request for state change failed. We change state from loading to finished.
+			dispatch({
+				type: type.TASK_RECV_UPDATED_ITEM,
+				item: task,
+				isPrevStateStarted: task.state == TaskState.named.started.id,
+				isContentUpdated: false
+			});
+		});
+	}
+}
+
+export function startItem(task){
+	return updateStateWithAction(task, TaskLogType.named.start);
+}
+
+export function pauseItem(task){
+	return updateStateWithAction(task, TaskLogType.named.pause);
+}
+
+export function resumeItem(task){
+	return updateStateWithAction(task, TaskLogType.named.resume);
+}
+
+export function postponeItem(item){
+	return updateStateWithAction(task, TaskLogType.named.postpone);
+}
+
+export function completeItem(task){
+	return updateStateWithAction(task, TaskLogType.named.complete);
+}
+
+function updateStateWithAction(task, actionType){
+	return function(dispatch, getState){
+
+		// Show loading symbol until we get server response.
+		dispatch({
+			type: type.TASK_REQ_UPDATE
+			, item: task
+		})
+
+		return request({
+			url: `/v1/tasks/${task._id}/${actionType.name}`
 			, type: 'put'
 			, data: {
 				time: getState().global.time
 			}
 		})
 		.then(result => {
-			console.log(result);
-			dispatch({type: type.TASK_RECV_ITEM, item: result.task});
+			dispatch({
+				type: type.TASK_RECV_UPDATED_ITEM,
+				item: result.task,
+				isPrevStateStarted: task.state == TaskState.named.started.id,
+				isStateUpdated: true
+			});
 			dispatch({type: type.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
 		}, err => {
 			dispatch({type: type.TASK_ERROR, err});
-			dispatch({type: type.TASK_RECV_ITEM, item: task});
+
+			// Even if request for state change failed. We change state from loading to finished.
+			dispatch({
+				type: type.TASK_RECV_UPDATED_ITEM,
+				item: task,
+				isPrevStateStarted: task.state == TaskState.named.started.id,
+				isStateUpdated: false
+			});
 		});
 	}
+}
+
+export function getRemainTime(task, logs) {
+	function dateToMillisec(date) {
+		return new Date(date);
+	}
+
+	var remainTime = ((dateToMillisec(task.duedate) - Date.now()) / 1000 / 60 / 60).toFixed(1);
+	var estimationTime = 2;
+
+	var logReq = '/v1/tasklog/' + task._id;
+
+	var activatedTime = 0;
+
+	let from = 0;
+	var lognum;
+	if(!logs) {
+		lognum = -1;
+	}
+	else {
+		lognum = logs.length;
+	}
+	while (from < lognum) {
+		if (logs[from].type == 200) {
+			let to = from + 1;
+			while (to < lognum) {
+				if (logs[to].type == 300) {
+					activatedTime += (dateToMillisec(logs[to].time) - dateToMillisec(logs[from].time));
+					from = to;
+					break;
+				}
+				to += 1;
+			}
+		}
+		from += 1;
+	}
+	activatedTime /= (1000 * 60 * 60);
+
+	let result = (remainTime - estimationTime + activatedTime).toFixed(1);
+	return result;
 }
 
 export function removeItem(task){
@@ -163,6 +267,3 @@ function request(requestArg){
 		return $.ajax(requestArg);
 	})
 }
-
-
-

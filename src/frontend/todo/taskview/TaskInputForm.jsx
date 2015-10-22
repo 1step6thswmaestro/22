@@ -26,16 +26,13 @@ class MyInput extends React.Component{
 
 	render(){
 		return (
-			<div className='form-group'>
-				<input
-					className="form-control"
-					type="text"
-					value={this.state.value}
-					onChange={this.handleChange.bind(this)}
-					placeholder={this.props.placeholder}
-					defaultValue={this.props.value}
-				/>
-			</div>
+			<input
+				className="form-control"
+				type="text"
+				value={this.state.value}
+				onChange={this.handleChange.bind(this)}
+				placeholder={this.props.placeholder}
+			/>
 		);
 	}
 };
@@ -67,7 +64,6 @@ class MyTextarea extends React.Component{
 				value={this.state.value}
 				onChange={this.handleChange.bind(this)}
 				placeholder={this.props.placeholder}
-				defaultValue={this.props.value}
 			/>
 		);
 	}
@@ -87,26 +83,24 @@ class TaskInputForm extends React.Component{
 	handleSubmitModify() {
 		let modifiedTask = this.getFormData();
 		modifiedTask['_id'] = this.state.task._id;
-		modifyItem(modifiedTask);
+
+	  	const { dispatch } = this.props;
+		dispatch(modifyItem(modifiedTask));
 	}
 
 	handleSubmitAdd() {
-		if (this.refs.taskForm.isValid()) {
-			this.props.onTaskSubmit(this.refs.taskForm.getFormData());
-			this.refs.taskForm.clearForm();
+		if (this.isValid()) {
+			this.props.onTaskSubmit(this.getFormData());
+			this.clearForm();
 		}
 		else{
 			var errormsg='';
-			var errors = this.refs.taskForm.state.errors;
+			var errors = this.state.errors;
 			for (var error in errors) {
 				errormsg=errormsg+errors[error]+'\n';
 			}
 			alert('Error: Check your input\n'+errormsg);
 		}
-	}
-
-	setDate(date){
-		this.refs.taskForm.setDate(date);
 	}
 
 	isValid(){
@@ -167,6 +161,24 @@ class TaskInputForm extends React.Component{
 		});
 	}
 
+	onModifyRequest(task){
+		this.setState({
+			modifyMode: true,
+			task: task,
+		});
+
+		this.refs.name.setState({
+			value: task.name
+		});
+
+		this.refs.description.setState({
+			value: task.description
+		});
+
+		this.refs.created.setDate(task.created);
+		this.refs.duedate.setDate(task.duedate);
+	}
+
 	setDate(date){
 		this.refs.created.setDate(date);
 		this.refs.duedate.setDate(this.refs.created.getValue() + (24*60*60*1000));
@@ -220,7 +232,7 @@ class TaskInputForm extends React.Component{
 									<div className="form-group-attached">
 										<div className="row">
 											<div className="col-md-12">
-												<MyInput ref="name" placeholder="Task Name" value={modifyMode?this.state.task.name:""} />
+												<MyInput ref="name" placeholder="Task Name" existingValue={modifyMode?this.state.task.name:""} />
 											</div>
 										</div>
 										<div className="row">
@@ -234,7 +246,7 @@ class TaskInputForm extends React.Component{
 										<div className="row">
 											<div className="col-md-12">
 												<div className="form-group">
-													<MyTextarea ref="description" placeholder="Task Description" value={modifyMode?this.state.task.description:""} />
+													<MyTextarea ref="description" placeholder="Task Description" defaultValue={modifyMode?this.state.task.description:""} />
 												</div>
 											</div>
 										</div>
