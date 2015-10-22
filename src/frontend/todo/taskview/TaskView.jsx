@@ -76,8 +76,6 @@ class TaskView extends React.Component{
 		var global = this.props.global;
 		const { dispatch } = this.props;
 
-
-
 		return (
 			<div className="task-view">
 				<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showInputDialog.bind(this)}>
