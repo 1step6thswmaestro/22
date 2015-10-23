@@ -12,9 +12,12 @@ import SvgContainer from '../../d3/SvgContainer'
 import Timeline from '../../timeline/timeline'
 
 class TaskItem extends React.Component{
-	constructor(){
-		super();
+	constructor(props){
+		super(props);
 		this.state = {};
+
+		const { dispatch } = this.props;
+		dispatch(fetchTaskLog(this.props.task));
 	}
 
 	complete(){
@@ -71,8 +74,6 @@ class TaskItem extends React.Component{
 		this.setState({
 			isExpanded: newVal
 		});
-
-		dispatch(fetchTaskLog(this.props.task));
 	}
 
 	getLocButtonStates(relatedLocation){

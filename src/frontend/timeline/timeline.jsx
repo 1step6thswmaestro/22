@@ -72,7 +72,9 @@ export default class Timeline extends React.Component{
 	}
 
 	renderLogs(){
-		let items = _.map(this.state.logs, log=>{
+		let logs = this.state.logs;
+		logs = _.filter(this.state.logs, log=>log._time.begin!=undefined)
+		let items = _.map(logs, log=>{
 			let begin = new Date(log._time.begin);
 			let end = new Date(log._time.end);
 			let x0 = this.state.xScale(begin);
@@ -98,7 +100,7 @@ export default class Timeline extends React.Component{
 				width = 7;
 			}
 
-			console.log(x0, x1, width, this.state.range);
+			console.log(log, x0, x1, width, this.state.range);
 
 
 			return (
@@ -115,6 +117,7 @@ export default class Timeline extends React.Component{
 	render() {
 		var props = this.props;
 
+		console.log('this.props.logs : ', this.props.logs);
 		if(!this.props.logs || !this.props.logs.length){
 			return (<g>
 				<rect ref='background' width='100%' height='100%' fill='#fff'>
@@ -200,7 +203,7 @@ export default class Timeline extends React.Component{
 				<rect ref='background' width='100%' height='100%' fill='#fff'>
 				</rect>
 				<text x="0" y="0" font-size="55">
-			    	{`${domain[0]}, ${domain[1]}`}
+			    	{`${domain[0]}`}
 			  	</text>
 			  	{this.renderLogs()}
 				<XAxis
@@ -222,26 +225,6 @@ export default class Timeline extends React.Component{
 					gridVerticalStrokeWidth={props.gridVerticalStrokeWidth}
 					gridVerticalStrokeDash={props.gridVerticalStrokeDash}
 					stroke='black'
-				/>
-
-				<YAxis
-					yAxisClassName='rd3-areachart-yaxis'
-					yScale={yScale}
-					yAxisTickValues={props.yAxisTickValues}
-					yAxisTickInterval={props.yAxisTickInterval}
-					yAxisTickCount={props.yAxisTickCount}
-					yAxisLabel={props.yAxisLabel}
-					yAxisLabelOffset={props.yAxisLabelOffset}
-					tickFormatting={props.yAxisFormatter}
-					xOrient={props.xOrient}
-					yOrient={props.yOrient}
-					margins={props.margins}
-					width={innerWidth}
-					height={props.height}
-					gridHorizontal={props.gridHorizontal}
-					gridHorizontalStroke={props.gridHorizontalStroke}
-					gridHorizontalStrokeWidth={props.gridHorizontalStrokeWidth}
-					gridHorizontalStrokeDash={props.gridHorizontalStrokeDash}
 				/>
 	  		</g>
 		);

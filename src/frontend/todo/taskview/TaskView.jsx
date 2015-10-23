@@ -60,7 +60,7 @@ class TaskView extends React.Component{
 			<TaskItem
 				key={task.id}
 				task={task}
-				tasklog={logs[task._id]}
+				tasklog={logs.groupBy[task._id]}
 				dispatch={dispatch}
 				global={global}
 				onTaskModify={this.showModifyDialog.bind(this)}

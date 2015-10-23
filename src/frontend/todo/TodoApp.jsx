@@ -9,11 +9,12 @@ import _ from 'underscore'
 
 import DateTimePicker from './dialog/DateTimePicker'
 
-import { setGlobalTime } from './actions/global'
-
-import { fetchPrioritizedList } from './actions/tasks'
-
 import { getLocation } from '../utility/location'
+import If from '../utility/if'
+
+import MainTimeline from '../timeline/MainTimeline'
+
+import DevelopView from '../develop/DevelopView'
 
 class TodoApp extends React.Component{
 	constructor(){
@@ -81,21 +82,14 @@ class TodoApp extends React.Component{
 		});
 	}
 
-	setGlobalTime(time){
-		const { dispatch } = this.props;
-		var unixtime= time.valueOf();
-		dispatch(setGlobalTime(unixtime));
-		dispatch(fetchPrioritizedList());
-	}
-
 	render() {
 		var viewContent;
 
 		if(this.state.currentView == 'task'){
 			viewContent = (
 				<div>
-				<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
-				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global}/>
+					<DevelopView dispatch={this.props.dispatch} config={this.props.config} />
+					<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global} />
 				</div>
 			);
 		}
@@ -106,7 +100,8 @@ class TodoApp extends React.Component{
 		}
 
 		return (
-			<div className="task-container">
+			<div className="task-app-container">
+				<MainTimeline tasklog={this.props.tasklog}/>
 				<header>
 					<h1>Give Me Task</h1>
 					<div className="view-toggle" onClick={this.toggleView.bind(this)} onTouchStart={this.toggleView.bind(this)}>
