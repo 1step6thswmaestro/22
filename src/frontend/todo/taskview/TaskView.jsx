@@ -6,7 +6,7 @@ import MapImage from '../dialog/MapImage'
 import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
-import { fetchList, fetchOngoingList, makeNewItem, removeItem } from '../actions/tasks'
+import { fetchList, fetchOngoingList, makeNewItem, removeItem, changePriorityCriterion } from '../actions/tasks'
 
 import _ from 'underscore'
 
@@ -43,10 +43,8 @@ class TaskView extends React.Component{
 	}
 
 	showModifyDialog(task) {
-		this.refs.taskinputform.setState({
-			modifyMode: true,
-			task: task,
-		});
+		this.refs.taskinputform.onModifyRequest(task);
+
 		var modal = $(React.findDOMNode(this.refs.taskinputform));
 		modal.modal({
 			backdrop: true
@@ -70,6 +68,15 @@ class TaskView extends React.Component{
 			)
 		);
 	}
+	onTimePrefOnlyButtonClick(){
+		const { dispatch } = this.props;
+		if (this.props.tasks.priority_criterion == 'timepref'){
+			dispatch(changePriorityCriterion('all'));
+		}
+		else{
+			dispatch(changePriorityCriterion('timepref'));
+		}
+	}
 
 	render() {
 		var self = this;
@@ -78,15 +85,23 @@ class TaskView extends React.Component{
 		var global = this.props.global;
 		const { dispatch } = this.props;
 
-
+		console.log(tasks);
+		var priorityTimePrefOnlyActiveFlag = 'btn btn-primary btn-lg';
+		if (this.props.tasks.priority_criterion == 'timepref'){
+			priorityTimePrefOnlyActiveFlag = 'btn btn-primary btn-lg active';
+		}
 
 		return (
 			<div className="task-view">
 				<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showInputDialog.bind(this)}>
 					Add New Task
 				</button>
+				<button type="button" id="priorityTimePrefOnly" className={priorityTimePrefOnlyActiveFlag} onClick={this.onTimePrefOnlyButtonClick.bind(this)}>
+					시간 선호도만으로 추천
+				</button>
 				<TaskInputForm
 					ref="taskinputform"
+					dispatch={this.props.dispatch}
 					onTaskSubmit={this.handleTaskSubmit.bind(this)}
 					global={this.props.global}
 				/>

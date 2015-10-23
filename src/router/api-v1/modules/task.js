@@ -64,6 +64,21 @@ module.exports = function(_router, app){
 		.then(result=>res.send({plist: result}))
 		.fail(err=>res.send(err));
 	})
+	router.get('/prioritized-timepref', function(req, res){
+		var time;
+		if (typeof req.query.time == 'undefined')
+		{
+			time = new Date(Date.now());
+		}
+		else{
+			time = new Date(Number(req.query.time));
+		}
+		var timeslotIdx = time.getHours()*2 + Math.floor(time.getMinutes()/30);
+		helper.priTaskHelper.findByTimePreference(req.user._id, undefined, timeslotIdx)
+		.then(result=>res.send({plist: result}))
+		.fail(err=>res.send(err));
+	})
+
 
 	router.post('/', function(req, res){
 		// This request create new task for the current user.
@@ -84,16 +99,18 @@ module.exports = function(_router, app){
 
 	router.post('/modify', function(req, res){
 		// This request modifies given task's name and description field.
-		let task = _.pick(req.body, '_id', 'name', 'description');
+		let task = _.pick(req.body, '_id', 'name', 'description', 'created', 'duedate');
 
+		// Overwrite only picked fields' value, whereas others maintain.
 		var modifiedTask = Task(task).toObject();
-		// TODO: Check if modfiedTask does not overwrite, other field such as state.
-		// If not, please comment the behavior because code make reader confusing.
-		console.log(modifiedTask);
-		delete modifiedTask._id;
-		Task.update({ _id: task._id }, modifiedTask, { multi: true }, function(err) {
+
+		app.helper.taskHelper.update(req.user._id, {_id: task._id}, modifiedTask)
+		.then(function(){
+			res.send(modifiedTask);
+		})
+		.fail(err=>{
 			if(err) throw err;
-		});
+		})
 	})
 	router.delete('/:id', function(req, res){
 		// This request delete specific task.
