@@ -10,6 +10,16 @@ let DECL = group.declare();
 // Then incosistent comes. Some request is still waiting, but app's state
 // shows fetching list is completed.
 
+
+DECL('TASK_PRIORITY_CRITERION_CHANGE', (state, action)=>{
+	console.log(action);
+	return Object.assign({}, state, {
+		priority_criterion: action.criterion
+	});
+});
+
+
+
 DECL('TASK_REQ_NEWITEM', (state, action)=>{
 	let item = action.item;
 	item.loading = true;
@@ -176,6 +186,7 @@ DECL('TASK_REQ_UPDATE', (state, action)=>{
 
 export const reducer = group.getReducer({
 	isFetching: false
+	, priority_criterion: 'all'
 	, list: []
 	, plist: []
 	, ongoinglist: []

@@ -15,7 +15,7 @@ TokenBasedPriorityStrategy.prototype.ready = function(userId, time){
 	let timeDivision = this.tokenizer.getTimeDivision(this.time);
 	let daytime = timeDivision%48;
 
-	console.log('TokenBasedPriorityStrategy', {time:(new Date(this.time)), timeDivision, daytime});
+	// console.log('TokenBasedPriorityStrategy', {time:(new Date(this.time)), timeDivision, daytime});
 
 	return this.app.helper.predictToken.find(userId, {
 		daytime: {$gte: daytime-2, $lte: daytime+2}
@@ -29,7 +29,7 @@ TokenBasedPriorityStrategy.prototype.calculate = function(task){
 	let score = 0.0;
 	let tokens = this.tokenGroups[TaskLogType.named.start.id];
 
-	console.log(tokens);
+	// console.log(tokens);
 
 	_.each(tokens, (count, text)=>{
 		if(task.name.search(text)>=0){
@@ -37,7 +37,7 @@ TokenBasedPriorityStrategy.prototype.calculate = function(task){
 		}
 	})
 
-	console.log(task.name, score);
+	// console.log(task.name, score);
 
 	return score;
 }

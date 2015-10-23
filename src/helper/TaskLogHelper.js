@@ -14,6 +14,12 @@ function init(app){
 			return list;
 		})
 	}
+	TaskLogHelper.prototype.findOne = function(userId, query, proj, opt){
+		return Q.nbind(TaskLog.findOne, TaskLog)(Object.assign({userId}, query), proj, opt)
+		.then(function(list){
+			return list;
+		})
+	}
 
 	TaskLogHelper.prototype.create = function(userId, taskId, type, opt){
 		opt = opt || {};

@@ -9,7 +9,7 @@ var ComprehensivePriorityStrategy = require('../task_strategy/ComprehensivePrior
 function init(app){
 	var helper = app.helper;
 	var lastUpdateTime = {}
-	
+
 	function PrioritizedTaskHelper(){
 	}
 
@@ -37,7 +37,17 @@ function init(app){
 			}));
 		})
 		.fail(err=>logger.error(err));
-	}	
+	}
+
+	PrioritizedTaskHelper.prototype.findByTimePreference = function(userId, query, time){
+		return this.update(userId, time)
+		.then(function(results){
+			var scoreLabel = 'timePreferenceScore.'.concat(time);
+			var opt = {sort: {}};
+			opt.sort[scoreLabel]=-1;
+			return helper.taskHelper.find(userId, query, null, opt)
+		});
+	}
 
 	PrioritizedTaskHelper.prototype.find = function(userId, query, time){
 		return this.update(userId, time)

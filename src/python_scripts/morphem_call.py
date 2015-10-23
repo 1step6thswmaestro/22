@@ -9,7 +9,7 @@ def main():
 		result = {'result':'none'}
 		print json.dumps(result)
 		sys.exit(0)
-	
+
 	morphem_list = mecab.pos(sys.argv[1].decode('utf-8'))
 	result_dict = {}
 	result_dict['result'] = [x[0].encode('utf-8') for x in morphem_list]
