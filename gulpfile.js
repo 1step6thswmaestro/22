@@ -34,7 +34,7 @@ function build_html(){
 }
 
 function build_sass(){
-	compile_sass_concat(__dirname, [base_dir('*/*.scss'), base_dir('*/*/*.scss')], target_dir('index.css'));
+	compile_sass_concat(__dirname, [base_dir('**/*.scss')], target_dir('index.css'));
 }
 
 function build_assets(){
@@ -42,9 +42,9 @@ function build_assets(){
 }
 
 function onWatch(){
-	gulp.watch([base_dir('/**')], build_html);
-	gulp.watch([base_dir('/**')], build_sass);
-	gulp.watch([base_dir('/**')], build_assets);
+	gulp.watch([base_dir('**')], build_html);
+	gulp.watch([base_dir('**')], build_sass);
+	gulp.watch([base_dir('**')], build_assets);
 }
 
 ///////////////////////////////////////////////////////////////

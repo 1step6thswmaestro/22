@@ -3,6 +3,7 @@ import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
 import TaskView from './taskview/TaskView'
+import TaskBanner from './taskview/TaskBanner'
 import UserView from './userview/UserView'
 
 import _ from 'underscore'
@@ -102,6 +103,7 @@ class TodoApp extends React.Component{
 		return (
 			<div className="task-app-container">
 				<MainTimeline tasklog={this.props.tasklog}/>
+				<TaskBanner tasks={this.props.tasks} />
 				<header>
 					<h1>Give Me Task</h1>
 					<div className="view-toggle" onClick={this.toggleView.bind(this)} onTouchStart={this.toggleView.bind(this)}>
