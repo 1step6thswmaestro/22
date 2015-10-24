@@ -38,13 +38,14 @@ function build_sass(){
 }
 
 function build_assets(){
-	copy_files(__dirname, base_dir('/**/*.svg'), target_dir('/'));
+	copy_files(__dirname, base_dir('**/*.svg'), target_dir('/'));
+	copy_files(__dirname, base_dir('**/*.jpg'), target_dir('/'));
 }
 
 function onWatch(){
-	gulp.watch([base_dir('**')], build_html);
-	gulp.watch([base_dir('**')], build_sass);
-	gulp.watch([base_dir('**')], build_assets);
+	gulp.watch([base_dir('**/*.html'), base_dir("**/*.jsx")], build_html);
+	gulp.watch([base_dir('**/*.scss')], build_sass);
+	gulp.watch([base_dir('**/*')], build_assets);
 }
 
 ///////////////////////////////////////////////////////////////
@@ -67,9 +68,20 @@ function copy_files(root, src_files, dest_file){
 function compile_sass_concat(root, src_files, dest_file){
 	return gulp.src(src_files)
 		.pipe(sass({includePaths: [__base_dir]}))
-		.on('error', function(err){ console.log(err.message); })
+		.on("error", notify.onError({
+	    	message: "Error: <%= error.message %>",
+	    	title: "Error running something"
+	    }))
 		.pipe(concat(path.basename(dest_file)))
 		.pipe(gulp.dest(path.dirname(dest_file)))
+		.pipe(notify({
+	        "title": "Success",
+	        // "subtitle": "<%= file.relative %>",
+	        "message": "<%= file.relative %>",
+	        "sound": "Frog", // case sensitive
+	        "onLast": true,
+	        "wait": true
+      }))
 }
 
 function compile_jsx(root, src_files, dest_file){
