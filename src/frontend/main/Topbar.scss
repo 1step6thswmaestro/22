@@ -5,12 +5,13 @@
 	background: #f39779;
 }
 
-$main-timeline-bg-color: #f96332;
+$main-timeline-bg-color: rgba(249, 99, 50, 0.8);
 
 #main-timeline{
 	background: $main-timeline-bg-color;
 
 	.background{
-		fill: $main-timeline-bg-color;
+		fill: none;
+		pointer-events: visible;
 	}
 }
