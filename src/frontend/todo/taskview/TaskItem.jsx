@@ -214,9 +214,16 @@ class TaskItem extends React.Component{
 					</div>
 					<div>
 						<div className="btn-group">
-							<button className={"btn " + processButtonState} onClick={this.start.bind(this)}>
-								<span className="glyphicon glyphicon-play"></span> 시작
-							</button>
+							<If test={task.state != TaskLogType.named.start.id}>
+								<button className="btn btn-default" onClick={this.start.bind(this)}>
+									<span className="glyphicon glyphicon-play"></span> 시작
+								</button>
+							</If>
+							<If test={task.state == TaskLogType.named.start.id}>
+								<button className="btn btn-check" onClick={this.pause.bind(this)}>
+									<span className="glyphicon glyphicon-play"></span> 일시 정지
+								</button>
+							</If>
 							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
 								<span className="glyphicon glyphicon-check"></span> 완료
 							</button>
