@@ -103,7 +103,7 @@ class TodoApp extends React.Component{
 		return (
 			<div className="task-app-container">
 				<MainTimeline tasklog={this.props.tasklog}/>
-				<TaskBanner tasks={this.props.tasks} />
+				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
 				<header>
 					<h1>Give Me Task</h1>
 					<div className="view-toggle" onClick={this.toggleView.bind(this)} onTouchStart={this.toggleView.bind(this)}>

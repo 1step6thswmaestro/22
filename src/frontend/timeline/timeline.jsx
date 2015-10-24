@@ -114,6 +114,22 @@ export default class Timeline extends React.Component{
 		)
 	}
 
+	renderNow(){
+		let x = this.state.xScale(new Date(Date.now()));
+		let width = 4;
+
+		if(x<0)
+			x = 0;
+
+		if(x>this.state.range[1]-width/2)
+			x = this.state.range[1]-width/2;
+
+		return (
+			<rect className='timeline-bar-now' x={x-width/2} width={width} y='10' height='50'>
+			</rect>
+		)
+	}
+
 	render() {
 		var props = this.props;
 
@@ -176,7 +192,8 @@ export default class Timeline extends React.Component{
 		var domainWindow = d3.extent(xValues);
 		var domainSize = this.state.domainSize*60*60*1000;
 		var leftDomainWindow = [domainWindow[0], domainWindow[1]-domainSize];
-		var leftCursor = this.state.leftCursor || leftDomainWindow[0];
+		// var leftCursor = this.state.leftCursor || leftDomainWindow[0];
+		var leftCursor = this.state.leftCursor || new Date(Date.now() - 4*60*60*1000);
 		this.state.leftCursor = leftCursor;
 		var domain = [new Date(leftCursor), new Date(leftCursor.getTime() + domainSize)];
 		var yMaxValues = [10];
@@ -206,6 +223,7 @@ export default class Timeline extends React.Component{
 			    	{`${domain[0]}`}
 			  	</text>
 			  	{this.renderLogs()}
+			  	{this.renderNow()}
 				<XAxis
 					xAxisClassName='rd3-areachart-xaxis'
 					xScale={xScale}

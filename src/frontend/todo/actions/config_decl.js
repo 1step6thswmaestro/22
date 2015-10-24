@@ -10,5 +10,6 @@ DECL('SET_CONFIG', (state, action)=>{
 });
 
 export const reducer = group.getReducer({
+	bannerIndex: 0
 });
 export const type = group.getTypes();
