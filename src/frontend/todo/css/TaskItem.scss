@@ -1,7 +1,24 @@
 .task-item{
+	position: relative;
 	padding: 10px;
-	font-size: 14;
-	color: #9b9b9b;
+	font-family: sans-serif;
+	font-size: 15px;
+	color: #777;
 
-	border-bottom: solid 2px #d8d8d8;
+	height: 50px;
+	line-height: 35px;
+
+	padding-left: 70px;
+
+	&:not(:last-child){
+		border-bottom: solid 1px #d8d8d8;
+	}
+
+	.duedate{
+		position: absolute;
+		right: 25px;
+		top: 10px;
+		font-family: serif;
+		font-size: 12px;
+	}
 }

@@ -41,25 +41,30 @@ export default class TaskBanner extends React.Component{
 		this.props.dispatch(setConfig('bannerIndex', index));
 	}
 
+	getTask(offset){
+		let index = (this.props.config.bannerIndex+offset+this.props.tasks.plist.length)%this.props.tasks.plist.length;
+		let task = this.props.tasks.plist[index] || {name: 'unnamed'};
+
+		return task;
+	}
+
 	render(){
 		console.log('this.props : ', this.props);
 
-		let x = 50;
-		let widthOffset = [0.6, 0.225, 0.175];
+		let x = 0;
+		// let widthOffset = [0.6, 0.225, 0.175];
+		let widthOffset = [1.0];
 		var width = 100;
 		try{
-			width = this.refs.svg.getDOMNode().offsetWidth-100;
+			width = this.refs.svg.getDOMNode().offsetWidth;
 		}
 		catch(e){
 
 		}
 		widthOffset = widthOffset.map(offset=>offset*width);
 
-		let contents = _.map(_.range(0, 3), offset=>{
-			let index = (this.props.config.bannerIndex+offset)%this.props.tasks.plist.length;
-			let task = this.props.tasks.plist[index] || {name: 'unnamed'};
-
-			console.log(offset, index, task);
+		let contents = _.map(_.range(0, 1), offset=>{
+			let task = this.getTask(offset);
 
 			let created = moment(task.created);
 			let duedate = moment(task.duedate);
@@ -70,7 +75,7 @@ export default class TaskBanner extends React.Component{
 
 			return (
 				<foreignObject x={_x} y="0" width={widthOffset[offset]} height="150px">
-					<div className={`content content${offset}`}>
+					<div className='content'>
 						<div className='name'>
 							{task.name}
 						</div>
@@ -99,33 +104,38 @@ export default class TaskBanner extends React.Component{
 			)
 		})
 
+		let prevTask = this.getTask(-1);
+		let nextTask = this.getTask(+1);
+
 		return (
 			<div className='task-banner'>
 				<svg id='task-banner-canvas' ref='svg'>
-					<defs>
-					    <clipPath id="cut-off-bottom0">
-					      <rect x="40" y="0" width="400px" height="150px" />
-					    </clipPath>
-					    <clipPath id="cut-off-bottom1">
-					      <rect x="440" y="0" width="200px" height="150px" />
-					    </clipPath>
-					    <clipPath id="cut-off-bottom2">
-					      <rect x="640" y="0" width="100px" height="150px" />
-					    </clipPath>
-					</defs>
 					{contents}
 				</svg>
-				<svg className='svg-left'>
-					<g className='btn-arrow-left'>
-						{this.button_left}
-					</g>
-				</svg>
-				
-				<svg className='svg-right'>
-					<g className='btn-arrow-right'>
-						{this.btnRight}
-					</g>
-				</svg>
+				<div className='inner-canvas inner-canvas-left'>
+					<div className='inner-content'>
+						<div className='name'>
+							{prevTask.name}
+						</div>
+					</div>
+					<svg>
+						<g className='btn-arrow-left'>
+							{this.button_left}
+						</g>
+					</svg>
+				</div>
+				<div className='inner-canvas inner-canvas-right'>
+					<div className='inner-content'>
+						<div className='name'>
+							{nextTask.name}
+						</div>
+					</div>
+					<svg>
+						<g className='btn-arrow-right'>
+							{this.btnRight}
+						</g>
+					</svg>
+				</div>
 			</div>
 		)
 	}

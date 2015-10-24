@@ -9,7 +9,6 @@ import { fetchTaskLog } from '../actions/tasklog';
 import If from '../../utility/if'
 var TaskLogType = require('../../../constants/TaskLogType');
 import SvgContainer from '../../d3/SvgContainer'
-import Timeline from '../../timeline/timeline'
 
 class TaskItem extends React.Component{
 	constructor(props){
@@ -164,13 +163,6 @@ class TaskItem extends React.Component{
 				</div>
 				<div className="panel-body">
 					<div className="row">
-						<div className='col-md-12'>
-							<SvgContainer width='100%' height='120px'>
-								<Timeline logs={logs}/>
-							</SvgContainer>
-						</div>
-					</div>
-					<div className="row">
 						<div className="col-md-8">
 							<div className="task-description">
 								<span>{task.description}</span>
@@ -266,12 +258,17 @@ class TaskItem extends React.Component{
 			completeButtonState = "btn-check";
 		}
 
+		let duedate = moment(task.duedate);
+
 		return (
 			<div className='task-item' onClick={this.expand.bind(this)}>
 				<If test={task.loading}>
 					<i className='fa fa-spinner fa-spin mr10'></i>
 				</If>
 				{task.name}
+				<div className='duedate'>
+					<i className='fa fa-clock-o'></i> {duedate.format("YY/MM/DD, HH:mm")}
+				</div>
 			</div>
 		);
 	}
