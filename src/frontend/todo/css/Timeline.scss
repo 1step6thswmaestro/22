@@ -1,5 +1,5 @@
 .timeline-bar-now{
-	fill: #000;
+	fill: rgba(118, 118, 118, 0.70);
 }
 
 .task-log-elem{
@@ -10,10 +10,22 @@
 	}
 }
 
+.task-log-elem-bottom{
+	fill: #95bca7;
+}
+
 .timeline {
 	.rep-time{
-		fill: #EDF8FE;
+		fill: #ddd;
 		font-size: 34;
 		font-family: Arial;
 	}
+}
+
+.rd3-areachart-xaxis{
+	text{
+		fill: #ddd;
+	}
+
+	pointer-events: none;
 }

@@ -27,7 +27,8 @@ module.exports = React.createClass({
     gridVertical:  React.PropTypes.bool,
     gridVerticalStroke: React.PropTypes.string,
     gridVerticalStrokeWidth: React.PropTypes.number,
-    gridVerticalStrokeDash: React.PropTypes.string
+    gridVerticalStrokeDash: React.PropTypes.string,
+    fontSize: React.PropTypes.number.isRequired
   },
 
   getDefaultProps() {
@@ -41,7 +42,8 @@ module.exports = React.createClass({
       xAxisLabelOffset: 10,
       xAxisOffset:      0,
       xOrient:         'bottom',
-      yOrient:         'left'
+      yOrient:         'left',
+      fontSize: 12
     };
   },
 
@@ -58,6 +60,8 @@ module.exports = React.createClass({
     if (typeof props.xAxisTickInterval !== 'undefined') {
       tickArguments = [d3.time[props.xAxisTickInterval.unit], props.xAxisTickInterval.interval];
     }
+
+    var fontSize = props.fontSize;
 
     return (
       <g
@@ -80,6 +84,7 @@ module.exports = React.createClass({
           gridVerticalStroke={props.gridVerticalStroke}
           gridVerticalStrokeWidth={props.gridVerticalStrokeWidth}
           gridVerticalStrokeDash={props.gridVerticalStrokeDash}
+          fontSize={fontSize}
         />
         <AxisLine
           scale={props.xScale}

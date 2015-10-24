@@ -27,7 +27,8 @@ module.exports = React.createClass({
     gridHorizontalStrokeWidth: React.PropTypes.number,
     gridVerticalStrokeWidth: React.PropTypes.number,
     gridHorizontalStrokeDash: React.PropTypes.string,
-    gridVerticalStrokeDash: React.PropTypes.string
+    gridVerticalStrokeDash: React.PropTypes.string,
+    fontSize: React.PropTypes.number.isRequired
   },
   getDefaultProps() {
     return {
@@ -44,7 +45,8 @@ module.exports = React.createClass({
       gridHorizontalStrokeWidth: 1,
       gridVerticalStrokeWidth: 1,
       gridHorizontalStrokeDash: '5, 5',
-      gridVerticalStrokeDash: '5, 5'
+      gridVerticalStrokeDash: '5, 5',
+      fontSize: 12
     };
   },
 
@@ -58,6 +60,8 @@ module.exports = React.createClass({
         textAnchor,
         tickFormat,
         y0, y1, y2, dy, x0, x1, x2, dx;
+
+    var fontSize = props.fontSize;
 
     var gridStrokeWidth,
         gridStroke,
@@ -175,6 +179,7 @@ module.exports = React.createClass({
               dy={dy} x={x1} y={y1}
               style={{stroke:props.tickTextStroke, fill:props.tickTextStroke}}
               textAnchor={textAnchor}
+              fontSize={fontSize}
             >
               {tickFormat(tick)}
             </text>

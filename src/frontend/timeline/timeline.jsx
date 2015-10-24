@@ -81,13 +81,13 @@ export default class Timeline extends React.Component{
 			let x1 = this.state.xScale(end);
 			let width = x1-x0;
 
-			if(x0 < 0){
+			if(x0 < -7){
 				width += x0;
-				x0 = 0;
+				x0 = -7;
 			}
 
-			if(x1<7){
-				x0 = 0;
+			if(x1<0){
+				x0 = -7;
 				width = 7;
 			}
 
@@ -95,8 +95,8 @@ export default class Timeline extends React.Component{
 				width -= (x1-this.state.range[1]);
 			}
 
-			if(x0 > this.state.range[1]-7){
-				x0 = this.state.range[1]-7;
+			if(x0 > this.state.range[1]){
+				x0 = this.state.range[1];
 				width = 7;
 			}
 
@@ -104,8 +104,12 @@ export default class Timeline extends React.Component{
 
 
 			return (
-				<rect className='task-log-elem' x={x0} width={width} y='0' height='40' onClick={this.clickLog.bind(this, log)}>
-				</rect>
+				<g>
+					<rect className='task-log-elem' x={x0} width={width} y='0' height='40' onClick={this.clickLog.bind(this, log)}>
+					</rect>
+					<rect className='task-log-elem-bottom' x={x0} width={width} y='37' height='3' onClick={this.clickLog.bind(this, log)}>
+					</rect>
+				</g>
 			)
 		})
 
@@ -221,7 +225,7 @@ export default class Timeline extends React.Component{
 			<g transform={trans} className={'timeline ' + props.className}>
 				<rect className='background' ref='background' width='100%' height='100%' fill='#fff'>
 				</rect>
-				<text className='rep-time' x="10" y="15" fontSize="10">
+				<text className='rep-time' x="0" y="15" fontSize="10">
 			    	{`${repTime.format('YY/MM/HH hh:mm')}`}
 			  	</text>
 			  	{this.renderLogs()}
@@ -244,7 +248,9 @@ export default class Timeline extends React.Component{
 					gridVerticalStroke={props.gridVerticalStroke}
 					gridVerticalStrokeWidth={props.gridVerticalStrokeWidth}
 					gridVerticalStrokeDash={props.gridVerticalStrokeDash}
-					stroke='black'
+					stroke='#ddd'
+					tickStroke='#ddd'
+					fontSize='10'
 				/>
 	  		</g>
 		);
@@ -261,7 +267,7 @@ Timeline.propTypes = {
 };
 
 Timeline.defaultProps = {
-	margins: {top: 10, right: 15, bottom: 25, left: 25},
+	margins: {top: 10, right: 15, bottom: 30, left: 25},
 	yAxisTickCount: 4,
 	interpolate: false,
 	interpolationType: null,
