@@ -21,4 +21,8 @@
 		font-family: serif;
 		font-size: 12px;
 	}
+
+	&:nth-child(2n+1){
+		background: rgba(160, 140, 140, 0.1);
+	}
 }
