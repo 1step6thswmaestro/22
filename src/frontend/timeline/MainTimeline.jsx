@@ -14,8 +14,8 @@ export default class MainTimeline extends React.Component{
 		let tasklog = _.map(this.props.tasklog.list, log=>log);
 		console.log('tasklog : ', tasklog);
 		return (
-			<SvgContainer width='100%' height='120px'>
-				<Timeline logs={tasklog}/>
+			<SvgContainer _id='main-timeline' width='100%' height='60px'>
+				<Timeline logs={tasklog} height='60' />
 			</SvgContainer>
 		)
 	}

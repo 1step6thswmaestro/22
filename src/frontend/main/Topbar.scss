@@ -1,0 +1,16 @@
+.top-bar{
+	width: 100%;
+	height: 30px;
+
+	background: #f39779;
+}
+
+$main-timeline-bg-color: #f96332;
+
+#main-timeline{
+	background: $main-timeline-bg-color;
+
+	.background{
+		fill: $main-timeline-bg-color;
+	}
+}

@@ -17,6 +17,8 @@ import MainTimeline from '../timeline/MainTimeline'
 
 import DevelopView from '../develop/DevelopView'
 
+import Topbar from '../main/Topbar'
+
 class TodoApp extends React.Component{
 	constructor(){
 		super();
@@ -102,6 +104,7 @@ class TodoApp extends React.Component{
 
 		return (
 			<div className="task-app-container">
+				<Topbar/>
 				<MainTimeline tasklog={this.props.tasklog}/>
 				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
 				<header>

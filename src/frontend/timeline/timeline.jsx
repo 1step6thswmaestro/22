@@ -104,7 +104,7 @@ export default class Timeline extends React.Component{
 
 
 			return (
-				<rect className='task-log-elem' x={x0} width={width} y='20' height='30' onClick={this.clickLog.bind(this, log)}>
+				<rect className='task-log-elem' x={x0} width={width} y='0' height='40' onClick={this.clickLog.bind(this, log)}>
 				</rect>
 			)
 		})
@@ -125,7 +125,7 @@ export default class Timeline extends React.Component{
 			x = this.state.range[1]-width/2;
 
 		return (
-			<rect className='timeline-bar-now' x={x-width/2} width={width} y='10' height='50'>
+			<rect className='timeline-bar-now' x={x-width/2} width={width} y='-10' height='60'>
 			</rect>
 		)
 	}
@@ -214,13 +214,15 @@ export default class Timeline extends React.Component{
 			.y(props.yAccessor)
 			.values((d)=> { return d.values; });
 
+		let repTime = moment(domain[0]);
+
 		var trans = `translate(${ props.margins.left },${ props.margins.top })`;
 		return (
-			<g transform={trans} className={props.className}>
-				<rect ref='background' width='100%' height='100%' fill='#fff'>
+			<g transform={trans} className={'timeline ' + props.className}>
+				<rect className='background' ref='background' width='100%' height='100%' fill='#fff'>
 				</rect>
-				<text x="0" y="0" font-size="55">
-			    	{`${domain[0]}`}
+				<text className='rep-time' x="10" y="15" fontSize="10">
+			    	{`${repTime.format('YY/MM/HH hh:mm')}`}
 			  	</text>
 			  	{this.renderLogs()}
 			  	{this.renderNow()}
@@ -259,7 +261,7 @@ Timeline.propTypes = {
 };
 
 Timeline.defaultProps = {
-	margins: {top: 10, right: 10, bottom: 25, left: 25},
+	margins: {top: 10, right: 15, bottom: 25, left: 25},
 	yAxisTickCount: 4,
 	interpolate: false,
 	interpolationType: null,

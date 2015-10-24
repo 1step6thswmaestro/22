@@ -15,7 +15,7 @@ export function changePriorityCriterion(criterion){
 		});
 		console.log('fetch after priority_criterion change.');
 		// TODO: fetching is not work. why? I may read redux document again. 
-		return fetchPrioritizedList();
+		return fetchPrioritizedList()(dispatch, getState);
 	}
 }
 

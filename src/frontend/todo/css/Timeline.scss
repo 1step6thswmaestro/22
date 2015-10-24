@@ -1,3 +1,19 @@
 .timeline-bar-now{
 	fill: #000;
 }
+
+.task-log-elem{
+	fill: #FEE7DF;
+	
+	&:hover{
+		fill: #FEB4B9;
+	}
+}
+
+.timeline {
+	.rep-time{
+		fill: #EDF8FE;
+		font-size: 34;
+		font-family: Arial;
+	}
+}
