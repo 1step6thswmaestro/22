@@ -93,6 +93,13 @@ class TaskView extends React.Component{
 
 		return (
 			<div className="task-view">
+				<div className="task-list">
+					<div className="row">
+						<div className="col-md-12">
+							{this.createTaskElements(tasks.plist, tasklog)}
+						</div>
+					</div>
+				</div>
 				<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showInputDialog.bind(this)}>
 					Add New Task
 				</button>
@@ -105,25 +112,6 @@ class TaskView extends React.Component{
 					onTaskSubmit={this.handleTaskSubmit.bind(this)}
 					global={this.props.global}
 				/>
-				<div className="task-list-ongoing">
-					현재 진행중인 작업:
-					<div className="row">
-						<div className="col-md-6">
-							{this.createTaskElements(tasks.ongoinglist, tasklog)}
-						</div>
-					</div>
-				</div>
-				<div className="task-list">
-					작업 목록:
-					<div className="row">
-						<div className="col-md-6">
-							{this.createTaskElements(tasks.list, tasklog)}
-						</div>
-						<div className="col-md-6">
-							{this.createTaskElements(tasks.plist, tasklog)}
-						</div>
-					</div>
-				</div>
 			</div>
 		);
 	}
