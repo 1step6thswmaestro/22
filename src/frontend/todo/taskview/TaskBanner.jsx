@@ -11,14 +11,14 @@ export default class TaskBanner extends React.Component{
 		this.index = 0;
 
 		this.button_left = (
-			<g transform="translate(-10.500000, -10.500000)" onClick={this.swipeLeft.bind(this)}>
+			<g transform="translate(-10.500000, -10.500000)">
 				<circle stroke="#F96332" stroke-width="3" cx="10.5" cy="10.5" r="10.5" fill='#EBEBEB'></circle>
             	<path d="M12.793256,14.8235294 L6.17647059,10.5 L12.793256,6.17647059 L12.793256,14.8235294 Z" fill="#F96332"></path>
             </g>
 		)
 
 		this.btnRight = (
-			<g transform="scale(-1.0, 1) translate(-10.500000, -10.500000)" onClick={this.swipeRight.bind(this)}>
+			<g transform="scale(-1.0, 1) translate(-10.500000, -10.500000)">
 				<circle stroke="#F96332" stroke-width="3" cx="10.5" cy="10.5" r="10.5" fill='#EBEBEB'></circle>
             	<path d="M12.793256,14.8235294 L6.17647059,10.5 L12.793256,6.17647059 L12.793256,14.8235294 Z" fill="#F96332"></path>
             </g>
@@ -112,7 +112,7 @@ export default class TaskBanner extends React.Component{
 				<svg id='task-banner-canvas' ref='svg'>
 					{contents}
 				</svg>
-				<div className='inner-canvas inner-canvas-left'>
+				<div className='inner-canvas inner-canvas-left' onClick={this.swipeLeft.bind(this)}>
 					<div className='inner-content'>
 						<div className='name'>
 							{prevTask.name}
@@ -124,7 +124,7 @@ export default class TaskBanner extends React.Component{
 						</g>
 					</svg>
 				</div>
-				<div className='inner-canvas inner-canvas-right'>
+				<div className='inner-canvas inner-canvas-right' onClick={this.swipeRight.bind(this)}>
 					<div className='inner-content'>
 						<div className='name'>
 							{nextTask.name}
