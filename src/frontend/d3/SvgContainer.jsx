@@ -26,7 +26,7 @@ export default class SvgContainer extends React.Component{
 
 	render(){
 		return (
-			<svg ref='svg' width={this.props.width} height={this.props.height}>
+			<svg id={this.props._id} ref='svg' width={this.props.width} height={this.props.height}>
 				{this.renderChildren()}
 			</svg>
 		)

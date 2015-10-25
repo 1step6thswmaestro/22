@@ -3,17 +3,21 @@ import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
 import TaskView from './taskview/TaskView'
+import TaskBanner from './taskview/TaskBanner'
 import UserView from './userview/UserView'
 
 import _ from 'underscore'
 
 import DateTimePicker from './dialog/DateTimePicker'
 
-import { setGlobalTime } from './actions/global'
-
-import { fetchPrioritizedList } from './actions/tasks'
-
 import { getLocation } from '../utility/location'
+import If from '../utility/if'
+
+import MainTimeline from '../timeline/MainTimeline'
+
+import DevelopView from '../develop/DevelopView'
+
+import Topbar from '../main/Topbar'
 
 class TodoApp extends React.Component{
 	constructor(){
@@ -81,21 +85,14 @@ class TodoApp extends React.Component{
 		});
 	}
 
-	setGlobalTime(time){
-		const { dispatch } = this.props;
-		var unixtime= time.valueOf();
-		dispatch(setGlobalTime(unixtime));
-		dispatch(fetchPrioritizedList());
-	}
-
 	render() {
 		var viewContent;
 
 		if(this.state.currentView == 'task'){
 			viewContent = (
 				<div>
-				<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
-				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global}/>
+					<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global} />
+					<DevelopView dispatch={this.props.dispatch} config={this.props.config} />
 				</div>
 			);
 		}
@@ -106,14 +103,17 @@ class TodoApp extends React.Component{
 		}
 
 		return (
-			<div className="task-container">
+			<div className="task-app-container">
+				<Topbar/>
+				<MainTimeline tasklog={this.props.tasklog}/>
+				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
+				{viewContent}
 				<header>
 					<h1>Give Me Task</h1>
 					<div className="view-toggle" onClick={this.toggleView.bind(this)} onTouchStart={this.toggleView.bind(this)}>
 						Click HERE to Toggle UserView/TaskView
 					</div>
 				</header>
-				{viewContent}
 			</div>
 		);
 	}

@@ -72,20 +72,22 @@ export default class Timeline extends React.Component{
 	}
 
 	renderLogs(){
-		let items = _.map(this.state.logs, log=>{
+		let logs = this.state.logs;
+		logs = _.filter(this.state.logs, log=>log._time.begin!=undefined)
+		let items = _.map(logs, log=>{
 			let begin = new Date(log._time.begin);
 			let end = new Date(log._time.end);
 			let x0 = this.state.xScale(begin);
 			let x1 = this.state.xScale(end);
 			let width = x1-x0;
 
-			if(x0 < 0){
+			if(x0 < -7){
 				width += x0;
-				x0 = 0;
+				x0 = -7;
 			}
 
-			if(x1<7){
-				x0 = 0;
+			if(x1<0){
+				x0 = -7;
 				width = 7;
 			}
 
@@ -93,17 +95,21 @@ export default class Timeline extends React.Component{
 				width -= (x1-this.state.range[1]);
 			}
 
-			if(x0 > this.state.range[1]-7){
-				x0 = this.state.range[1]-7;
+			if(x0 > this.state.range[1]){
+				x0 = this.state.range[1];
 				width = 7;
 			}
 
-			console.log(x0, x1, width, this.state.range);
+			console.log(log, x0, x1, width, this.state.range);
 
 
 			return (
-				<rect className='task-log-elem' x={x0} width={width} y='20' height='30' onClick={this.clickLog.bind(this, log)}>
-				</rect>
+				<g>
+					<rect className='task-log-elem' x={x0} width={width} y='0' height='40' onClick={this.clickLog.bind(this, log)}>
+					</rect>
+					<rect className='task-log-elem-bottom' x={x0} width={width} y='37' height='3' onClick={this.clickLog.bind(this, log)}>
+					</rect>
+				</g>
 			)
 		})
 
@@ -112,9 +118,26 @@ export default class Timeline extends React.Component{
 		)
 	}
 
+	renderNow(){
+		let x = this.state.xScale(new Date(Date.now()));
+		let width = 4;
+
+		if(x<0)
+			x = 0;
+
+		if(x>this.state.range[1]-width/2)
+			x = this.state.range[1]-width/2;
+
+		return (
+			<rect className='timeline-bar-now' x={x-width/2} width={width} y='-10' height='60'>
+			</rect>
+		)
+	}
+
 	render() {
 		var props = this.props;
 
+		console.log('this.props.logs : ', this.props.logs);
 		if(!this.props.logs || !this.props.logs.length){
 			return (<g>
 				<rect ref='background' width='100%' height='100%' fill='#fff'>
@@ -173,7 +196,8 @@ export default class Timeline extends React.Component{
 		var domainWindow = d3.extent(xValues);
 		var domainSize = this.state.domainSize*60*60*1000;
 		var leftDomainWindow = [domainWindow[0], domainWindow[1]-domainSize];
-		var leftCursor = this.state.leftCursor || leftDomainWindow[0];
+		// var leftCursor = this.state.leftCursor || leftDomainWindow[0];
+		var leftCursor = this.state.leftCursor || new Date(Date.now() - 4*60*60*1000);
 		this.state.leftCursor = leftCursor;
 		var domain = [new Date(leftCursor), new Date(leftCursor.getTime() + domainSize)];
 		var yMaxValues = [10];
@@ -194,15 +218,18 @@ export default class Timeline extends React.Component{
 			.y(props.yAccessor)
 			.values((d)=> { return d.values; });
 
+		let repTime = moment(domain[0]);
+
 		var trans = `translate(${ props.margins.left },${ props.margins.top })`;
 		return (
-			<g transform={trans} className={props.className}>
-				<rect ref='background' width='100%' height='100%' fill='#fff'>
+			<g transform={trans} className={'timeline ' + props.className}>
+				<rect className='background' ref='background' width='100%' height='100%' fill='#fff'>
 				</rect>
-				<text x="0" y="0" font-size="55">
-			    	{`${domain[0]}, ${domain[1]}`}
+				<text className='rep-time' x="0" y="15" fontSize="10">
+			    	{`${repTime.format('YY/MM/HH hh:mm')}`}
 			  	</text>
 			  	{this.renderLogs()}
+			  	{this.renderNow()}
 				<XAxis
 					xAxisClassName='rd3-areachart-xaxis'
 					xScale={xScale}
@@ -221,27 +248,9 @@ export default class Timeline extends React.Component{
 					gridVerticalStroke={props.gridVerticalStroke}
 					gridVerticalStrokeWidth={props.gridVerticalStrokeWidth}
 					gridVerticalStrokeDash={props.gridVerticalStrokeDash}
-					stroke='black'
-				/>
-
-				<YAxis
-					yAxisClassName='rd3-areachart-yaxis'
-					yScale={yScale}
-					yAxisTickValues={props.yAxisTickValues}
-					yAxisTickInterval={props.yAxisTickInterval}
-					yAxisTickCount={props.yAxisTickCount}
-					yAxisLabel={props.yAxisLabel}
-					yAxisLabelOffset={props.yAxisLabelOffset}
-					tickFormatting={props.yAxisFormatter}
-					xOrient={props.xOrient}
-					yOrient={props.yOrient}
-					margins={props.margins}
-					width={innerWidth}
-					height={props.height}
-					gridHorizontal={props.gridHorizontal}
-					gridHorizontalStroke={props.gridHorizontalStroke}
-					gridHorizontalStrokeWidth={props.gridHorizontalStrokeWidth}
-					gridHorizontalStrokeDash={props.gridHorizontalStrokeDash}
+					stroke='#ddd'
+					tickStroke='#ddd'
+					fontSize='10'
 				/>
 	  		</g>
 		);
@@ -258,7 +267,7 @@ Timeline.propTypes = {
 };
 
 Timeline.defaultProps = {
-	margins: {top: 10, right: 10, bottom: 25, left: 25},
+	margins: {top: 10, right: 15, bottom: 30, left: 25},
 	yAxisTickCount: 4,
 	interpolate: false,
 	interpolationType: null,

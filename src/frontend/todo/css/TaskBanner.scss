@@ -1,0 +1,124 @@
+.task-banner{
+	svg#task-banner-canvas{
+		width: 100%;
+		height: 100%;
+	}
+	background: rgba(255, 255, 255, 0.4);
+	position: relative;
+	height: 150px;
+
+	.content{
+		position: relative;
+		padding: 12px 7px;
+		height: 150px;
+		transition: 0.3s;
+	}
+
+	.name{
+		color: #9c623a;
+		font-family: sans-serif;
+		font-size: 20px;
+		font-weight: 700;
+
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.duedate{
+		color: #aaa;
+
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.buttons{
+		margin-top: 30px;
+	}
+
+
+
+	.svg-middle{
+		position: absolute;
+		right: 0px;
+		top: 10px;
+		width: 100px;
+	}
+
+	.inner-canvas-left{
+		left: 0px;
+
+		svg{
+			right: 0px;
+		}
+	}
+
+	.inner-canvas-right{
+		right: 0px;
+
+		svg{
+			left: 0px;
+		}
+	}
+	
+	.inner-content{
+		display: none;
+		padding: 10px;
+	}
+
+	.inner-canvas{
+		display: none;
+		position: absolute;
+		top: 0px;
+		width: 50px;
+		background: #aaa;
+		opacity: 0.6;
+		height: 150px;
+		transition: 0.3s;
+
+
+		&:hover{
+			background: #ccc;
+			opacity: 0.9;
+
+			width: 150px;
+
+			.inner-content{
+				display: block;
+			}
+		}
+
+		svg{
+			top: 0px;
+			position: absolute;
+			width: 50px;
+		}
+	}
+
+	&:hover{
+		.inner-canvas{
+			display: block;
+		}
+
+		.content{
+			opacity: 0.7;
+			margin: 0px 50px;
+		}
+	}
+
+	.btn-arrow-left{
+		transform: translate(25px, 75px);
+	}
+
+	.btn-arrow-right{
+		transform: translate(25px, 75px);
+	}
+
+	.btn-play{
+		transform: translate(20px, 25px);
+		path{
+			stroke: #EB8F71;
+			stroke-width: 5;
+			fill: none;
+		}
+	}
+}

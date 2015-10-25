@@ -9,3 +9,25 @@
 		font-size: 30px;
 	};
 };
+
+#main-timeline{
+	margin-bottom: 0px;
+}
+
+.task-banner{
+	margin-top: 0px;
+}
+
+body{
+	background-image: url('main/background.jpg');
+	background-size: cover;
+	background-position: 50% 50%;
+	background-attachment: fixed;
+
+}
+
+html { overflow-y: scroll; }
+
+::-webkit-scrollbar { 
+    display: none; 
+}
