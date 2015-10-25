@@ -13,10 +13,11 @@ class DocItem extends React.Component{
 		console.log('Send Click Event');
 		var data = {
 			id: docID,
-			user_id: 'dummyID'
+			user_id: this.props.user_id
 		};
 		// formatting /search/<user_id>/<doc_id>
-		var url = encodeURI("http://localhost:5000/searchLog/"+data.user_id+"/"+data.id);
+		var query = this.props.keyword;
+		var url = encodeURI("http://localhost:5000/searchLog/"+data.user_id+"/"+data.id+"/"+query);
 
 		$.ajax({
 			url: url,
@@ -67,8 +68,10 @@ class DocView extends React.Component{
 	getDocumentList(callback){
 		// formatting /search/<user_id>/<query>
 		var query = this.props.keyword;
-		
-		var url = encodeURI("http://127.0.0.1:5000/search/"+"dummyID"+"/"+query)
+		var user_id = this.props.user_id;
+
+		console.log("User ID " + user_id)
+		var url = encodeURI("http://localhost:5000/search/"+user_id+"/"+query)
 
 		$.ajax({
 			url: url,
@@ -94,9 +97,11 @@ class DocView extends React.Component{
 	}
 
 	render() {
+		var query = this.props.keyword;
+		var user_id = this.props.user_id;
 		function createDocElements(list){
 			return _.map(list, doc => (
-		        <DocItem key={doc._id} doc={doc} />
+		        <DocItem key={doc._id} doc={doc} keyword={query} user_id={user_id}/>
 			));
 	    }
 
