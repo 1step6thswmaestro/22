@@ -9,12 +9,14 @@ import { fetchTaskLog } from '../actions/tasklog';
 import If from '../../utility/if'
 var TaskLogType = require('../../../constants/TaskLogType');
 import SvgContainer from '../../d3/SvgContainer'
-import Timeline from '../../timeline/timeline'
 
 class TaskItem extends React.Component{
-	constructor(){
-		super();
+	constructor(props){
+		super(props);
 		this.state = {};
+
+		const { dispatch } = this.props;
+		dispatch(fetchTaskLog(this.props.task));
 	}
 
 	complete(){
@@ -71,8 +73,6 @@ class TaskItem extends React.Component{
 		this.setState({
 			isExpanded: newVal
 		});
-
-		dispatch(fetchTaskLog(this.props.task));
 	}
 
 	getLocButtonStates(relatedLocation){
@@ -163,13 +163,6 @@ class TaskItem extends React.Component{
 				</div>
 				<div className="panel-body">
 					<div className="row">
-						<div className='col-md-12'>
-							<SvgContainer width='100%' height='120px'>
-								<Timeline logs={logs}/>
-							</SvgContainer>
-						</div>
-					</div>
-					<div className="row">
 						<div className="col-md-8">
 							<div className="task-description">
 								<span>{task.description}</span>
@@ -221,9 +214,16 @@ class TaskItem extends React.Component{
 					</div>
 					<div>
 						<div className="btn-group">
-							<button className={"btn " + processButtonState} onClick={this.start.bind(this)}>
-								<span className="glyphicon glyphicon-play"></span> 시작
-							</button>
+							<If test={task.state != TaskLogType.named.start.id}>
+								<button className="btn btn-default" onClick={this.start.bind(this)}>
+									<span className="glyphicon glyphicon-play"></span> 시작
+								</button>
+							</If>
+							<If test={task.state == TaskLogType.named.start.id}>
+								<button className="btn btn-check" onClick={this.pause.bind(this)}>
+									<span className="glyphicon glyphicon-play"></span> 일시 정지
+								</button>
+							</If>
 							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
 								<span className="glyphicon glyphicon-check"></span> 완료
 							</button>
@@ -234,7 +234,7 @@ class TaskItem extends React.Component{
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
 							</button>
 						</div>
-						<DocView taskID = {this.props.task._id} keyword = {task.name + task.description}/>
+						<DocView taskID = {this.props.task._id} keyword = {task.name + task.description} user_id = {task.userId}/>
 					</div>
 				</div>
 			</div>
@@ -265,62 +265,16 @@ class TaskItem extends React.Component{
 			completeButtonState = "btn-check";
 		}
 
+		let duedate = moment(task.duedate);
+
 		return (
-			<div className="panel panel-default">
-				<div className="panel-heading" onClick={this.expand.bind(this)}>
-					<h2 className="task-name">
-						{task.name}
-						<If test={task.loading}>
-							<i className='fa fa-spinner fa-spin'></i>
-						</If>
-					</h2>
-				</div>
-				<div className="panel-body">
-					{task._id}
-					<div>
-						<div className="btn-group">
-							<If test={task.state != TaskLogType.named.start.id}>
-								<button className="btn btn-default" onClick={this.start.bind(this)}>
-									<span className="glyphicon glyphicon-play"></span> 시작
-								</button>
-							</If>
-							<If test={task.state == TaskLogType.named.start.id}>
-								<button className="btn btn-check" onClick={this.pause.bind(this)}>
-									<span className="glyphicon glyphicon-play"></span> 일시 정지
-								</button>
-							</If>
-							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
-								<span className="glyphicon glyphicon-check"></span> 완료
-							</button>
-							<button className="btn btn-default" label="Remind me later" onClick={this.postpone.bind(this)}>
-								<span className="glyphicon glyphicon-send"></span> 나중에 알림
-							</button>
-							<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
-								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
-							</button>
-							<button className="btn btn-default" label="Discard this task" onClick={this.modify.bind(this)}>
-								<span className="glyphicon glyphicon-pencil"></span> 수정
-							</button>
-							<button className="btn btn-default" label="Discard this task" onClick={this.reset.bind(this)}>
-								<span className="glyphicon glyphicon-trash"></span> reset
-							</button>
-							<a href={`/v1/tasktoken/task/${task._id}/`}>
-								<button className="btn btn-default" label="Discard this task">
-									<span className="glyphicon glyphicon-trash"></span> show tokens
-								</button>
-							</a>
-							<a href={`/v1/tasktoken/time/${this.props.global.time?this.props.global.time:''}`}>
-								<button className="btn btn-default" label="Discard this task">
-									<span className="glyphicon glyphicon-trash"></span> show tokens2
-								</button>
-							</a>
-							<a href={`/v1/tasklog/task/${task._id}/`}>
-								<button className="btn btn-default" label="Discard this task">
-									<span className="glyphicon glyphicon-trash"></span> show logs
-								</button>
-							</a>
-						</div>
-					</div>
+			<div className='task-item' onClick={this.expand.bind(this)}>
+				<If test={task.loading}>
+					<i className='fa fa-spinner fa-spin mr10'></i>
+				</If>
+				{task.name}
+				<div className='duedate'>
+					<i className='fa fa-clock-o'></i> {duedate.format("YY/MM/DD, HH:mm")}
 				</div>
 			</div>
 		);

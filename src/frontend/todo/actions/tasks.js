@@ -7,14 +7,23 @@ import _ from 'underscore'
 var TaskLogType = require('../../../constants/TaskLogType');
 var TaskState = require('../../../constants/TaskState');
 
+export function changePriorityCriterion(criterion){
+	return (dispatch, getState) => {
+		dispatch({
+			type: type.TASK_PRIORITY_CRITERION_CHANGE,
+			criterion: criterion
+		});
+		console.log('fetch after priority_criterion change.');
+		// TODO: fetching is not work. why? I may read redux document again. 
+		return fetchPrioritizedList()(dispatch, getState);
+	}
+}
 
 export function fetchOngoingList(){
 	return (dispatch, getState) => {
 		dispatch({
 			type: type.TASK_REQ_ONGOING_LIST
 		});
-
-		console.log(getState());
 
 		return $.ajax({
 			url: '/v1/tasks/ongoing'
@@ -38,9 +47,6 @@ export function fetchList(){
 		dispatch({
 			type: type.TASK_REQ_LIST
 		});
-
-		console.log(getState());
-
 		return $.ajax({
 			url: '/v1/tasks'
 			, type: 'get'
@@ -63,11 +69,17 @@ export function fetchPrioritizedList(){
 		dispatch({
 			type: type.TASK_REQ_PLIST
 		});
+		console.log('fetch PrioritizedList');
+		var url;
+		if(getState().tasks.priority_criterion == 'all'){
+			url = '/v1/tasks/prioritized';
+		}
+		else if(getState().tasks.priority_criterion == 'timepref'){
+			url = '/v1/tasks/prioritized-timepref';
 
-		console.log(getState());
-
+		}
 		return $.ajax({
-			url: '/v1/tasks/prioritized'
+			url: url
 			, type: 'get'
 			, data:{
 				time: getState().global.time
@@ -211,9 +223,6 @@ export function getRemainTime(task, logs) {
 
 	var remainTime = ((dateToMillisec(task.duedate) - Date.now()) / 1000 / 60 / 60).toFixed(1);
 	var estimationTime = 2;
-
-	var logReq = '/v1/tasklog/' + task._id;
-
 	var activatedTime = 0;
 
 	let from = 0;

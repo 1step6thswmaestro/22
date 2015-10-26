@@ -6,7 +6,7 @@ import MapImage from '../dialog/MapImage'
 import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
-import { fetchList, fetchOngoingList, makeNewItem, removeItem } from '../actions/tasks'
+import { fetchList, fetchOngoingList, makeNewItem, removeItem, changePriorityCriterion } from '../actions/tasks'
 
 import _ from 'underscore'
 
@@ -60,13 +60,22 @@ class TaskView extends React.Component{
 			<TaskItem
 				key={task.id}
 				task={task}
-				tasklog={logs[task._id]}
+				tasklog={logs.groupBy[task._id]}
 				dispatch={dispatch}
 				global={global}
 				onTaskModify={this.showModifyDialog.bind(this)}
 			/>
 			)
 		);
+	}
+	onTimePrefOnlyButtonClick(){
+		const { dispatch } = this.props;
+		if (this.props.tasks.priority_criterion == 'timepref'){
+			dispatch(changePriorityCriterion('all'));
+		}
+		else{
+			dispatch(changePriorityCriterion('timepref'));
+		}
 	}
 
 	render() {
@@ -76,12 +85,26 @@ class TaskView extends React.Component{
 		var global = this.props.global;
 		const { dispatch } = this.props;
 
-
+		console.log(tasks);
+		var priorityTimePrefOnlyActiveFlag = 'btn btn-primary btn-lg';
+		if (this.props.tasks.priority_criterion == 'timepref'){
+			priorityTimePrefOnlyActiveFlag = 'btn btn-primary btn-lg active';
+		}
 
 		return (
 			<div className="task-view">
+				<div className="task-list">
+					<div className="row">
+						<div className="col-md-12">
+							{this.createTaskElements(tasks.plist, tasklog)}
+						</div>
+					</div>
+				</div>
 				<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showInputDialog.bind(this)}>
 					Add New Task
+				</button>
+				<button type="button" id="priorityTimePrefOnly" className={priorityTimePrefOnlyActiveFlag} onClick={this.onTimePrefOnlyButtonClick.bind(this)}>
+					시간 선호도만으로 추천
 				</button>
 				<TaskInputForm
 					ref="taskinputform"
@@ -89,25 +112,6 @@ class TaskView extends React.Component{
 					onTaskSubmit={this.handleTaskSubmit.bind(this)}
 					global={this.props.global}
 				/>
-				<div className="task-list-ongoing">
-					현재 진행중인 작업:
-					<div className="row">
-						<div className="col-md-6">
-							{this.createTaskElements(tasks.ongoinglist, tasklog)}
-						</div>
-					</div>
-				</div>
-				<div className="task-list">
-					작업 목록:
-					<div className="row">
-						<div className="col-md-6">
-							{this.createTaskElements(tasks.list, tasklog)}
-						</div>
-						<div className="col-md-6">
-							{this.createTaskElements(tasks.plist, tasklog)}
-						</div>
-					</div>
-				</div>
 			</div>
 		);
 	}
