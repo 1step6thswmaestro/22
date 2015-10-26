@@ -10,12 +10,10 @@ class DocItem extends React.Component{
 		super();
 	}
 	onDocumentClick(docID){
-		console.log('Send Click Event');
 		var data = {
 			id: docID,
 			user_id: this.props.user_id
 		};
-		// formatting /search/<user_id>/<doc_id>
 		var query = this.props.keyword;
 
 		$.ajax({
@@ -65,7 +63,6 @@ class DocView extends React.Component{
 
 		$.ajax({
 			url: '/v1/doc/recommand'
-			// , method: 'get'
 			, data: {
 				'query' : query
 				, 'user_id' : user_id
