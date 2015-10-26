@@ -17,22 +17,15 @@ class DocItem extends React.Component{
 		};
 		// formatting /search/<user_id>/<doc_id>
 		var query = this.props.keyword;
-		var url = encodeURI("http://localhost:5000/searchLog/"+data.user_id+"/"+data.id+"/"+query);
 
 		$.ajax({
-			url: url,
-			cache: false,
-			method: 'POST'
+			url: '/v1/doc/log'
+			, data: {
+				'user_id': data.user_id
+				, 'article_id': data.id
+				, 'query': query
+			}
 		})
-		.then(
-			function(data){
-				console.log('Response for doc click: '+ data);
-			}
-			, function(XMLHttpRequest, textStatus, errorThrown) {
-				console.error(url);
-				console.error(errorThrown);
-			}
-		);
 	}
 	render() {
 		return (
@@ -58,6 +51,7 @@ class DocView extends React.Component{
 	componentDidMount() {
 		// Request related document from server.
 		this.getDocumentList(function(docs){
+			console.log('Docs : ' + docs);
 			this.setState({
 				waitMessage: '',
 				docList: docs
@@ -66,17 +60,16 @@ class DocView extends React.Component{
 	}
 
 	getDocumentList(callback){
-		// formatting /search/<user_id>/<query>
 		var query = this.props.keyword;
 		var user_id = this.props.user_id;
 
-		console.log("User ID " + user_id)
-		var url = encodeURI("http://localhost:5000/search/"+user_id+"/"+query)
-
 		$.ajax({
-			url: url,
-			cache: false,
-			method: 'POST'
+			url: '/v1/doc/recommand'
+			// , method: 'get'
+			, data: {
+				'query' : query
+				, 'user_id' : user_id
+			}
 		})
 		.then(
 			function(data){
@@ -85,12 +78,14 @@ class DocView extends React.Component{
 					console.error('Json error');
 				}
 				else {
-					var json_data = data['hits'];
+					console.log(data)
+					var json = JSON.parse(data)
+					var json_data = json['hits'];
 					callback(json_data);
 				}
 			}
 			, function(reuqest, textStatus, errorThrown) {
-				console.error(url);
+				console.log(textStatus);
 				console.error(errorThrown);
 			}
 		);
