@@ -217,9 +217,11 @@ class TaskItem extends React.Component{
 							<div className="task-duedate">
 								마감일: {getReadableDate(task.duedate)}
 							</div>
-							<div>
-								{ this.getRemainTime() }
-							</div>
+							<If test={task.state != TaskStateType.named.complete.id}>
+								<div>
+									{ this.getRemainTime() }
+								</div>
+							</If>
 							{completeDate}
 						</div>
 					</div>
