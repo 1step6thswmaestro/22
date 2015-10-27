@@ -21,7 +21,7 @@ class TaskItem extends React.Component{
 
 	complete(){
 		const { dispatch } = this.props;
-		dispatch(completeItem(this.props.task._id));
+		dispatch(completeItem(this.props.task));
 	}
 
 	start() {
@@ -42,11 +42,6 @@ class TaskItem extends React.Component{
 	postpone(){
 		const { dispatch } = this.props;
 		dispatch(postponeItem(this.props.task));
-	}
-
-	modify() {
-		const { dispatch } = this.props;
-		this.props.onTaskModify(this.props.task);
 	}
 
 	reset(){
@@ -141,7 +136,7 @@ class TaskItem extends React.Component{
 			);
 		}
 
-		if(task.timestampComplete != null){
+		if(task.state == TaskStateType.named.complete.id){
 			completeDate = (
 				<div className="task-complete-date">
 					완료일: {getReadableDate(task.timestampComplete)}
@@ -215,21 +210,35 @@ class TaskItem extends React.Component{
 					</div>
 					<div>
 						<div className="btn-group">
-							<If test={task.state != TaskStateType.named.start.id}>
-								<button className="btn btn-default" onClick={this.start.bind(this)}>
-									<span className="glyphicon glyphicon-play"></span> 시작
+							<If test={task.state != TaskStateType.named.complete.id}>
+								<If test={task.state != TaskStateType.named.start.id}>
+									<button className="btn btn-default" onClick={this.start.bind(this)}>
+										<span className="glyphicon glyphicon-play"></span> 시작
+									</button>
+								</If>
+							</If>
+							<If test={task.state != TaskStateType.named.complete.id}>
+								<If test={task.state == TaskStateType.named.start.id}>
+									<button className="btn btn-check" onClick={this.pause.bind(this)}>
+										<span className="glyphicon glyphicon-play"></span> 일시 정지
+									</button>
+								</If>
+							</If>
+							<If test={task.state != TaskStateType.named.complete.id}>
+								<button className="btn btn-default" onClick={this.complete.bind(this)}>
+									<span className="glyphicon glyphicon-check"></span> 완료
 								</button>
 							</If>
-							<If test={task.state == TaskStateType.named.start.id}>
-								<button className="btn btn-check" onClick={this.pause.bind(this)}>
-									<span className="glyphicon glyphicon-play"></span> 일시 정지
+							<If test={task.state == TaskStateType.named.complete.id}>
+								<button className="btn btn-check">
+									<span className="glyphicon glyphicon-check"></span> 완료
 								</button>
 							</If>
-							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
-								<span className="glyphicon glyphicon-check"></span> 완료
-							</button>
 							<button className="btn btn-default" label="Remind me later" onClick={this.postpone.bind(this)}>
 								<span className="glyphicon glyphicon-send"></span> 나중에 알림
+							</button>
+							<button className="btn btn-default" label="Discard this task" onClick={this.props.onTaskModify}>
+								<span className="glyphicon glyphicon-pencil"></span> 수정
 							</button>
 							<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
@@ -247,24 +256,6 @@ class TaskItem extends React.Component{
 		var descStr = task.description || '';
 		var startDate, completeDate;
 		var locButtonState = this.getLocButtonStates(task.relatedLocation);
-
-		var completeButtonState = "btn-default";
-		if(task.timestampStart != null){
-			startDate = (
-				<div className="taskStartedDate">
-					시작일: {getReadableDate(task.timestampStart)}
-				</div>
-			);
-		}
-
-		if(task.timestampComplete != null){
-			completeDate = (
-				<div className="task-complete-date">
-					완료일: {getReadableDate(task.timestampComplete)}
-				</div>
-			);
-			completeButtonState = "btn-check";
-		}
 
 		let duedate = moment(task.duedate);
 

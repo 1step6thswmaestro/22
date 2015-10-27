@@ -23,6 +23,8 @@ DECL('TASK_RECV_ITEM', (state, action)=>{
 		}
 		return item;
 	});
+
+	console.log('TASK_RECV_ITEM', newlist);
 	return Object.assign({}, state, {
 		list: newlist
 		, isFetching: false

@@ -69,7 +69,7 @@ class TaskView extends React.Component{
 
 	    function createTaskElements(list, logs){
 			return _.map(list, task => (
-		        <TaskItem key={task.id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} global={global} onTaskModify={self.showModifyDialog.bind(self)} />)
+		        <TaskItem key={task.id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} global={global} onTaskModify={self.showModifyDialog.bind(self, task)} />)
 			);
 	    }
 
@@ -78,7 +78,7 @@ class TaskView extends React.Component{
 				<div className="task-list">
 					<div className="row">
 						<div className="col-md-12">
-							{createTaskElements(tasks.plist, tasklog)}
+							{createTaskElements(tasks.list, tasklog)}
 						</div>
 					</div>
 				</div>

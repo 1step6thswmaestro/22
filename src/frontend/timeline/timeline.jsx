@@ -100,9 +100,6 @@ export default class Timeline extends React.Component{
 				width = 7;
 			}
 
-			console.log(log, x0, x1, width, this.state.range);
-
-
 			return (
 				<g>
 					<rect className='task-log-elem' x={x0} width={width} y='0' height='40' onClick={this.clickLog.bind(this, log)}>
@@ -137,7 +134,6 @@ export default class Timeline extends React.Component{
 	render() {
 		var props = this.props;
 
-		console.log('this.props.logs : ', this.props.logs);
 		if(!this.props.logs || !this.props.logs.length){
 			return (<g>
 				<rect ref='background' width='100%' height='100%' fill='#fff'>
@@ -146,9 +142,6 @@ export default class Timeline extends React.Component{
 		}
 
 		var interpolationType = props.interpolationType || (props.interpolate ? 'cardinal' : 'linear');
-
-		console.log(this.props.logs);
-
 
 		let logs = [];
 		let last;
@@ -178,8 +171,6 @@ export default class Timeline extends React.Component{
 
 		}
 		this.state.logs = logs;
-		console.log(this.state.logs);
-
 		// Calculate inner chart dimensions
 
 		var width = this.props.width;

@@ -112,7 +112,7 @@ export function completeItem(task){
 	return updateState(task, TaskStateType.named.complete);
 }
 
-function updateState(task, state){
+function updateState(task, actionType){
 	return function(dispatch, getState){
 		dispatch({
 			type: type.TASK_REQ_UPDATE
@@ -120,7 +120,7 @@ function updateState(task, state){
 		})
 
 		return request({
-			url: `/v1/tasks/${task._id}/${actionType.name}`
+			url: `/v1/tasks/${task._id}/${actionType.command}`
 			, type: 'put'
 			, data: {
 				time: getState().global.time
