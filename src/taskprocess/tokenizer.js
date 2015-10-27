@@ -14,8 +14,11 @@ class Tokenizer{
 
 	tokenizeText(text){
 		var texts = [];
-		var tokens = text.split(' ');
-		return Q(grab(tokens));
+		// var tokens = text.split(' ');
+		var tokens = py_interpreter.getToken(text); // Get nouns and verbs
+		console.log(tokens)
+		return Q(tokens);
+		// return Q(grab(tokens));
 
 		// return py_interpreter.analyze_morphem(text)
 		// .then(tokens=>{
@@ -99,7 +102,7 @@ class Tokenizer{
 		let _time = currentTime;
 		let lastTime = new Date(task.lastProcessed);
 
-		console.log({lastTime});
+		// console.log({lastTime});
 
 		let p0 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$gt: lastTime}}, undefined, {sort: {time: -1}});
 		let p1 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$lte: lastTime}}, undefined, {limit: 1});
@@ -126,7 +129,7 @@ class Tokenizer{
 				// console.log('p1', task.created, task.lastProcessed)
 				// console.log(task.created.getTime(), task.lastProcessed.getTime(), task.created.getTime() == task.lastProcessed.getTime());
 				if(task.created.getTime() == task.lastProcessed.getTime()){
-					console.log(task, lastlog, self.getTimeDivision(lastlog.time));
+					// console.log(task, lastlog, self.getTimeDivision(lastlog.time));
 					promises.push(self.makeTokens(task, lastlog, self.getTimeDivision(lastlog.time), true));
 				}
 			}

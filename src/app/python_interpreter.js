@@ -8,6 +8,7 @@ var py_absolute_path = path.resolve('./src/python_scripts/');
 
 //define function path
 var morphem_py_path = 'morphem_call.py'
+var getToken_py_path = 'getToken.py'
 var getTaskScore_py_path = 'getTaskScore.py'
 
 var Q = require('q');
@@ -25,7 +26,7 @@ var py_function_broker = function(path, input, callback){
 
 	PythonShell.run(path, options, function(err, results){
 		if (err) throw err;
-		console.log('python script run success.');
+		console.log('python script result:');
 		console.log(JSON.parse(results[0]))
 		callback(JSON.parse(results[0]))
 	});
@@ -42,7 +43,15 @@ module.exports = {
 
 		return defer.promise;
 	},
-
+	getToken : function(content) {
+		var input = [content];
+		let defer = Q.defer();
+		py_function_broker(getToken_py_path, input, function(result){
+			// Resolve a Deferred object and call any doneCallbacks with the given args
+			defer.resolve(result.tokens);
+		});
+		return defer.promise;
+	},
 	getTaskScore : function(userId, time, task) {
 		var input = ['a', 'b', 'c'];
 		console.log(input);
