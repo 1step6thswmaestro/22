@@ -15,7 +15,7 @@ module.exports = function(_router, app){
 	let helper = app.helper;
 	let router = express.Router();
 	_router.use('/tasks', router);
-	// var taskTokenizer = new tokenizer(app);
+	var taskTokenizer = new tokenizer(app);
 	var timslotUpdater = new TimeslotUpdater(app);
 
 
@@ -153,6 +153,8 @@ module.exports = function(_router, app){
 		})
 		.then(function(result){
 			timslotUpdater.updateTimeslot(result.log);
+			taskTokenizer.processTask(req.user, result.task)
+
 			res.send(result);
 		})
 		.fail(err=>logger.error(err))
