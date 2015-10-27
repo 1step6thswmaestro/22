@@ -26,9 +26,7 @@ function feedly_connector(user_id){
 
 //--------------------Wrapper Function-----------------------
 
-function feedly_wrapper(){
-	var sequence = Futures.sequence();
-}
+function feedly_wrapper(){}
 
 feedly_wrapper.prototype.get_or_create_status = function(uesr_id, callback){
 	feedly_model.findOne({"user_id" : user_id}, function(err, doc){
@@ -51,43 +49,51 @@ feedly_wrapper.prototype.get_or_create_status = function(uesr_id, callback){
 }
 
 feedly_wrapper.prototype.logon = function(user_id, callback){
-	this.sequence
-	.then(function(next){
-		var feedly_inst = new feedly_connector(user_id);
-		next(feedly_inst);
-	})
-	.then(function(next, feedly_inst){
-		feedly_inst.get_or_create_status(user_id, function(err, status){
-			if (err) {
-				callback(err, status);
-			}
-			if (status == 1) { // 활성화 상태
+	var sequence = Futures.sequence();
+	
+	this.get_or_create_status(user_id, function(err, status){
+		if (err) {
+			callback(err, -1);
+		}
+		if (status == 1) {
+			sequence
+			.then(function(next){
+				var feedly_inst = new feedly_connector(user_id);
+				next(feedly_inst);
+			})
+			.then(function(next, feedly_inst){
 				feedly_inst.read_and_update(function(err, msg){
 					callback(err, msg);
 				});
-			}
-		});
-	});
+			});
+		}
+	})
 }
 
 feedly_wrapper.prototype.change_status = function(user_id, callback){
-	this.sequence
-	.then(function(next){
-		var feedly_inst = new feedly_connector(user_id);
-		next(feedly_inst);
-	})
-	.then(function(next, feedly_inst){
-		feedly_inst.change(user_id, function(err, status){
-			if (status == 1){
+	var sequence = Futures.sequence();
+
+	this.get_or_create_status(user_id, function(err, status){
+		if (err) {
+			callback(err, -1);
+		}
+
+		sequence
+		.then(function(next){
+			var feedly_inst = new feedly_connector(user_id);
+			next(feedly_inst);
+		})
+		.then(function(next, feedly_inst){
+			if (status == 0) {
+				feedly_inst.logout(function(err, msg){
+					callback(err, msg);
+				})
+			} else {
 				feedly_inst.read_and_update(function(err, msg){
 					callback(err, msg);
 				});
-			} else {
-				feedly_inst.logout(function(err, msg){
-					callback(err, msg);
-				});
 			}
-		});
+		})
 	});
 }
 
