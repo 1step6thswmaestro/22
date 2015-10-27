@@ -62,30 +62,43 @@ class DocView extends React.Component{
 		var user_id = this.props.user_id;
 
 		$.ajax({
-			url: '/v1/doc/recommand'
-			, data: {
-				'query' : query
-				, 'user_id' : user_id
+			url: '/v1/feedly/status/change'
+			, data : {
+				'user_id' : user_id
 			}
-		})
-		.then(
+		}).then(
 			function(data){
-				// var name 'total' is useless.
-				if(data == null) {
-					console.error('Json error');
-				}
-				else {
-					console.log(data)
-					var json = JSON.parse(data)
-					var json_data = json['hits'];
-					callback(json_data);
-				}
-			}
-			, function(reuqest, textStatus, errorThrown) {
-				console.log(textStatus);
-				console.error(errorThrown);
+				var ls = [data];
+				callback(ls)
+			}, function(reuqest, textStatus, errorThrown){
+
 			}
 		);
+		// $.ajax({
+		// 	url: '/v1/doc/recommand'
+		// 	, data: {
+		// 		'query' : query
+		// 		, 'user_id' : user_id
+		// 	}
+		// })
+		// .then(
+		// 	function(data){
+		// 		// var name 'total' is useless.
+		// 		if(data == null) {
+		// 			console.error('Json error');
+		// 		}
+		// 		else {
+		// 			console.log(data)
+		// 			var json = JSON.parse(data)
+		// 			var json_data = json['hits'];
+		// 			callback(json_data);
+		// 		}
+		// 	}
+		// 	, function(reuqest, textStatus, errorThrown) {
+		// 		console.log(textStatus);
+		// 		console.error(errorThrown);
+		// 	}
+		// );
 	}
 
 	render() {

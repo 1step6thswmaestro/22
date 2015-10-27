@@ -1,12 +1,14 @@
 var mongoose = require('mongoose');
 var Feedly = require('feedly');
-var feedly_model = mongoose.model('Feedly');
+var feedly_model = mongoose.model('feedly_model');
 var path = require('path');
 var Futures = require('futures');
 
 function feedly_connector(user_id){
 	var sequence = Futures.sequence();
 	var user_id = user_id;
+
+	var obj = this;
 
 	sequence
 	.then(function(next){
@@ -28,7 +30,7 @@ function feedly_connector(user_id){
 
 function feedly_wrapper(){}
 
-feedly_wrapper.prototype.get_or_create_status = function(uesr_id, callback){
+feedly_wrapper.prototype.get_or_create_status = function(user_id, callback){
 	feedly_model.findOne({"user_id" : user_id}, function(err, doc){
 		if (err){
 			logger.error(err);
@@ -50,16 +52,19 @@ feedly_wrapper.prototype.get_or_create_status = function(uesr_id, callback){
 
 feedly_wrapper.prototype.logon = function(user_id, callback){
 	var sequence = Futures.sequence();
-	
 	this.get_or_create_status(user_id, function(err, status){
+		logger.log(status);
 		if (err) {
 			callback(err, -1);
 		}
 		if (status == 1) {
 			sequence
 			.then(function(next){
+				logger.log(user_id);
 				var feedly_inst = new feedly_connector(user_id);
-				next(feedly_inst);
+				setTimeout(function(){
+					next(feedly_inst)
+				}, 1000);
 			})
 			.then(function(next, feedly_inst){
 				feedly_inst.read_and_update(function(err, msg){
@@ -72,7 +77,6 @@ feedly_wrapper.prototype.logon = function(user_id, callback){
 
 feedly_wrapper.prototype.change_status = function(user_id, callback){
 	var sequence = Futures.sequence();
-
 	this.get_or_create_status(user_id, function(err, status){
 		if (err) {
 			callback(err, -1);
@@ -81,7 +85,9 @@ feedly_wrapper.prototype.change_status = function(user_id, callback){
 		sequence
 		.then(function(next){
 			var feedly_inst = new feedly_connector(user_id);
-			next(feedly_inst);
+			setTimeout(function(){
+				next(feedly_inst);
+			}, 1000);
 		})
 		.then(function(next, feedly_inst){
 			if (status == 0) {
@@ -119,7 +125,7 @@ feedly_connector.prototype.change = function(user_id, callback){
         		callback(error, update_status);
         	}
         );
-	}
+	});
 }
 
 feedly_connector.prototype.read_and_update = function(callback){
@@ -130,11 +136,12 @@ feedly_connector.prototype.read_and_update = function(callback){
 			for(var i = 0 ; i < result.feeds.length ; i++){
 				rss.push(result.feeds[i].id);
 			}
-			logger.log(rss)
-			recall.update_feeds(undefined, rss, callback)
+			recall.update_feeds(rss, function(err, num){
+				callback(err, num);
+			});
 		},
 		function(error){
-			callback(error, undefined, undefined);
+			callback(error, undefined);
 		}
 	);
 };

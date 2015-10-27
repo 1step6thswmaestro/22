@@ -1,36 +1,36 @@
 'use strict'
 
 var express = require('express');
-var feedly_connector = require('../../../app/feedly_connector');
 var Futures = require('futures');
-
-// /v1/feedly/logon
-// /v1/feedly/status/change
+var feedly_connector = require('../../../app/feedly_connector');
 
 module.exports = function(_router, app){
 	let router = express.Router();
 	_router.use('/feedly', router);
 
-	var user_id = res.query.user_id;
-	var inst = new feedly_connector(res.query.user_id);
-
 	router.get('/logon', function(req, res){
-		inst.logon(uesr_id, function(err, status){
+		var user_id = req.query.user_id;
+		var inst = new feedly_connector(user_id);
+		inst.logon(user_id, function(err, status){
 			if (err) {
 				logger.error(err);
 				return ;
 			}
-			res.send(status);
+			logger.log(status);
+			res.sendStatus(status);
 		});
 	});
 
 	router.get('/status/change', function(req, res){
+		var user_id = req.query.user_id;
+		var inst = new feedly_connector(user_id);
 		inst.change_status(user_id, function(err, status){
 			if (err) {
 				logger.error(err);
 				return ;
 			}
-			res.send(status);
+			logger.log(status);
+			res.sendStatus(status);
 		});
 	});
 }
