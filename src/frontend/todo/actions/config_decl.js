@@ -5,12 +5,12 @@ let group = new ActionGroup();
 let DECL = group.declare();
 
 DECL('SET_CONFIG', (state, action)=>{
-	console.log(action);
-	return Object.assign(state, {[action.key]: action.value});
+	return Object.assign({}, state, {[action.key]: action.value});
 });
 
 export const reducer = group.getReducer({
 	bannerIndex: 0
 	, priorityStrategy: undefined //default value
+	, displayActiveListOnly: false
 });
 export const type = group.getTypes();

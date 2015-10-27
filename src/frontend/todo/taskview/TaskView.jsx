@@ -63,14 +63,13 @@ class TaskView extends React.Component{
 		var self = this;
 		var tasks = this.props.tasks;
 		var tasklog = this.props.tasklog;
-		var global = this.props.global;
-		const { dispatch } = this.props;
+		const { global, config, dispatch } = this.props;
 
 		var priorityTimePrefOnlyActiveFlag = 'btn btn-default'; //temporal
 
 	    function createTaskElements(list, logs){
 			return _.map(list, task => (
-		        <TaskItem key={task.id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} global={global} onTaskModify={self.showModifyDialog.bind(self, task)} />)
+		        <TaskItem key={task._id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} global={global} onTaskModify={self.showModifyDialog.bind(self, task)} />)
 			);
 	    }
 
@@ -79,7 +78,11 @@ class TaskView extends React.Component{
 				<div className="task-list">
 					<div className="row">
 						<div className="col-md-12">
-							{createTaskElements(tasks.list, tasklog)}
+							{createTaskElements(
+								config.displayActiveListOnly?
+									tasks.activeList
+									:tasks.plist
+								, tasklog)}
 						</div>
 					</div>
 				</div>

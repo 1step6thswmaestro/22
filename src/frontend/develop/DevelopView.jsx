@@ -22,7 +22,7 @@ export default class DevelopView extends React.Component{
 	}
 
 	render(){
-		let { dispatch } = this.props;
+		let { dispatch, config } = this.props;
 		let buttonRaw = [
 			{text: 'default', command: undefined}
 			, {text: 'time preference', command: 'time'}
@@ -58,6 +58,16 @@ export default class DevelopView extends React.Component{
 		    )
 		})
 
+		function toggleDisplayActiveListOnly(){
+			dispatch(setConfig('displayActiveListOnly', !config.displayActiveListOnly));
+		}
+
+		let onlyActiveButton = (
+			<button className={classNames({'btn': true, 'btn-checked': config.displayActiveListOnly, 'btn-default': !config.displayActiveListOnly})} onClick={toggleDisplayActiveListOnly.bind(this)}>
+				Display Active List Only
+			</button>
+		)
+
 		return (
 			<div>
 				<If test={this.props.config.globalTimePicker!=true}>
@@ -75,6 +85,8 @@ export default class DevelopView extends React.Component{
 				</If>
 				<i className='mr10'></i>
 				{buttons}
+				<i className='mr10'></i>
+				{onlyActiveButton}
 			</div>
 		)
 	}

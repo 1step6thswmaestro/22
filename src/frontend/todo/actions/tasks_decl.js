@@ -7,26 +7,36 @@ let DECL = group.declare();
 DECL('TASK_REQ_NEWITEM', (state, action)=>{
 	let item = action.item;
 	item.loading = true;
+
+	let tempTasks = Object.assign(state.tempTasks, {[item.tid]: item});
+
 	return Object.assign({}, state, {
-		list: [...state.list, item]
+		tempTasks
+		, _list: state._list
+		, _tlist: [...state._tlist, item.tid]
 		, isFetching: true
 	});
 });
 
 DECL('TASK_RECV_ITEM', (state, action)=>{
-	let newlist = state.list.map(function(item){
-		if(action.tid && item.tid == action.tid
-			|| item._id == action.item._id){
+	let item = action.item;
+	item.loading = false;
+	let tasks = Object.assign(state.tasks, {[item._id]: item});
+	let _list = state._list;
+	if(_list.indexOf(item._id)<0){
+		_list.push(item._id);
+	}
 
-			item = Object.assign({}, action.item);
-			item.loading = false;
-		}
-		return item;
-	});
+	let _tlist = state._tlist;
+	let tidIndex = _tlist.indexOf(action.tid);
+	if(action.tid && tidIndex>=0){
+		_tlist.splice(tidIndex, 1);
+	}
 
-	console.log('TASK_RECV_ITEM', newlist);
 	return Object.assign({}, state, {
-		list: newlist
+		tasks
+		, _list
+		, _tlist
 		, isFetching: false
 	});
 });
@@ -49,16 +59,26 @@ DECL('TASK_REQ_ONGOING_LIST', (state, action)=>{
 });
 
 DECL('TASK_RECV_LIST', (state, action)=>{
+	let tasks = state.tasks;
+	action.list.forEach(item=>{
+		tasks[item._id] = item;
+	});
+
+	let _list = _.pluck(action.list, '_id');
 	return Object.assign({}, state, {
-		list: action.list
+		tasks
+		, _list
 		, isFetching: false
 	});
 });
 
 DECL('TASK_RECV_LIST_PRIORITIZED', (state, action)=>{
-	return Object.assign({}, state, {
-		plist: action.list
+	let tasks = state.tasks;
+	action.list.forEach(item=>{
+		tasks[item._id] = item;
 	});
+	let _plist = _.pluck(action.list, '_id');
+	return Object.assign({}, state, {tasks, _plist})
 });
 
 DECL('TASK_ERROR', (state, action)=>{
@@ -68,35 +88,42 @@ DECL('TASK_ERROR', (state, action)=>{
 });
 
 DECL('TASK_REMOVE_ITEM', (state, action)=>{
-	let newlist = state.list.filter(function(item){
-		return item._id!=action.taskId;
-	});
+	let { taskId } = action;
+	let { _list, _plist, tasks } = state;
 
+	let listIndex = _list.indexOf(taskId);
+	if(listIndex>=0){
+		_list.splice(listIndex, 1);
+	}
+
+
+	let plistIndex = _plist.indexOf(taskId);
+	if(plistIndex>=0){
+		_plist.splice(plistIndex, 1);
+	}
+
+	delete tasks[taskId];
+	
 	return Object.assign({}, state, {
-		list: newlist
-		, isFetching: false
+		tasks
+		, _list
+		, _plist
 	});
 })
 
 DECL('TASK_REQ_UPDATE', (state, action)=>{
-	let newlist = state.list.map(function(item){
-		if(item._id == action.item._id){
-			item = Object.assign({}, item);
-			_.extend(item, action.doc);
-			item.loading = true;
-		}
-		
-		return item;
-	});
-	return Object.assign({}, state, {
-		list: newlist
-		, isFetching: false
-	});
+	let { tasks } = state;
+	let { item } = action.item;
+	item.loading = false;
+	Object.assign(tasks, {[item._id]: item});
+
+	return Object.assign({}, state, {tasks});
 })
 
 export const reducer = group.getReducer({
 	isFetching: false
-	, list: []
-	, plist: []
+	, tasks: {}
+	, _list: []
+	, _plist: []
 });
 export const type = group.getTypes();

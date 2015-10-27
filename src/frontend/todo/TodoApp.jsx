@@ -18,6 +18,7 @@ import MainTimeline from '../timeline/MainTimeline'
 import DevelopView from '../develop/DevelopView'
 
 import Topbar from '../main/Topbar'
+import TaskStateType from '../../constants/TaskStateType';
 
 class TodoApp extends React.Component{
 	constructor(){
@@ -87,12 +88,11 @@ class TodoApp extends React.Component{
 
 	render() {
 		var viewContent;
+		console.log("todoapp render");
 
 		if(this.state.currentView == 'task'){
 			viewContent = (
-				<div>
-					<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global} config={this.props.config}/>
-				</div>
+				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global} config={this.props.config}/>
 			);
 		}
 		else if(this.state.currentView == 'user'){
@@ -121,7 +121,12 @@ class TodoApp extends React.Component{
 
 function mapStateToProps(state){
 	var props = Object.assign({}, state);
-	props.list = _.filter(state.tasks.list, item => !item.removed);
+	props.tasks.list = _.map(state.tasks._list, _id => state.tasks.tasks[_id]);
+	props.tasks.plist = _.map(state.tasks._plist, _id => state.tasks.tasks[_id]);
+	let _activeList = _.filter(state.tasks.tasks, obj=>obj.state == TaskStateType.named.start.id);
+	_activeList = _.intersection(state.tasks._plist, _.pluck(_activeList, '_id'));
+
+	props.tasks.activeList = _.map(_activeList, _id => state.tasks.tasks[_id]);
 	return props;
 };
 
