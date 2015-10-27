@@ -65,7 +65,8 @@ class Tokenizer{
 				weekday: self.getWeekDayFromToken(time),
 				time: time,
 				daytime: time%48,
-				status: log.type,
+				prevType: task.state,
+				type: log.type,
 				loc: log.loc,
 			};
 

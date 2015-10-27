@@ -21,7 +21,7 @@ TokenBasedPriorityStrategy.prototype.ready = function(userId, time){
 		daytime: {$gte: daytime-2, $lte: daytime+2}
 	}, undefined, {sort: {time: 1}})
 	.then(function(tokens){
-		self.tokenGroups = _.mapObject(_.groupBy(tokens, 'status'), arr=>_.countBy(arr, 'text'));
+		self.tokenGroups = _.mapObject(_.groupBy(tokens, 'type'), arr=>_.countBy(arr, 'text'));
 	})
 }
 

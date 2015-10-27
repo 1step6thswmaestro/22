@@ -12,7 +12,8 @@ module.exports = function(app){
 		weekday: {type: Number},				//0~6 (sun~sat)
 		time: {type: Number},					//30분 단위의 유닛 사용, 하루는 총 0~47의 값을 갖음.
 		daytime: {type: Number},
-		status: {type: Number},
+		prevType: {type: Number},
+		type: {type: Number},
 		loc: {type: { type: String }, coordinates: [ ]},
 		loc_cluster: {type: Number},
 	});
