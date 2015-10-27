@@ -52,7 +52,7 @@ export default class DevelopView extends React.Component{
 		    	'btn-default': !obj.checked
 		    });
 		    return (
-		    	<button className={btnClass} onClick={setPriorityStrategyConfig.bind(this, obj)}>
+		    	<button key={obj.text} className={btnClass} onClick={setPriorityStrategyConfig.bind(this, obj)}>
 		    		{obj.text}
 		    	</button>
 		    )

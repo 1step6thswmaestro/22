@@ -241,7 +241,7 @@ export default class Timeline extends React.Component{
 					gridVerticalStrokeDash={props.gridVerticalStrokeDash}
 					stroke='#ddd'
 					tickStroke='#ddd'
-					fontSize='10'
+					fontSize={10}
 				/>
 	  		</g>
 		);

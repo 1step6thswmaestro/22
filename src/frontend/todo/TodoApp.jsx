@@ -88,7 +88,6 @@ class TodoApp extends React.Component{
 
 	render() {
 		var viewContent;
-		console.log("todoapp render");
 
 		if(this.state.currentView == 'task'){
 			viewContent = (
