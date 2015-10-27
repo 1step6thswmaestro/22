@@ -118,7 +118,22 @@ class TaskItem extends React.Component{
 	}
 
 	getRemainTime() {
-		return getRemainTime(this.props.task, this.props.tasklog);
+		let time = Math.floor(getRemainTime(this.props.task, this.props.tasklog));
+		
+		let result = "여유시간: ";
+		if(time <= 0) {
+			result = "여유시간 부족!";
+		}
+		else if(time <= 1) {
+			result += "1시간 이하";
+		}
+		else if(time > 25) {
+			result += ("약 "+Math.floor((time/24))+"일 "+(time%24)+"시간");
+		}
+		else{
+			result += ("약 "+time+"시간");
+		}
+		return result;
 	}
 
 	getDetailView(){
@@ -203,10 +218,7 @@ class TaskItem extends React.Component{
 								마감일: {getReadableDate(task.duedate)}
 							</div>
 							<div>
-								남은시간: { this.getRemainTime() } 시간
-							</div>
-							<div>
-								소요시간: { task.estimation } 시간
+								{ this.getRemainTime() }
 							</div>
 							{completeDate}
 						</div>
