@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var ActionTypes = require('../constants/TaskLogType');
+var ActionTypes = require('../constants/TaskStateType');
 
 module.exports = function(app){
 	var taskLogSchema = new Schema({

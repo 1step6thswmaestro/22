@@ -7,7 +7,7 @@ import { getReadableDate } from '../../utility/date'
 import { startItem, pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
 import { fetchTaskLog } from '../actions/tasklog';
 import If from '../../utility/if'
-var TaskLogType = require('../../../constants/TaskLogType');
+var TaskStateType = require('../../../constants/TaskStateType');
 import SvgContainer from '../../d3/SvgContainer'
 
 class TaskItem extends React.Component{
@@ -150,7 +150,7 @@ class TaskItem extends React.Component{
 			completeButtonState = "btn-check";
 		}
 
-		if (task.state == TaskLogType.named.start.id) {
+		if (task.state == TaskStateType.named.start.id) {
 			processButtonState = "btn-check";
 		}
 
@@ -215,12 +215,12 @@ class TaskItem extends React.Component{
 					</div>
 					<div>
 						<div className="btn-group">
-							<If test={task.state != TaskLogType.named.start.id}>
+							<If test={task.state != TaskStateType.named.start.id}>
 								<button className="btn btn-default" onClick={this.start.bind(this)}>
 									<span className="glyphicon glyphicon-play"></span> 시작
 								</button>
 							</If>
-							<If test={task.state == TaskLogType.named.start.id}>
+							<If test={task.state == TaskStateType.named.start.id}>
 								<button className="btn btn-check" onClick={this.pause.bind(this)}>
 									<span className="glyphicon glyphicon-play"></span> 일시 정지
 								</button>

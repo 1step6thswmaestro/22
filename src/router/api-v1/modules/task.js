@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var Task = mongoose.model('Task');
 var TaskLog = mongoose.model('TaskLog');
-var TaskLogType = require('../../../constants/TaskLogType');
+var TaskStateType = require('../../../constants/TaskStateType');
 var Q = require('q');
 var express = require('express');
 var tokenizer = require('../../../taskprocess/tokenizer');
@@ -51,7 +51,7 @@ module.exports = function(_router, app){
 
 		app.helper.taskHelper.create(userId, task)
 		.then(function(obj){
-			return app.helper.tasklog.create(obj.userId, obj._id, TaskLogType.named.create, {loc, time: created})
+			return app.helper.tasklog.create(obj.userId, obj._id, TaskStateType.named.create, {loc, time: created})
 			.then(()=>obj);
 		})
 		.then((obj)=>res.send(obj))
@@ -83,20 +83,20 @@ module.exports = function(_router, app){
 	})
 
 	router.put('/:_id/:command', function(req, res, next){
-		if(!TaskLogType.named[req.params.command]){
+		if(!TaskStateType.named[req.params.command]){
 			// Undefined command recieved.
 			next();
 			return;
 		}
 
-		var type = TaskLogType.named[req.params.command];
+		var type = TaskStateType.named[req.params.command];
 		var taskType = type;
 		if(type.state){
-			taskType = TaskLogType.named[type.state];
+			taskType = TaskStateType.named[type.state];
 		}
 
 		var p0 = helper.taskHelper.update(req.user._id, {_id: req.params._id}, {state: taskType.id});
-		var p1 = helper.tasklog.create(req.user._id, req.params._id, TaskLogType.named[req.params.command], {
+		var p1 = helper.tasklog.create(req.user._id, req.params._id, TaskStateType.named[req.params.command], {
 			loc: req.body.loc
 			, time: req.body.time
 		});

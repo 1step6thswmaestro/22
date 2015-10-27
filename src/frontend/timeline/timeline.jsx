@@ -5,7 +5,7 @@ import d3 from 'd3'
 import { Chart, XAxis, YAxis } from '../d3/common';
 import { ViewBoxMixin } from '../d3/mixins';
 import _ from 'underscore';
-var TaskLogType = require('../../constants/TaskLogType');
+var TaskStateType = require('../../constants/TaskStateType');
 
 export default class Timeline extends React.Component{
 	constructor(props){
@@ -166,11 +166,11 @@ export default class Timeline extends React.Component{
 			last._time = last._time || {};
 
 			let type = log.type;
-			if(type == TaskLogType.named.start.id){
+			if(type == TaskStateType.named.start.id){
 				last._time.begin = last._time.begin || log.time;
 			}
-			else if(type == TaskLogType.named.pause.id 
-				|| type == TaskLogType.named.pause.id){
+			else if(type == TaskStateType.named.pause.id 
+				|| type == TaskStateType.named.pause.id){
 				last._time.end = log.time;
 				logs.push(last);
 				last = undefined;

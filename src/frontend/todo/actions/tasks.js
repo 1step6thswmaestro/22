@@ -4,7 +4,7 @@ import { type } from './tasks_decl';
 import { getLocation } from '../../utility/location'
 import _ from 'underscore'
 
-var TaskLogType = require('../../../constants/TaskLogType');
+var TaskStateType = require('../../../constants/TaskStateType');
 
 export function fetchList(){
 	return (dispatch, getState) => {
@@ -93,23 +93,23 @@ export function modifyItem(task){
 }
 
 export function startItem(task){
-	return updateState(task, TaskLogType.named.start);
+	return updateState(task, TaskStateType.named.start);
 }
 
 export function pauseItem(task){
-	return updateState(task, TaskLogType.named.pause);
+	return updateState(task, TaskStateType.named.pause);
 }
 
 export function resumeItem(task){
-	return updateState(task, TaskLogType.named.resume);
+	return updateState(task, TaskStateType.named.resume);
 }
 
 export function postponeItem(item){
-	return updateState(task, TaskLogType.named.postpone);
+	return updateState(task, TaskStateType.named.postpone);
 }
 
 export function completeItem(task){
-	return updateState(task, TaskLogType.named.complete);
+	return updateState(task, TaskStateType.named.complete);
 }
 
 function updateState(task, state){

@@ -1,6 +1,6 @@
 'use strict'
 
-var TaskLogType = require('../constants/TaskLogType');
+var TaskStateType = require('../constants/TaskStateType');
 var _ = require('underscore');
 
 function ComprehensivePriorityStrategy(app){

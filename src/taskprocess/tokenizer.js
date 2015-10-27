@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var TaskLogType = require('../constants/TaskLogType');
+var TaskStateType = require('../constants/TaskStateType');
 var PredictToken = require('../models/PredictToken');
 var Q = require('q');
 var py_interpreter = require('../app/python_interpreter');
@@ -49,7 +49,7 @@ class Tokenizer{
 	makeTokens(task, log, time, force){
 		let self = this;
 
-		if(!force && TaskLogType.indexed[log.type].tokenize === false){
+		if(!force && TaskStateType.indexed[log.type].tokenize === false){
 			return;
 		}
 

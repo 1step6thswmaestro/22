@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var TaskLogType = require('../constants/TaskLogType');
+var TaskStateType = require('../constants/TaskStateType');
 var Q = require('q');
 
 var TimeSlot = mongoose.model('TimeSlot');
@@ -15,14 +15,14 @@ class TimeslotUpdater{
 
 	updateTimeslot(taskLog){
 		// Update Time Preference Engine.
-		if (taskLog.type != TaskLogType.named.pause.id && taskLog.type != TaskLogType.named.complete.id){
+		if (taskLog.type != TaskStateType.named.pause.id && taskLog.type != TaskStateType.named.complete.id){
 			return;
 		}
 
 		// DB Access. Get related task, and previous taskLog for start event.
 		var p0 = this.app.helper.taskHelper.find(taskLog.userId, {_id: taskLog.taskId});
 		var p1 = this.app.helper.tasklog.findOne(taskLog.userId,
-			{taskId: taskLog.taskId, type: TaskLogType.named.start.id},
+			{taskId: taskLog.taskId, type: TaskStateType.named.start.id},
 			undefined, {sort: {time: -1}}); // Find most recent start event log.
 
 
