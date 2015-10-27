@@ -5,6 +5,7 @@ node_modules
 __database
 mongodb
 run.sh
+.feedly_access.json
 
 # --- GIT IGNORE FOR OSX ----
 .DS_Store
