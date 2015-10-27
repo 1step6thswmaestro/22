@@ -7,6 +7,7 @@ var TaskStateType = require('../../../constants/TaskStateType');
 var Q = require('q');
 var express = require('express');
 var tokenizer = require('../../../taskprocess/tokenizer');
+var TimeEstimator = require('../../../taskprocess/estimator');
 
 var TimeslotUpdater = require('../../../taskprocess/TimeslotUpdater');
 
@@ -16,7 +17,7 @@ module.exports = function(_router, app){
 	_router.use('/tasks', router);
 	var taskTokenizer = new tokenizer(app);
 	var timslotUpdater = new TimeslotUpdater(app);
-
+	var timeEstimator = new TimeEstimator(app);
 
 	router.get('/testcommand_droptasks', function(req, res){
 		// This request removes every tasks related to the current user.
@@ -49,13 +50,17 @@ module.exports = function(_router, app){
 		let created = req.body.created;
 		let loc = req.body.loc;
 
-		app.helper.taskHelper.create(userId, task)
-		.then(function(obj){
-			return app.helper.tasklog.create(obj.userId, obj._id, TaskStateType.named.create, {loc, time: created})
-			.then(()=>obj);
-		})
-		.then((obj)=>res.send(obj))
-		.fail(err=>logger.error(err))
+		timeEstimator.estimate(userId, task.name)
+		.then(result=>{
+			task.estimation = result;
+			app.helper.taskHelper.create(userId, task)
+			.then(function(obj){
+				return app.helper.tasklog.create(obj.userId, obj._id, TaskStateType.named.create, {loc, time: created})
+				.then(()=>obj);
+			})
+			.then((obj)=>res.send(obj))
+			.fail(err=>logger.error(err));
+		});
 	})
 
 	router.post('/modify', function(req, res){

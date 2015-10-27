@@ -205,6 +205,9 @@ class TaskItem extends React.Component{
 							<div>
 								남은시간: { this.getRemainTime() } 시간
 							</div>
+							<div>
+								소요시간: { task.estimation } 시간
+							</div>
 							{completeDate}
 						</div>
 					</div>
