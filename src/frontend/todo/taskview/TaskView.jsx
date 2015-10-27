@@ -55,17 +55,11 @@ class TaskView extends React.Component{
 		});
 	}
 
-	onTimePrefOnlyButtonClick(){
-		// noop
-	}
-
 	render() {
 		var self = this;
 		var tasks = this.props.tasks;
 		var tasklog = this.props.tasklog;
 		const { global, config, dispatch } = this.props;
-
-		var priorityTimePrefOnlyActiveFlag = 'btn btn-default'; //temporal
 
 	    function createTaskElements(list, logs){
 			return _.map(list, task => (
@@ -88,9 +82,6 @@ class TaskView extends React.Component{
 				</div>
 				<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showInputDialog.bind(this)}>
 					Add New Task
-				</button>
-				<button type="button" id="priorityTimePrefOnly" className={priorityTimePrefOnlyActiveFlag} onClick={this.onTimePrefOnlyButtonClick.bind(this)}>
-					시간 선호도만으로 추천
 				</button>
 				<TaskInputForm
 					ref="taskinputform"
