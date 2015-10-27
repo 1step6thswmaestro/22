@@ -89,7 +89,7 @@ module.exports = function(_router, app){
 		let created = req.body.created;
 		let loc = req.body.loc;
 
-		timeEstimator.estimate(task.name)
+		timeEstimator.estimate(userId, task.name)
 		.then(result=>{
 			task.estimation = result;
 			app.helper.taskHelper.create(userId, task)
