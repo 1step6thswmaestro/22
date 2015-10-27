@@ -4,6 +4,8 @@ import DateTimePicker from '../todo/dialog/DateTimePicker'
 import { setGlobalTime } from '../todo/actions/global'
 import { setConfig } from '../todo/actions/config'
 import { fetchPrioritizedList } from '../todo/actions/tasks'
+import classNames from 'classnames';
+
 
 
 export default class DevelopView extends React.Component{
@@ -20,6 +22,42 @@ export default class DevelopView extends React.Component{
 	}
 
 	render(){
+		let { dispatch } = this.props;
+		let buttonRaw = [
+			{text: 'default', command: undefined}
+			, {text: 'time preference', command: 'time'}
+		]
+
+		let checkedObj;
+		buttonRaw.forEach(obj=>{
+			if(obj.command == this.props.config.priorityStrategy){
+				obj.checked = true;
+				checkedObj = obj;
+			}
+		});
+		if(!checkedObj){
+			buttonRaw[0].checked = true;
+		}
+
+		function setPriorityStrategyConfig(obj){
+			dispatch(setConfig('priorityStrategy', obj.command));
+			dispatch(fetchPrioritizedList());
+		}
+
+
+		let buttons = buttonRaw.map(obj=>{
+			var btnClass = classNames({
+		    	'btn': true,
+		    	'btn-checked': obj.checked,
+		    	'btn-default': !obj.checked
+		    });
+		    return (
+		    	<button className={btnClass} onClick={setPriorityStrategyConfig.bind(this, obj)}>
+		    		{obj.text}
+		    	</button>
+		    )
+		})
+
 		return (
 			<div>
 				<If test={this.props.config.globalTimePicker!=true}>
@@ -35,6 +73,8 @@ export default class DevelopView extends React.Component{
 						<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
 					</div>
 				</If>
+				<i className='mr10'></i>
+				{buttons}
 			</div>
 		)
 	}

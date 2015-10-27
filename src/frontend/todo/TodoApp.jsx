@@ -91,8 +91,7 @@ class TodoApp extends React.Component{
 		if(this.state.currentView == 'task'){
 			viewContent = (
 				<div>
-					<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global} />
-					<DevelopView dispatch={this.props.dispatch} config={this.props.config} />
+					<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global} config={this.props.config}/>
 				</div>
 			);
 		}
@@ -107,6 +106,7 @@ class TodoApp extends React.Component{
 				<Topbar/>
 				<MainTimeline tasklog={this.props.tasklog}/>
 				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
+				<DevelopView dispatch={this.props.dispatch} config={this.props.config} />
 				{viewContent}
 				<header>
 					<h1>Give Me Task</h1>

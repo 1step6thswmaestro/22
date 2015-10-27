@@ -22,7 +22,6 @@ export function fetchList(){
 		.then(
 			result => {
 				dispatch({type: type.TASK_RECV_LIST, list: result.list});
-				dispatch({type: type.TASK_RECV_LIST_PRIORITIZED, list: result.plist})
 			}
 			, err => dispatch({type: type.TASK_ERROR, err})
 		)
@@ -36,7 +35,7 @@ export function fetchPrioritizedList(){
 		});
 
 		return $.ajax({
-			url: '/v1/tasks/prioritized'
+			url: `/v1/tasks/prioritized/${getState().config.priorityStrategy}`
 			, type: 'get'
 			, data:{
 				time: getState().global.time

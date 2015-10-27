@@ -11,5 +11,6 @@ DECL('SET_CONFIG', (state, action)=>{
 
 export const reducer = group.getReducer({
 	bannerIndex: 0
+	, priorityStrategy: undefined //default value
 });
 export const type = group.getTypes();

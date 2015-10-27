@@ -30,16 +30,27 @@ module.exports = function(_router, app){
 	router.get('/', function(req, res){
 		let time = req.query.time?parseInt(req.query.time):Date.now();
 
-
-		Q.all([helper.taskHelper.find(req.user._id)
-			, helper.priTaskHelper.find(req.user._id, undefined, parseInt(time))])
-		.then(results=>res.send({list: results[0], plist: results[1]}));
+		helper.taskHelper.find(req.user._id)
+		.then(results=>res.send({list: results}))
 	})
 
-	router.get('/prioritized', function(req, res){
-		helper.priTaskHelper.find(req.user._id, undefined, parseInt(req.query.time))
-		.then(result=>res.send({plist: result}));
+	router.get('/prioritized/:method?', function(req, res){
+		let time = req.query.time?parseInt(req.query.time):Date.now();
 
+		let promise;
+		switch(req.params.method){
+			case 'time':
+				promise = helper.priTaskHelper.findByTimePreference(req.user._id, undefined, time);
+				break;
+			default:
+				promise = helper.priTaskHelper.find(req.user._id, undefined, time);
+				break;
+
+		}
+
+		promise
+		.then(result=>res.send({plist: result}))
+		.fail(err=>res.status(400).send(err));
 	})
 
 	router.post('/', function(req, res){

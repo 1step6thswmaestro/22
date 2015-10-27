@@ -6,7 +6,7 @@ import MapImage from '../dialog/MapImage'
 import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
-import { fetchList, makeNewItem, removeItem } from '../actions/tasks'
+import { fetchList, fetchPrioritizedList, makeNewItem, removeItem } from '../actions/tasks'
 
 import _ from 'underscore'
 
@@ -20,6 +20,7 @@ class TaskView extends React.Component{
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch(fetchList());
+		dispatch(fetchPrioritizedList());
 	}
 
 	handleTaskSubmit(task) {
