@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 var Task = mongoose.model('Task');
 var TaskLog = mongoose.model('TaskLog');
 var TaskLogType = require('../../../constants/TaskLogType');
-var TaskState = require('../../../constants/TaskState');
 var Q = require('q');
 var express = require('express');
 var tokenizer = require('../../../taskprocess/tokenizer');
@@ -28,57 +27,19 @@ module.exports = function(_router, app){
 	})
 
 	router.get('/', function(req, res){
-		var time;
-		if (typeof req.query.time == 'undefined')
-		{
-			time = new Date(Date.now());
-		}
-		else{
-			time = new Date(Number(req.query.time));
-		}
-		var timeslotIdx = time.getHours()*2 + Math.floor(time.getMinutes()/30);
+		let time = req.query.time?parseInt(req.query.time):Date.now();
 
-		// This request returns all tasks that are saved for the user.
-		Q.all([helper.taskHelper.find(req.user._id, {state: {$ne: TaskState.named.started.id}})
-			, helper.priTaskHelper.find(req.user._id, undefined, timeslotIdx)])
-			//, helper.priTaskHelper.find(req.user._id, {state: {$ne: TaskState.named.started.id}}, timeslotIdx)])
+
+		Q.all([helper.taskHelper.find(req.user._id)
+			, helper.priTaskHelper.find(req.user._id, undefined, parseInt(time))])
 		.then(results=>res.send({list: results[0], plist: results[1]}));
 	})
 
-	router.get('/ongoing', function(req, res){
-		helper.taskHelper.find(req.user._id, {state: TaskState.named.started.id})
-		.then(result=>res.send({list: result}));
-	})
-
 	router.get('/prioritized', function(req, res){
-		var time;
-		if (typeof req.query.time == 'undefined')
-		{
-			time = new Date(Date.now());
-		}
-		else{
-			time = new Date(Number(req.query.time));
-		}
-		var timeslotIdx = time.getHours()*2 + Math.floor(time.getMinutes()/30);
-		helper.priTaskHelper.find(req.user._id, undefined, timeslotIdx)
-		.then(result=>res.send({plist: result}))
-		.fail(err=>res.send(err));
-	})
-	router.get('/prioritized-timepref', function(req, res){
-		var time;
-		if (typeof req.query.time == 'undefined')
-		{
-			time = new Date(Date.now());
-		}
-		else{
-			time = new Date(Number(req.query.time));
-		}
-		var timeslotIdx = time.getHours()*2 + Math.floor(time.getMinutes()/30);
-		helper.priTaskHelper.findByTimePreference(req.user._id, undefined, timeslotIdx)
-		.then(result=>res.send({plist: result}))
-		.fail(err=>res.send(err));
-	})
+		helper.priTaskHelper.find(req.user._id, undefined, parseInt(req.query.time))
+		.then(result=>res.send({plist: result}));
 
+	})
 
 	router.post('/', function(req, res){
 		// This request create new task for the current user.
@@ -100,9 +61,7 @@ module.exports = function(_router, app){
 	router.post('/modify', function(req, res){
 		// This request modifies given task's name and description field.
 		let task = _.pick(req.body, '_id', 'name', 'description', 'created', 'duedate');
-
-		// Overwrite only picked fields' value, whereas others maintain.
-		var modifiedTask = Task(task).toObject();
+		
 
 		app.helper.taskHelper.update(req.user._id, {_id: task._id}, modifiedTask)
 		.then(function(){
@@ -112,6 +71,7 @@ module.exports = function(_router, app){
 			if(err) throw err;
 		})
 	})
+
 	router.delete('/:id', function(req, res){
 		// This request delete specific task.
 		//TODO
@@ -123,20 +83,20 @@ module.exports = function(_router, app){
 	})
 
 	router.put('/:_id/:command', function(req, res, next){
-		// Handle event related to task. Update task according to the event type.
-
 		if(!TaskLogType.named[req.params.command]){
 			// Undefined command recieved.
 			next();
 			return;
 		}
 
-		var commandType = TaskLogType.named[req.params.command];
-		var nextState = TaskState.named[commandType.nextState];
+		var type = TaskLogType.named[req.params.command];
+		var taskType = type;
+		if(type.state){
+			taskType = TaskLogType.named[type.state];
+		}
 
-		var p0 = helper.taskHelper.update(req.user._id, {_id: req.params._id}, {state: nextState.id});
-
-		var p1 = helper.tasklog.create(req.user._id, req.params._id, commandType, {
+		var p0 = helper.taskHelper.update(req.user._id, {_id: req.params._id}, {state: taskType.id});
+		var p1 = helper.tasklog.create(req.user._id, req.params._id, TaskLogType.named[req.params.command], {
 			loc: req.body.loc
 			, time: req.body.time
 		});

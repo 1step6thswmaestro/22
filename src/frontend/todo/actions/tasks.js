@@ -5,48 +5,13 @@ import { getLocation } from '../../utility/location'
 import _ from 'underscore'
 
 var TaskLogType = require('../../../constants/TaskLogType');
-var TaskState = require('../../../constants/TaskState');
-
-export function changePriorityCriterion(criterion){
-	return (dispatch, getState) => {
-		dispatch({
-			type: type.TASK_PRIORITY_CRITERION_CHANGE,
-			criterion: criterion
-		});
-		console.log('fetch after priority_criterion change.');
-		// TODO: fetching is not work. why? I may read redux document again. 
-		return fetchPrioritizedList()(dispatch, getState);
-	}
-}
-
-export function fetchOngoingList(){
-	return (dispatch, getState) => {
-		dispatch({
-			type: type.TASK_REQ_ONGOING_LIST
-		});
-
-		return $.ajax({
-			url: '/v1/tasks/ongoing'
-			, type: 'get'
-			// Seems unnecessary.
-			//, data:{
-			//	time: getState().global.time
-			//}
-		})
-		.then(
-			result => {
-				dispatch({type: type.TASK_RECV_ONGOING_LIST, list: result.list});
-			}
-			, err => dispatch({type: type.TASK_ERROR, err})
-		)
-	}
-}
 
 export function fetchList(){
 	return (dispatch, getState) => {
 		dispatch({
 			type: type.TASK_REQ_LIST
 		});
+
 		return $.ajax({
 			url: '/v1/tasks'
 			, type: 'get'
@@ -69,17 +34,9 @@ export function fetchPrioritizedList(){
 		dispatch({
 			type: type.TASK_REQ_PLIST
 		});
-		console.log('fetch PrioritizedList');
-		var url;
-		if(getState().tasks.priority_criterion == 'all'){
-			url = '/v1/tasks/prioritized';
-		}
-		else if(getState().tasks.priority_criterion == 'timepref'){
-			url = '/v1/tasks/prioritized-timepref';
 
-		}
 		return $.ajax({
-			url: url
+			url: '/v1/tasks/prioritized'
 			, type: 'get'
 			, data:{
 				time: getState().global.time
@@ -116,72 +73,47 @@ export function makeNewItem(item){
 			, data: item
 		})
 		.then(
-			item => dispatch({type: type.TASK_RECV_NEWITEM, item, tid})
+			item => dispatch({type: type.TASK_RECV_ITEM, item, tid})
 			, err => dispatch({type: type.TASK_ERROR, err})
 		);
 	}
 }
 
 export function modifyItem(task){
-	return function(dispatch, getState){
-
-		// Show loading symbol until we get server response.
-		dispatch({
-			type: type.TASK_REQ_UPDATE
-			, item: task
-		})
-
-		return request({
-			url: '/v1/tasks/modify'
-			, type: 'post'
-			, data: task
-		})
-		.then(result => {
-			dispatch({
-				type: type.TASK_RECV_UPDATED_ITEM,
-				item: result,
-				isPrevStateStarted: task.state == TaskState.named.started.id,
-				isContentUpdated: true
-			});
-			dispatch({type: type.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
-		}, err => {
-			dispatch({type: type.TASK_ERROR, err});
-
-			// Even if request for state change failed. We change state from loading to finished.
-			dispatch({
-				type: type.TASK_RECV_UPDATED_ITEM,
-				item: task,
-				isPrevStateStarted: task.state == TaskState.named.started.id,
-				isContentUpdated: false
-			});
-		});
-	}
+	return request({
+		url: '/v1/tasks/modify'
+		, type: 'post'
+		, data: task
+	})
+	.then(result => {
+		dispatch({type: type.TASK_MODIFY_ITEM, task});
+	}, err => {
+		dispatch({type: type.TASK_ERROR, err});
+	});
 }
 
 export function startItem(task){
-	return updateStateWithAction(task, TaskLogType.named.start);
+	return updateState(task, TaskLogType.named.start);
 }
 
 export function pauseItem(task){
-	return updateStateWithAction(task, TaskLogType.named.pause);
+	return updateState(task, TaskLogType.named.pause);
 }
 
 export function resumeItem(task){
-	return updateStateWithAction(task, TaskLogType.named.resume);
+	return updateState(task, TaskLogType.named.resume);
 }
 
 export function postponeItem(item){
-	return updateStateWithAction(task, TaskLogType.named.postpone);
+	return updateState(task, TaskLogType.named.postpone);
 }
 
 export function completeItem(task){
-	return updateStateWithAction(task, TaskLogType.named.complete);
+	return updateState(task, TaskLogType.named.complete);
 }
 
-function updateStateWithAction(task, actionType){
+function updateState(task, state){
 	return function(dispatch, getState){
-
-		// Show loading symbol until we get server response.
 		dispatch({
 			type: type.TASK_REQ_UPDATE
 			, item: task
@@ -195,23 +127,12 @@ function updateStateWithAction(task, actionType){
 			}
 		})
 		.then(result => {
-			dispatch({
-				type: type.TASK_RECV_UPDATED_ITEM,
-				item: result.task,
-				isPrevStateStarted: task.state == TaskState.named.started.id,
-				isStateUpdated: true
-			});
+			console.log(result);
+			dispatch({type: type.TASK_RECV_ITEM, item: result.task});
 			dispatch({type: type.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
 		}, err => {
 			dispatch({type: type.TASK_ERROR, err});
-
-			// Even if request for state change failed. We change state from loading to finished.
-			dispatch({
-				type: type.TASK_RECV_UPDATED_ITEM,
-				item: task,
-				isPrevStateStarted: task.state == TaskState.named.started.id,
-				isStateUpdated: false
-			});
+			dispatch({type: type.TASK_RECV_ITEM, item: task});
 		});
 	}
 }

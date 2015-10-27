@@ -1,13 +1,12 @@
 var helper = require('./helper');
-var TaskState = require('./TaskState');
 
 var Type = [
-	{id: 100, name: 'create', nextState: TaskState.named.created.name, tokenize: false}
-	, {id: 200, name: 'start', nextState: TaskState.named.started.name}
-	, {id: 300, name: 'pause', nextState: TaskState.named.paused.name, tokenize: false}
-	, {id: 350, name: 'resume', nextState: TaskState.named.started.name}
-	, {id: 400, name: 'postpone', nextState: TaskState.named.paused.name}
-	, {id: 500, name: 'complete', nextState: TaskState.named.completed.name}
+	{id: 100, command: 'create', tokenize: false}
+	, {id: 200, command: 'start'}
+	, {id: 300, command: 'pause', tokenize: false}
+	, {id: 350, command: 'resume', state: 'start'}
+	, {id: 400, command: 'postpone'}
+	, {id: 500, command: 'complete'}
 ];
 
-module.exports = helper.processEnum(Type);
+module.exports = helper.processType(Type);
