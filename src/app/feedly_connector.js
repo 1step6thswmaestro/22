@@ -53,14 +53,12 @@ feedly_wrapper.prototype.get_or_create_status = function(user_id, callback){
 feedly_wrapper.prototype.logon = function(user_id, callback){
 	var sequence = Futures.sequence();
 	this.get_or_create_status(user_id, function(err, status){
-		logger.log(status);
 		if (err) {
 			callback(err, -1);
 		}
 		if (status == 1) {
 			sequence
 			.then(function(next){
-				logger.log(user_id);
 				var feedly_inst = new feedly_connector(user_id);
 				setTimeout(function(){
 					next(feedly_inst)
@@ -77,30 +75,32 @@ feedly_wrapper.prototype.logon = function(user_id, callback){
 
 feedly_wrapper.prototype.change_status = function(user_id, callback){
 	var sequence = Futures.sequence();
-	this.get_or_create_status(user_id, function(err, status){
-		if (err) {
-			callback(err, -1);
-		}
-
-		sequence
-		.then(function(next){
-			var feedly_inst = new feedly_connector(user_id);
-			setTimeout(function(){
-				next(feedly_inst);
-			}, 1000);
-		})
-		.then(function(next, feedly_inst){
-			if (status == 0) {
-				feedly_inst.logout(function(err, msg){
-					callback(err, status);
-				})
-			} else {
-				feedly_inst.read_and_update(function(err, msg){
-					callback(err, status);
-				});
+	sequence
+	.then(function(next){
+		var feedly_inst = new feedly_connector(user_id);
+		setTimeout(function(){
+			next(feedly_inst);
+		}, 1000);
+	})
+	.then(function(next, feedly_inst){
+		feedly_inst.change(user_id, function(err, status){
+			if (err) {
+				callback(err, -1);
 			}
+			next(feedly_inst, status);
 		})
-	});
+	})
+	.then(function(next, feedly_inst, status){
+		if (status == 0) {
+			feedly_inst.logout(function(err, msg){
+				callback(err, status);
+			})
+		} else {
+			feedly_inst.read_and_update(function(err, msg){
+				callback(err, status);
+			});
+		}
+	})
 }
 
 module.exports = feedly_wrapper;
@@ -111,13 +111,13 @@ feedly_connector.prototype.change = function(user_id, callback){
 	feedly_model.findOne({"user_id" : user_id}, function(err, doc){
 		if (err){
 			logger.error(err);
-			callback(err, doc);
+			callback(err, undefined);
 		}
 		
 		var update_status = ~ doc['status'] + 2; // 0 to 1, 1 to 0
         feedly_model.update(
         	{'user_id' : user_id}
-        	, { $Set : {'status' : update_status}}
+        	, { $set : {'status' : update_status}}
         	, function(error, num){
         		if (error){
         			logger.error(error);
