@@ -6,6 +6,7 @@ var TaskStateType = require('../constants/TaskStateType');
 var Q = require('q');
 
 var TimeSlot = mongoose.model('TimeSlot');
+var py_interpreter = require('../app/python_interpreter');
 
 
 class TimeslotUpdater{
@@ -28,7 +29,7 @@ class TimeslotUpdater{
 
 		Q.all([p0, p1])
 		.then(function(results){
-			console.log('Found task and startLog');
+			// console.log('Found task and startLog');
 
 			var task = results[0][0];
 			var startLog = results[1];
@@ -44,9 +45,9 @@ class TimeslotUpdater{
 
 			startIdx = startLog.time.getHours()*2 + Math.floor(startLog.time.getMinutes()/30);
 			endIdx = taskLog.time.getHours()*2 + Math.floor(taskLog.time.getMinutes()/30);
-			console.log(startLog);
-			console.log(taskLog);
-			console.log(startIdx, endIdx);
+			// console.log(startLog);
+			// console.log(taskLog);
+			// console.log(startIdx, endIdx);
 
 			// Term frequency update for each time slot.
 			for(let i = startIdx; i<= endIdx; i++){
@@ -54,8 +55,8 @@ class TimeslotUpdater{
 				// If token is not in dictionary, update the dictionary.
 				TimeSlot.findOne({'slotIndex' : i}, function (err, timeslot){
 					if (err) return handleError(err);
-					console.log('Prev Timeslot:')
-					console.log(timeslot)
+					// console.log('Prev Timeslot:')
+					// console.log(timeslot)
 					if (timeslot == null){
 						var hourStr = ("00" + Math.floor(i/2)).slice (-2);
 						let name = hourStr + (i%2==0 ? ':00' : ':30') ;
@@ -65,16 +66,16 @@ class TimeslotUpdater{
 						timeslot.userId = taskLog.userId;
 						timeslot.tokens = [];
 					}
-					console.log(timeslot)
-					console.log(tokens)
+					// console.log(timeslot)
+					// console.log(tokens)
 					// Update TimeSlot's wordcount
 					for(let idx in tokens){
 						// How can we avoid race condition on count increment?
-						console.log(tokens[idx]);
+						// console.log(tokens[idx]);
 						timeslot.tokens.push(tokens[idx]);
 					}
-					console.log('Updated Timeslot:')
-					console.log(timeslot)
+					// console.log('Updated Timeslot:')
+					// console.log(timeslot)
 					timeslot.save();
 				});
 			}
@@ -86,7 +87,9 @@ class TimeslotUpdater{
 		var content = task.name + ' ' + task.description;
 
 		// Simple tokenizer. With regex, match every non-whitespace strings.
-		var tokens = content.match(/\S+/g);
+		// var tokens = content.match(/\S+/g);
+
+		var tokens = py_interpreter.getToken(content);
 		return tokens;
 	}
 };

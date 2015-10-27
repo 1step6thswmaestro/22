@@ -13,6 +13,14 @@ module.exports = function(app){
 		});
 	});
 
+	app.use('/test/tokenize', function(req, res) {
+		logger.log(req.query.q);
+		py_interpreter.getToken(req.query.q)
+		.then(function(msg) {
+			res.send(JSON.stringify(msg));
+		});
+	});
+
 	app.use('/test/score', function(req, res) {
 		var test_msg = '';
 		py_interpreter.getTaskScore(test_msg, 0, 0)
