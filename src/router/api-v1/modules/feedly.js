@@ -11,23 +11,26 @@ module.exports = function(_router, app){
 	let router = express.Router();
 	_router.use('/feedly', router);
 
-	router.get('/logon', function(req, res){
-		var inst = new feedly_connector(res.query.user_id);
-		inst.get_or_create_status(function(status){
+	var user_id = res.query.user_id;
+	var inst = new feedly_connector(res.query.user_id);
 
-		})
+	router.get('/logon', function(req, res){
+		inst.logon(uesr_id, function(err, status){
+			if (err) {
+				logger.error(err);
+				return ;
+			}
+			res.send(status);
+		});
 	});
 
 	router.get('/status/change', function(req, res){
-		var inst = new feedly_connector(res.query.user_id);
-		
-
-		inst.update(function(msg){
-			res.send(msg);
-		});
-
-		inst.logout(function(msg){
-			res.send(msg);
+		inst.change_status(user_id, function(err, status){
+			if (err) {
+				logger.error(err);
+				return ;
+			}
+			res.send(status);
 		});
 	});
 }

@@ -63,7 +63,7 @@ feedly_wrapper.prototype.logon = function(user_id, callback){
 			})
 			.then(function(next, feedly_inst){
 				feedly_inst.read_and_update(function(err, msg){
-					callback(err, msg);
+					callback(err, status);
 				});
 			});
 		}
@@ -86,11 +86,11 @@ feedly_wrapper.prototype.change_status = function(user_id, callback){
 		.then(function(next, feedly_inst){
 			if (status == 0) {
 				feedly_inst.logout(function(err, msg){
-					callback(err, msg);
+					callback(err, status);
 				})
 			} else {
 				feedly_inst.read_and_update(function(err, msg){
-					callback(err, msg);
+					callback(err, status);
 				});
 			}
 		})
