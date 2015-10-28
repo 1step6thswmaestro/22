@@ -5,7 +5,8 @@ reload(sys) # Encoding trick. Suppress encoding error when we pass Korean as sys
 sys.setdefaultencoding("utf-8")
 
 import MeCab
-m = MeCab.Tagger('-d /usr/lib/mecab/dic/mecab-ko-dic')
+m = MeCab.Tagger() # User default dictionary.
+# m = MeCab.Tagger('-d /usr/lib/mecab/dic/mecab-ko-dic')
 # Below code is requied to run to prevent a odd bug.
 # The bug seems like MeCab but. When we parse for the first time, parse didn't work.
 m.parse(u'한국어의 형태소를 분리하는지 테스트'.encode('utf-8'))
@@ -52,8 +53,15 @@ def main():
     import json
 
     result = {}
-    result["tokens"] = getNounAndVerb(sys.argv[1])
+    try:
+        result["tokens"] = getNounAndVerb(sys.argv[1])
+    except:
+        with open('errlog.txt', 'w') as f:
+            f.write(sys.exc_info()[0])
+        sys.exit(1);
+
     print json.dumps(result)
+    sys.exit(0)
 
 if __name__ == "__main__":
     main()
