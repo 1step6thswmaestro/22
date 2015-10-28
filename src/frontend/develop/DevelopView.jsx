@@ -76,17 +76,19 @@ export default class DevelopView extends React.Component{
 					</button>
 				</If>
 				<If test={this.props.config.globalTimePicker==true}>
-					<div>
-						<button className='btn btn-default' onClick={this.toggleDatePicker.bind(this)}>
-							DatePicker 감추기
-						</button>
-						<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
-					</div>
+					<button className='btn btn-check' onClick={this.toggleDatePicker.bind(this)}>
+						DatePicker 감추기
+					</button>
 				</If>
 				<i className='mr10'></i>
 				{buttons}
 				<i className='mr10'></i>
 				{onlyActiveButton}
+				<If test={this.props.config.globalTimePicker==true}>
+					<div>
+						<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
+					</div>
+				</If>
 			</div>
 		)
 	}
