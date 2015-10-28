@@ -68,21 +68,25 @@ class TaskView extends React.Component{
 	    }
 
 		return (
-			<div className="task-view">
-				<div className="task-list">
-					<div className="row">
-						<div className="col-md-12">
-							{createTaskElements(
-								config.displayActiveListOnly?
-									tasks.activeList
-									:tasks.plist
-								, tasklog)}
+			<div className="task-view-wrapper">
+				<div className="task-view">
+					<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showInputDialog.bind(this)}>
+						Add New Task
+					</button>
+					<div className="task-list-wrapper">
+						<div className="task-list">
+							<div className="row">
+								<div className="col-md-12">
+									{createTaskElements(
+										config.displayActiveListOnly?
+											tasks.activeList
+											:tasks.plist
+										, tasklog)}
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-				<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showInputDialog.bind(this)}>
-					Add New Task
-				</button>
 				<TaskInputForm
 					ref="taskinputform"
 					dispatch={this.props.dispatch}

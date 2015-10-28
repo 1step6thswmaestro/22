@@ -1,27 +1,32 @@
-.task-view{
+.task-view-wrapper{
 	width: 100%;
 	margin-top: 20px;
   padding: 0px 10px;
 }
 
-.task-list{
-	position: relative;
+.task-view{
   margin-left: auto;
   margin-right: auto;
-	
-	border-radius: 10px;
-	border: 1px solid #bbb;
 
-	width: 100%;
+  width: 100%;
 
-	/* offset-x | offset-y | blur-radius | spread-radius | color */
-	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
+}
+
+.task-list-wrapper{
+  position: relative;	
 }
 
 @media (min-width: 700px) {
-	.task-list{
-		width: 700px;
-	}
+  .task-view{
+    width: 700px;
+  }
+}
+  
+.task-list{
+  border-radius: 10px;
+  border: 1px solid #bbb;
+  /* offset-x | offset-y | blur-radius | spread-radius | color */
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
 }
 
 .task-list:before {
