@@ -13,20 +13,14 @@ class Tokenizer{
 	}
 
 	tokenizeText(text){
-		var texts = [];
-		// var tokens = text.split(' ');
+		// var tokens = text.split(' '); // Very simple tokenizer.
 		var tokens = py_interpreter.getToken(text); // Get nouns and verbs
 		console.log(tokens)
 		return Q(tokens);
 		// return Q(grab(tokens));
 
-		// return py_interpreter.analyze_morphem(text)
-		// .then(tokens=>{
-		// 	console.log('tokens : ', tokens);
-		// 	return grab(tokens);
-		// });
-
 		function grab(tokens){
+			// grab() generate every combination of skip-gram.
 			let head = tokens[0];
 			if(tokens.length<=1){
 				return ['', head];
@@ -57,6 +51,8 @@ class Tokenizer{
 		}
 
 		let textTokens = this.tokenizeText(task.name);
+		console.log("token result:");
+		console.log(textTokens);
 
 		let tokens = _.map(textTokens, text => {
 			let obj = {
@@ -122,8 +118,6 @@ class Tokenizer{
 
 				_time = log.time;
 			});
-
-
 			//create token
 			if(lastlog){
 				// console.log('p1', task.created, task.lastProcessed)

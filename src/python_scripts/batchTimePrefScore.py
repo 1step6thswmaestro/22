@@ -79,9 +79,7 @@ def smoother(numtype_arr):
 		window_one_side_len = len(window)/2;
 
 		for offset in range( - window_one_side_len, window_one_side_len + 1):
-			if idx + offset < 0 or idx + offset >= len(numtype_arr):
-				continue
-			weighted_sum = weighted_sum + window[offset + window_one_side_len] * numtype_arr[idx + offset]
+			weighted_sum = weighted_sum + window[offset + window_one_side_len] * numtype_arr[(idx + offset) % len(numtype_arr)]
 
 		result_arr[idx] = weighted_sum;
 	return result_arr
