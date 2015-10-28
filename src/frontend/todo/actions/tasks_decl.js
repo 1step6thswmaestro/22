@@ -8,7 +8,7 @@ DECL('TASK_REQ_NEWITEM', (state, action)=>{
 	let item = action.item;
 	item.loading = true;
 
-	let tempTasks = Object.assign(state.tempTasks, {[item.tid]: item});
+	let tempTasks = Object.assign(state.tempTasks||{}, {[item.tid]: item});
 
 	return Object.assign({}, state, {
 		tempTasks
@@ -25,6 +25,10 @@ DECL('TASK_RECV_ITEM', (state, action)=>{
 	let _list = state._list;
 	if(_list.indexOf(item._id)<0){
 		_list.push(item._id);
+	}
+	let _plist = state._plist;
+	if(_plist.indexOf(item._id)<0){
+		_plist.push(item._id);
 	}
 
 	let _tlist = state._tlist;
@@ -113,7 +117,7 @@ DECL('TASK_REMOVE_ITEM', (state, action)=>{
 
 DECL('TASK_REQ_UPDATE', (state, action)=>{
 	let { tasks } = state;
-	let { item } = action.item;
+	let { item } = action;
 	item.loading = false;
 	Object.assign(tasks, {[item._id]: item});
 
@@ -125,5 +129,6 @@ export const reducer = group.getReducer({
 	, tasks: {}
 	, _list: []
 	, _plist: []
+	, _tlist: []
 });
 export const type = group.getTypes();

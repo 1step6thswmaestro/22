@@ -125,7 +125,14 @@ function mapStateToProps(state){
 	let _activeList = _.filter(state.tasks.tasks, obj=>obj.state == TaskStateType.named.start.id);
 	_activeList = _.intersection(state.tasks._plist, _.pluck(_activeList, '_id'));
 
+	_.each(state.tasks._tlist, tid=>{
+		let task = state.tasks.tempTasks[tid];
+		props.tasks.list.push(task);
+		props.tasks.plist.push(task);
+	})
+
 	props.tasks.activeList = _.map(_activeList, _id => state.tasks.tasks[_id]);
+
 	return props;
 };
 

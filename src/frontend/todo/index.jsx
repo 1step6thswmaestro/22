@@ -8,6 +8,7 @@ let store = configureStore({
   	tasks: {}
 	, _list: []
 	, _plist: []
+	, _tlist: []
   }
 });
 
