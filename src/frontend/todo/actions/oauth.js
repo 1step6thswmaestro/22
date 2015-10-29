@@ -7,6 +7,15 @@ const CLIENT_ID = '199263260413-d9la67nokq2873broqrrm90k342mo98b.apps.googleuser
 const SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
 
 var gapi = null;
+var isAuthorized = false;
+
+export function isAuthed() {
+	return isAuthorized;
+}
+
+export function setApi(_gapi) {
+	gapi = _gapi;
+}
 
 /**
  * Check if current user has authorized this application.
@@ -43,9 +52,9 @@ export function handleAuthResult(authResult) {
  *
  * @param {Event} event Button click event.
  */
-export function handleAuthClick(_gapi, event) {
-	if(!gapi) {
-		gapi = _gapi;
+export function handleAuthClick(event) {
+	if (gapi) {
+		isAuthorized = true;
 		gapi.auth.authorize(
 			{client_id: CLIENT_ID, scope: SCOPES, immediate: false},
 			handleAuthResult);
