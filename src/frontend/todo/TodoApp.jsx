@@ -17,6 +17,8 @@ import MainTimeline from '../timeline/MainTimeline'
 
 import DevelopView from '../develop/DevelopView'
 
+import DayView from './dayview/DayView'
+
 import Topbar from '../main/Topbar'
 import TaskStateType from '../../constants/TaskStateType';
 
@@ -105,6 +107,7 @@ class TodoApp extends React.Component{
 				<Topbar/>
 				<MainTimeline tasklog={this.props.tasklog}/>
 				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
+				<DayView dispatch={this.props.dispatch} />
 				<DevelopView dispatch={this.props.dispatch} config={this.props.config} />
 				{viewContent}
 				<header>
