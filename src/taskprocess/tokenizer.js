@@ -50,31 +50,30 @@ class Tokenizer{
 			return;
 		}
 
-		let textTokens = this.tokenizeText(task.name);
-		console.log("token result:");
-		console.log(textTokens);
+		return this.tokenizeText(task.name)
+		.then(textTokens=>{
+			let tokens = _.map(textTokens, text => {
+				let obj = {
+					userId: task.userId,
+					taskId: task._id,
+					text: text,
+					duration: task.duedate - task.created,
+					priority: task.priority,
+					weekday: self.getWeekDayFromToken(time),
+					time: time,
+					daytime: time%48,
+					prevType: task.state,
+					type: log.type,
+					loc: log.loc,
+				};
 
-		let tokens = _.map(textTokens, text => {
-			let obj = {
-				userId: task.userId,
-				taskId: task._id,
-				text: text,
-				duration: task.duedate - task.created,
-				priority: task.priority,
-				weekday: self.getWeekDayFromToken(time),
-				time: time,
-				daytime: time%48,
-				prevType: task.state,
-				type: log.type,
-				loc: log.loc,
-			};
-
-			return obj;
-		});
-
-		return Q.all(_.map(tokens, function(tokenRaw){
-			return self.app.helper.predictToken.create(tokenRaw);
-		}));
+				return obj;
+			});
+			
+			return Q.all(_.map(tokens, function(tokenRaw){
+				return self.app.helper.predictToken.create(tokenRaw);
+			}));
+		})
 	}
 
 	processTaskById(user, taskId){
