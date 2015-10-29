@@ -219,7 +219,12 @@ class TaskItem extends React.Component{
 							</div>
 							<If test={task.state != TaskStateType.named.complete.id}>
 								<div>
-									{ this.getRemainTime() }
+									<div>
+										소요시간: { task.estimation } 시간
+									</div>
+									<div>
+										{ this.getRemainTime() }
+									</div>
 								</div>
 							</If>
 							{completeDate}

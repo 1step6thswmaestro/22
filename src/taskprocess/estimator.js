@@ -24,7 +24,7 @@ class TimeEstimator{
 			if (logs[from].type == 200) {
 				let to = from + 1;
 				while (to < lognum) {
-					if (logs[to].type == 300) {
+					if (logs[to].type == 300 || logs[to].type == 500) {
 						let timeTo = new Date(logs[to].time);
 						let timeFrom = new Date(logs[from].time);
 						takenTime += (timeTo - timeFrom);
@@ -39,6 +39,7 @@ class TimeEstimator{
 
 		takenTime /= (60 * 60 * 1000);
 
+		if (takenTime <= 0) return 1;
 		return takenTime.toFixed(1);
 	}
 
