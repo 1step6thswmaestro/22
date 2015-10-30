@@ -265,6 +265,25 @@ class TaskItem extends React.Component{
 							<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
 							</button>
+							<button className="btn btn-warning" label="Discard this task" onClick={this.reset.bind(this)}>
+								<span className="glyphicon glyphicon-trash"></span> reset
+							</button>
+							<a href={`/v1/tasktoken/task/${task._id}/`}>
+								<button className="btn btn-warning" label="Discard this task">
+									<span className="glyphicon glyphicon-trash"></span> tokens
+								</button>
+							</a>
+							<a href={`/v1/tasktoken/time/${this.props.global.time?this.props.global.time:''}`}>
+								<button className="btn btn-warning" label="Discard this task">
+									<span className="glyphicon glyphicon-trash"></span> tokens by time
+								</button>
+							</a>
+							<a href={`/v1/tasklog/task/${task._id}/`}>
+								<button className="btn btn-warning" label="Discard this task">
+									<span className="glyphicon glyphicon-trash"></span> show logs
+								</button>
+							</a>
+
 						</div>
 						<DocView taskID = {this.props.task._id} keyword = {task.name + task.description} user_id = {task.userId}/>
 					</div>
