@@ -1,33 +1,42 @@
 'use strict'
 
-var path			= require('path');
-var PythonShell 	= require('python-shell');
+var path = require('path');
+var spawn = require("child_process").spawn
 
 // define absolute directory
 var py_absolute_path = path.resolve('./src/python_scripts/');
 
-//define function path
+// define function path
 var morphem_py_path = 'morphem_call.py'
+var getToken_py_path = 'getToken.py'
 var getTaskScore_py_path = 'getTaskScore.py'
 
 var Q = require('q');
 
 var py_function_broker = function(path, input, callback){
 	// This function should get a message.
-	// Then it will return to you the python script result as JSON type
-	var options = {
-	  mode: 'text',
-	  // pythonPath: '/usr/bin/python',
-	  scriptPath: py_absolute_path ,
-	  args: input // input has form of list. ie. input = ['value1', 'value2', 'value3']
-	};
+	// Then it will return to you the python script result as JSON type.
 
+	var args = [py_absolute_path + '/' + path].concat(input);
+	var result = '';
 
-	PythonShell.run(path, options, function(err, results){
-		if (err) throw err;
-		console.log('python script run success.');
-		console.log(JSON.parse(results[0]))
-		callback(JSON.parse(results[0]))
+	var pythonProcess = spawn("python",  args);
+	pythonProcess.stdout.on('data', function(data){
+		result += data;
+	});
+
+	pythonProcess.stdout.on('close', function(code){
+		if (code == 0){ // On success
+			callback(JSON.parse(result));
+		}
+		else{
+			console.error('stdout closed with code: ' + code);
+			callback(null);
+		}
+	});
+
+	pythonProcess.stderr.on('data', function(data){
+		console.error('stderr: ' + data);
 	});
 }
 
@@ -42,7 +51,22 @@ module.exports = {
 
 		return defer.promise;
 	},
-
+	getToken : function(content) {
+		var input = [content];
+		let defer = Q.defer();
+		py_function_broker(getToken_py_path, input, function(result){
+			// Resolve a Deferred object and call any doneCallbacks with the given args
+			var tokens;
+			if (result == null){
+				tokens = null
+			}
+			else {
+				tokens = result.tokens
+			}
+			defer.resolve(tokens);
+		});
+		return defer.promise;
+	},
 	getTaskScore : function(userId, time, task) {
 		var input = ['a', 'b', 'c'];
 		console.log(input);

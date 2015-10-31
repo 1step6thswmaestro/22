@@ -7,7 +7,7 @@ import { getReadableDate } from '../../utility/date'
 import { startItem, pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
 import { fetchTaskLog } from '../actions/tasklog';
 import If from '../../utility/if'
-var TaskLogType = require('../../../constants/TaskLogType');
+var TaskStateType = require('../../../constants/TaskStateType');
 import SvgContainer from '../../d3/SvgContainer'
 
 class TaskItem extends React.Component{
@@ -21,7 +21,7 @@ class TaskItem extends React.Component{
 
 	complete(){
 		const { dispatch } = this.props;
-		dispatch(completeItem(this.props.task._id));
+		dispatch(completeItem(this.props.task));
 	}
 
 	start() {
@@ -42,10 +42,6 @@ class TaskItem extends React.Component{
 	postpone(){
 		const { dispatch } = this.props;
 		dispatch(postponeItem(this.props.task));
-	}
-
-	modify() {
-		this.props.onTaskModify(this.props.task);
 	}
 
 	reset(){
@@ -122,7 +118,22 @@ class TaskItem extends React.Component{
 	}
 
 	getRemainTime() {
-		return getRemainTime(this.props.task, this.props.tasklog);
+		let time = Math.floor(getRemainTime(this.props.task, this.props.tasklog));
+		
+		let result = "여유시간: ";
+		if(time <= 0) {
+			result = "여유시간 부족!";
+		}
+		else if(time <= 1) {
+			result += "1시간 이하";
+		}
+		else if(time > 25) {
+			result += ("약 "+Math.floor((time/24))+"일 "+(time%24)+"시간");
+		}
+		else{
+			result += ("약 "+time+"시간");
+		}
+		return result;
 	}
 
 	getDetailView(){
@@ -140,7 +151,7 @@ class TaskItem extends React.Component{
 			);
 		}
 
-		if(task.timestampComplete != null){
+		if(task.state == TaskStateType.named.complete.id){
 			completeDate = (
 				<div className="task-complete-date">
 					완료일: {getReadableDate(task.timestampComplete)}
@@ -149,7 +160,7 @@ class TaskItem extends React.Component{
 			completeButtonState = "btn-check";
 		}
 
-		if (task.state == TaskLogType.named.start.id) {
+		if (task.state == TaskStateType.named.start.id) {
 			processButtonState = "btn-check";
 		}
 
@@ -206,33 +217,73 @@ class TaskItem extends React.Component{
 							<div className="task-duedate">
 								마감일: {getReadableDate(task.duedate)}
 							</div>
-							<div>
-								남은시간: { this.getRemainTime() } 시간
-							</div>
+							<If test={task.state != TaskStateType.named.complete.id}>
+								<div>
+									<div>
+										소요시간: { task.estimation } 시간
+									</div>
+									<div>
+										{ this.getRemainTime() }
+									</div>
+								</div>
+							</If>
 							{completeDate}
 						</div>
 					</div>
 					<div>
 						<div className="btn-group">
-							<If test={task.state != TaskLogType.named.start.id}>
-								<button className="btn btn-default" onClick={this.start.bind(this)}>
-									<span className="glyphicon glyphicon-play"></span> 시작
+							<If test={task.state != TaskStateType.named.complete.id}>
+								<If test={task.state != TaskStateType.named.start.id}>
+									<button className="btn btn-default" onClick={this.start.bind(this)}>
+										<span className="glyphicon glyphicon-play"></span> 시작
+									</button>
+								</If>
+							</If>
+							<If test={task.state != TaskStateType.named.complete.id}>
+								<If test={task.state == TaskStateType.named.start.id}>
+									<button className="btn btn-check" onClick={this.pause.bind(this)}>
+										<span className="glyphicon glyphicon-play"></span> 일시 정지
+									</button>
+								</If>
+							</If>
+							<If test={task.state != TaskStateType.named.complete.id}>
+								<button className="btn btn-default" onClick={this.complete.bind(this)}>
+									<span className="glyphicon glyphicon-check"></span> 완료
 								</button>
 							</If>
-							<If test={task.state == TaskLogType.named.start.id}>
-								<button className="btn btn-check" onClick={this.pause.bind(this)}>
-									<span className="glyphicon glyphicon-play"></span> 일시 정지
+							<If test={task.state == TaskStateType.named.complete.id}>
+								<button className="btn btn-check">
+									<span className="glyphicon glyphicon-check"></span> 완료
 								</button>
 							</If>
-							<button className={"btn " + completeButtonState} onClick={this.complete.bind(this)}>
-								<span className="glyphicon glyphicon-check"></span> 완료
-							</button>
 							<button className="btn btn-default" label="Remind me later" onClick={this.postpone.bind(this)}>
 								<span className="glyphicon glyphicon-send"></span> 나중에 알림
+							</button>
+							<button className="btn btn-default" label="Discard this task" onClick={this.props.onTaskModify}>
+								<span className="glyphicon glyphicon-pencil"></span> 수정
 							</button>
 							<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> 할 일 제거
 							</button>
+							<button className="btn btn-warning" label="Discard this task" onClick={this.reset.bind(this)}>
+								<span className="glyphicon glyphicon-trash"></span> reset
+							</button>
+							<a href={`/v1/tasktoken/task/${task._id}/`}>
+								<button className="btn btn-warning" label="Discard this task">
+									<span className="glyphicon glyphicon-trash"></span> tokens
+								</button>
+							</a>
+							<a href={`/v1/tasktoken/time/${this.props.global.time?this.props.global.time:''}`}>
+								<button className="btn btn-warning" label="Discard this task">
+									<span className="glyphicon glyphicon-trash"></span> tokens by time
+								</button>
+							</a>
+							<a href={`/v1/tasklog/task/${task._id}/`}>
+								<button className="btn btn-warning" label="Discard this task">
+									<span className="glyphicon glyphicon-trash"></span> show logs
+								</button>
+							</a>
+
 						</div>
 						<DocView taskID = {this.props.task._id} keyword = {task.name + task.description} user_id = {task.userId}/>
 					</div>
@@ -246,24 +297,6 @@ class TaskItem extends React.Component{
 		var descStr = task.description || '';
 		var startDate, completeDate;
 		var locButtonState = this.getLocButtonStates(task.relatedLocation);
-
-		var completeButtonState = "btn-default";
-		if(task.timestampStart != null){
-			startDate = (
-				<div className="taskStartedDate">
-					시작일: {getReadableDate(task.timestampStart)}
-				</div>
-			);
-		}
-
-		if(task.timestampComplete != null){
-			completeDate = (
-				<div className="task-complete-date">
-					완료일: {getReadableDate(task.timestampComplete)}
-				</div>
-			);
-			completeButtonState = "btn-check";
-		}
 
 		let duedate = moment(task.duedate);
 

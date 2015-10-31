@@ -1,6 +1,6 @@
 'use strict'
 
-var TaskLogType = require('../constants/TaskLogType');
+var TaskStateType = require('../constants/TaskStateType');
 var _ = require('underscore');
 
 function ComprehensivePriorityStrategy(app){
@@ -15,7 +15,7 @@ function getRemainTime(task, logs) {
 	}
 
 	var remainTime = ((dateToMillisec(task.duedate) - Date.now()) / 1000 / 60 / 60).toFixed(1);
-	var estimationTime = 2;
+	var estimationTime = task.estimation;
 	var activatedTime = 0;
 
 	let from = 0;

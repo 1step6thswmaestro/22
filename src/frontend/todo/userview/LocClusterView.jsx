@@ -90,7 +90,7 @@ class LocClusterView extends React.Component{
 			width: '100%'
 		};
 		return (
-			<div class="clusterview" style={divStyle}>
+			<div className="clusterview" style={divStyle}>
 				<div ref="map" id="map-canvas"  style={divStyle}>
 				</div>
 			</div>

@@ -1,12 +1,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var ActionTypes = require('../constants/TaskLogType');
+var ActionTypes = require('../constants/TaskStateType');
 
 module.exports = function(app){
 	var taskLogSchema = new Schema({
 		taskId: Schema.Types.ObjectId
 		, userId: Schema.Types.ObjectId
-		// log type codes are defined in src/constants/TaskLogType.js
 		, type: Number
 		// A GeoJSON geometry object.
 		// http://geojson.org/geojson-spec.html

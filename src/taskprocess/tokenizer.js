@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var TaskLogType = require('../constants/TaskLogType');
+var TaskStateType = require('../constants/TaskStateType');
 var PredictToken = require('../models/PredictToken');
 var Q = require('q');
 var py_interpreter = require('../app/python_interpreter');
@@ -13,17 +13,14 @@ class Tokenizer{
 	}
 
 	tokenizeText(text){
-		var texts = [];
-		var tokens = text.split(' ');
-		return Q(grab(tokens));
-
-		// return py_interpreter.analyze_morphem(text)
-		// .then(tokens=>{
-		// 	console.log('tokens : ', tokens);
-		// 	return grab(tokens);
-		// });
+		// var tokens = text.split(' '); // Very simple tokenizer.
+		var tokens = py_interpreter.getToken(text); // Get nouns and verbs
+		console.log(tokens)
+		return Q(tokens);
+		// return Q(grab(tokens));
 
 		function grab(tokens){
+			// grab() generate every combination of skip-gram.
 			let head = tokens[0];
 			if(tokens.length<=1){
 				return ['', head];
@@ -49,32 +46,34 @@ class Tokenizer{
 	makeTokens(task, log, time, force){
 		let self = this;
 
-		if(!force && TaskLogType.indexed[log.type].tokenize === false){
+		if(!force && TaskStateType.indexed[log.type].tokenize === false){
 			return;
 		}
 
-		let textTokens = this.tokenizeText(task.name);
+		return this.tokenizeText(task.name)
+		.then(textTokens=>{
+			let tokens = _.map(textTokens, text => {
+				let obj = {
+					userId: task.userId,
+					taskId: task._id,
+					text: text,
+					duration: task.duedate - task.created,
+					priority: task.priority,
+					weekday: self.getWeekDayFromToken(time),
+					time: time,
+					daytime: (time+(9*2))%48,
+					prevType: task.state,
+					type: log.type,
+					loc: log.loc,
+				};
 
-		let tokens = _.map(textTokens, text => {
-			let obj = {
-				userId: task.userId,
-				taskId: task._id,
-				text: text,
-				duration: task.duedate - task.created,
-				priority: task.priority,
-				weekday: self.getWeekDayFromToken(time),
-				time: time,
-				daytime: time%48,
-				status: log.type,
-				loc: log.loc,
-			};
-
-			return obj;
-		});
-
-		return Q.all(_.map(tokens, function(tokenRaw){
-			return self.app.helper.predictToken.create(tokenRaw);
-		}));
+				return obj;
+			});
+			
+			return Q.all(_.map(tokens, function(tokenRaw){
+				return self.app.helper.predictToken.create(tokenRaw);
+			}));
+		})
 	}
 
 	processTaskById(user, taskId){
@@ -98,7 +97,7 @@ class Tokenizer{
 		let _time = currentTime;
 		let lastTime = new Date(task.lastProcessed);
 
-		console.log({lastTime});
+		// console.log({lastTime});
 
 		let p0 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$gt: lastTime}}, undefined, {sort: {time: -1}});
 		let p1 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$lte: lastTime}}, undefined, {limit: 1});
@@ -118,14 +117,12 @@ class Tokenizer{
 
 				_time = log.time;
 			});
-
-
 			//create token
 			if(lastlog){
 				// console.log('p1', task.created, task.lastProcessed)
 				// console.log(task.created.getTime(), task.lastProcessed.getTime(), task.created.getTime() == task.lastProcessed.getTime());
 				if(task.created.getTime() == task.lastProcessed.getTime()){
-					console.log(task, lastlog, self.getTimeDivision(lastlog.time));
+					// console.log(task, lastlog, self.getTimeDivision(lastlog.time));
 					promises.push(self.makeTokens(task, lastlog, self.getTimeDivision(lastlog.time), true));
 				}
 			}

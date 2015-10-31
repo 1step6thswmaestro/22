@@ -11,15 +11,15 @@ export default class TaskBanner extends React.Component{
 		this.index = 0;
 
 		this.button_left = (
-			<g transform="translate(-10.500000, -10.500000)" onClick={this.swipeLeft.bind(this)}>
-				<circle stroke="#F96332" stroke-width="3" cx="10.5" cy="10.5" r="10.5" fill='#EBEBEB'></circle>
+			<g transform="translate(-10.500000, -10.500000)">
+				<circle stroke="#F96332" strokeWidth="3" cx="10.5" cy="10.5" r="10.5" fill='#EBEBEB'></circle>
             	<path d="M12.793256,14.8235294 L6.17647059,10.5 L12.793256,6.17647059 L12.793256,14.8235294 Z" fill="#F96332"></path>
             </g>
 		)
 
 		this.btnRight = (
-			<g transform="scale(-1.0, 1) translate(-10.500000, -10.500000)" onClick={this.swipeRight.bind(this)}>
-				<circle stroke="#F96332" stroke-width="3" cx="10.5" cy="10.5" r="10.5" fill='#EBEBEB'></circle>
+			<g transform="scale(-1.0, 1) translate(-10.500000, -10.500000)">
+				<circle stroke="#F96332" strokeWidth="3" cx="10.5" cy="10.5" r="10.5" fill='#EBEBEB'></circle>
             	<path d="M12.793256,14.8235294 L6.17647059,10.5 L12.793256,6.17647059 L12.793256,14.8235294 Z" fill="#F96332"></path>
             </g>
 		)
@@ -49,70 +49,51 @@ export default class TaskBanner extends React.Component{
 	}
 
 	render(){
-		console.log('this.props : ', this.props);
-
-		let x = 0;
-		// let widthOffset = [0.6, 0.225, 0.175];
-		let widthOffset = [1.0];
-		var width = 100;
-		try{
-			width = this.refs.svg.getDOMNode().offsetWidth;
-		}
-		catch(e){
-
-		}
-		widthOffset = widthOffset.map(offset=>offset*width);
-
-		let contents = _.map(_.range(0, 1), offset=>{
+		let contents = ()=>{
+			let offset = 0;
 			let task = this.getTask(offset);
 
 			let created = moment(task.created);
 			let duedate = moment(task.duedate);
 
-			let _x = x;
-			x += widthOffset[offset];
-			// style={{'clip-path' : `url(#cut-off-bottom${offset})`}}
-
 			return (
-				<foreignObject x={_x} y="0" width={widthOffset[offset]} height="150px">
-					<div className='content'>
-						<div className='name'>
-							{task.name}
-						</div>
-						<div className='duedate'>
-							<i className='fa fa-clock-o'></i> {created.format("YY/MM/DD, HH:mm")}
-						</div>
-						<div className='duedate'>
-							<i className='fa fa-clock-o'></i> {duedate.format("YY/MM/DD, HH:mm")}
-						</div>
-						<div className='buttons'>
-							<div className="btn-group">
-								<button className={"btn "} data-toggle="집" label="집">
-									<span className="glyphicon glyphicon-home"></span>
-								</button>
-							</div>
-						</div>
-						<If test={offset==0}>
-							<svg className='svg-middle'>
-								<g className='btn-play'>
-									{this.btnPlay}
-								</g>
-							</svg>
-						</If>
+				<div className='content'>
+					<div className='name'>
+						{task.name}
 					</div>
-				</foreignObject>
+					<div className='duedate'>
+						<i className='fa fa-clock-o'></i> {created.format("YY/MM/DD, HH:mm")}
+					</div>
+					<div className='duedate'>
+						<i className='fa fa-clock-o'></i> {duedate.format("YY/MM/DD, HH:mm")}
+					</div>
+					<div className='buttons'>
+						<div className="btn-group">
+							<button className={"btn "} data-toggle="집" label="집">
+								<span className="glyphicon glyphicon-home"></span>
+							</button>
+						</div>
+					</div>
+					<If test={offset==0}>
+						<svg className='svg-middle'>
+							<g className='btn-play'>
+								{this.btnPlay}
+							</g>
+						</svg>
+					</If>
+				</div>
 			)
-		})
+		}();
 
 		let prevTask = this.getTask(-1);
 		let nextTask = this.getTask(+1);
 
 		return (
 			<div className='task-banner'>
-				<svg id='task-banner-canvas' ref='svg'>
+				<div className='content-wrapper'>
 					{contents}
-				</svg>
-				<div className='inner-canvas inner-canvas-left'>
+				</div>
+				<div className='inner-canvas inner-canvas-left' onClick={this.swipeLeft.bind(this)}>
 					<div className='inner-content'>
 						<div className='name'>
 							{prevTask.name}
@@ -124,7 +105,7 @@ export default class TaskBanner extends React.Component{
 						</g>
 					</svg>
 				</div>
-				<div className='inner-canvas inner-canvas-right'>
+				<div className='inner-canvas inner-canvas-right' onClick={this.swipeRight.bind(this)}>
 					<div className='inner-content'>
 						<div className='name'>
 							{nextTask.name}

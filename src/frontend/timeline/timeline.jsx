@@ -5,7 +5,7 @@ import d3 from 'd3'
 import { Chart, XAxis, YAxis } from '../d3/common';
 import { ViewBoxMixin } from '../d3/mixins';
 import _ from 'underscore';
-var TaskLogType = require('../../constants/TaskLogType');
+var TaskStateType = require('../../constants/TaskStateType');
 
 export default class Timeline extends React.Component{
 	constructor(props){
@@ -100,9 +100,6 @@ export default class Timeline extends React.Component{
 				width = 7;
 			}
 
-			console.log(log, x0, x1, width, this.state.range);
-
-
 			return (
 				<g>
 					<rect className='task-log-elem' x={x0} width={width} y='0' height='40' onClick={this.clickLog.bind(this, log)}>
@@ -137,7 +134,6 @@ export default class Timeline extends React.Component{
 	render() {
 		var props = this.props;
 
-		console.log('this.props.logs : ', this.props.logs);
 		if(!this.props.logs || !this.props.logs.length){
 			return (<g>
 				<rect ref='background' width='100%' height='100%' fill='#fff'>
@@ -146,9 +142,6 @@ export default class Timeline extends React.Component{
 		}
 
 		var interpolationType = props.interpolationType || (props.interpolate ? 'cardinal' : 'linear');
-
-		console.log(this.props.logs);
-
 
 		let logs = [];
 		let last;
@@ -166,11 +159,11 @@ export default class Timeline extends React.Component{
 			last._time = last._time || {};
 
 			let type = log.type;
-			if(type == TaskLogType.named.start.id){
+			if(type == TaskStateType.named.start.id){
 				last._time.begin = last._time.begin || log.time;
 			}
-			else if(type == TaskLogType.named.pause.id 
-				|| type == TaskLogType.named.pause.id){
+			else if(type == TaskStateType.named.pause.id 
+				|| type == TaskStateType.named.pause.id){
 				last._time.end = log.time;
 				logs.push(last);
 				last = undefined;
@@ -178,8 +171,6 @@ export default class Timeline extends React.Component{
 
 		}
 		this.state.logs = logs;
-		console.log(this.state.logs);
-
 		// Calculate inner chart dimensions
 
 		var width = this.props.width;
@@ -250,7 +241,7 @@ export default class Timeline extends React.Component{
 					gridVerticalStrokeDash={props.gridVerticalStrokeDash}
 					stroke='#ddd'
 					tickStroke='#ddd'
-					fontSize='10'
+					fontSize={10}
 				/>
 	  		</g>
 		);

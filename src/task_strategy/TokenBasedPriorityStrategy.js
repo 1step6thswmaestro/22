@@ -1,7 +1,7 @@
 'use strict'
 
 var TokenizerClass = require('../taskprocess/tokenizer');
-var TaskLogType = require('../constants/TaskLogType');
+var TaskStateType = require('../constants/TaskStateType');
 var _ = require('underscore');
 
 function TokenBasedPriorityStrategy(app){
@@ -21,13 +21,13 @@ TokenBasedPriorityStrategy.prototype.ready = function(userId, time){
 		daytime: {$gte: daytime-2, $lte: daytime+2}
 	}, undefined, {sort: {time: 1}})
 	.then(function(tokens){
-		self.tokenGroups = _.mapObject(_.groupBy(tokens, 'status'), arr=>_.countBy(arr, 'text'));
+		self.tokenGroups = _.mapObject(_.groupBy(tokens, 'type'), arr=>_.countBy(arr, 'text'));
 	})
 }
 
 TokenBasedPriorityStrategy.prototype.calculate = function(task){
 	let score = 0.0;
-	let tokens = this.tokenGroups[TaskLogType.named.start.id];
+	let tokens = this.tokenGroups[TaskStateType.named.start.id];
 
 	// console.log(tokens);
 

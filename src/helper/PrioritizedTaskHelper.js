@@ -42,7 +42,9 @@ function init(app){
 	PrioritizedTaskHelper.prototype.findByTimePreference = function(userId, query, time){
 		return this.update(userId, time)
 		.then(function(results){
-			var scoreLabel = 'timePreferenceScore.'.concat(time);
+			var _time = new Date(time);
+			var timeslotIdx = _time.getHours()*2 + Math.floor(_time.getMinutes()/30);
+			var scoreLabel = 'timePreferenceScore.'.concat(timeslotIdx);
 			var opt = {sort: {}};
 			opt.sort[scoreLabel]=-1;
 			return helper.taskHelper.find(userId, query, null, opt)

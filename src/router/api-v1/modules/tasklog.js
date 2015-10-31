@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 var Task = mongoose.model('Task');
 var TaskLog = mongoose.model('TaskLog');
 var Account = mongoose.model('Account');
-var TaskActionType = require('../../../constants/TaskLogType');
 var Q = require('q');
 
 module.exports = function(router, app){

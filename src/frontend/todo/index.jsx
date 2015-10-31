@@ -5,8 +5,10 @@ import { configureStore } from './store/configureStore'
 
 let store = configureStore({
   tasks: {
-	list: []
-	, plist: []
+  	tasks: {}
+	, _list: []
+	, _plist: []
+	, _tlist: []
   }
 });
 

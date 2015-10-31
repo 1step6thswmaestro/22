@@ -55,7 +55,7 @@ class DateTimePicker extends React.Component{
 
 	getDefaultView(){
 		return (
-			<div class="form-group">
+			<div className="form-group">
 				<label>{this.props.label}</label>
 			 	<div className='input-group date' ref='datetimepicker'>
 					<input type='text' className="form-control" />
