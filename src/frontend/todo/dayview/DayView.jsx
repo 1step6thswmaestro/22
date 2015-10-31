@@ -9,6 +9,7 @@ import { setApi, handleAuthClick, checkAuth, isAuthed } from '../actions/oauth'
 
 import _ from 'underscore'
 
+// Just temporary code for oauth test.
 class DayView extends React.Component{
 	constructor(){
 		super();

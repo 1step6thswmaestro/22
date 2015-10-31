@@ -76,32 +76,44 @@ export function loadCalendarApi() {
  * appropriate message is printed.
  */
 export function listUpcomingEvents() {
-	var request = gapi.client.calendar.events.list({
-		'calendarId': 'primary',
-		'timeMin': (new Date()).toISOString(),
-		'showDeleted': false,
-		'singleEvents': true,
-		'maxResults': 10,
-		'orderBy': 'startTime'
-	});
+	gapi.client.calendar.calendarList.list({
+		'fields': 'items(description,etag,id,primary,summary)'
+	})
+	.then(function(response){
+		console.log(response.result);
+		response.result.items.map(function(calendar){
+			var request = gapi.client.calendar.events.list({
+				'calendarId': calendar.id,
+				'timeMin': (new Date()).toISOString(),
+				'showDeleted': false,
+				'singleEvents': true,
+				'maxResults': 10,
+				'orderBy': 'startTime'
+			});
 
-	request.execute(function(resp) {
-		var events = resp.items;
-		appendPre('Upcoming events:');
+			/**
+			 *  SHOULD CHANGE HERE!!!
+			 *  TODO: Change here to push loaded events to the database.
+			 */
+			request.execute(function(resp) {
+				var events = resp.items;
 
-		if (events.length > 0) {
-			for (var i = 0; i < events.length; i++) {
-				var event = events[i];
-				var when = event.start.dateTime;
-				if (!when) {
-					when = event.start.date;
+				if (events.length > 0) {
+					for (var i = 0; i < events.length; i++) {
+						var event = events[i];
+						var when = event.start.dateTime;
+						if (!when) {
+							when = event.start.date;
+						}
+						appendPre(event.summary + ' (' + when + ')')
+					}
+				} else {
+					appendPre('No upcoming events found.');
 				}
-				appendPre(event.summary + ' (' + when + ')')
-			}
-		} else {
-			appendPre('No upcoming events found.');
-		}
-
+			});
+		})
+	}, function(reason) {
+		console.log(reason);
 	});
 }
 
