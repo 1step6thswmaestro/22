@@ -79,16 +79,23 @@ export function makeNewItem(item){
 }
 
 export function modifyItem(task){
-	return request({
-		url: '/v1/tasks/modify'
-		, type: 'post'
-		, data: task
-	})
-	.then(result => {
-		dispatch({type: type.TASK_MODIFY_ITEM, task});
-	}, err => {
-		dispatch({type: type.TASK_ERROR, err});
-	});
+	return function(dispatch) {
+		dispatch({
+			type: type.TASK_REQ_UPDATE,
+			item: task
+		});
+
+		return request({
+			url: '/v1/tasks/modify'
+			, type: 'post'
+			, data: task
+		})
+		.then(result => {
+			dispatch({type: type.TASK_RECV_ITEM, task});
+		}, err => {
+			dispatch({type: type.TASK_ERROR, err});
+		});
+	}
 }
 
 export function startItem(task){

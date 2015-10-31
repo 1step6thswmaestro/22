@@ -43,10 +43,7 @@ class TaskView extends React.Component{
 	}
 
 	showModifyDialog(task) {
-		this.refs.taskinputform.setState({
-			modifyMode: true,
-			task: task,
-		});
+		this.refs.taskinputform.onModifyRequest(task);
 		var modal = $(React.findDOMNode(this.refs.taskinputform));
 		modal.modal({
 			backdrop: true

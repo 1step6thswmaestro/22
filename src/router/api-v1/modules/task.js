@@ -77,7 +77,7 @@ module.exports = function(_router, app){
 	router.post('/modify', function(req, res){
 		// This request modifies given task's name and description field.
 		let task = _.pick(req.body, '_id', 'name', 'description', 'created', 'duedate');
-
+		let modifiedTask = Task(task).toObject();
 
 		app.helper.taskHelper.update(req.user._id, {_id: task._id}, modifiedTask)
 		.then(function(){
