@@ -61,7 +61,7 @@ class Tokenizer{
 					priority: task.priority,
 					weekday: self.getWeekDayFromToken(time),
 					time: time,
-					daytime: time%48,
+					daytime: (time+(9*2))%48,
 					prevType: task.state,
 					type: log.type,
 					loc: log.loc,
