@@ -129,7 +129,11 @@ module.exports = function(_router, app){
 		})
 		.then(function(result){
 			timslotUpdater.updateTimeslot(result.log);
-			taskTokenizer.processTask(req.user, result.task)
+
+			if(!req.body.time)
+				taskTokenizer.processTask(req.user, result.task)
+			else
+				taskTokenizer.processTask(req.user, result.task)
 
 			res.send(result);
 		})

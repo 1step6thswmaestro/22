@@ -5,6 +5,7 @@ import { setGlobalTime } from '../todo/actions/global'
 import { setConfig } from '../todo/actions/config'
 import { fetchPrioritizedList } from '../todo/actions/tasks'
 import classNames from 'classnames';
+import moment from 'moment-timezone';
 
 
 
@@ -12,7 +13,10 @@ export default class DevelopView extends React.Component{
 	setGlobalTime(time){
 		const { dispatch } = this.props;
 		var unixtime= time.valueOf();
-		dispatch(setGlobalTime(unixtime));
+
+		var momentObj = moment(unixtime).tz('Asia/Seoul');
+
+		dispatch(setGlobalTime(momentObj.toDate()));
 		dispatch(fetchPrioritizedList());
 	}
 
