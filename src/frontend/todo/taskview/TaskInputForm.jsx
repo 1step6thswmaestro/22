@@ -84,7 +84,7 @@ class TaskInputForm extends React.Component{
 		let modifiedTask = this.getFormData();
 		modifiedTask['_id'] = this.state.task._id;
 
-	  const { dispatch } = this.props;
+		const { dispatch } = this.props;
 		dispatch(modifyItem(modifiedTask));
 	}
 
