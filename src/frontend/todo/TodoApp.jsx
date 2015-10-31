@@ -17,6 +17,8 @@ import MainTimeline from '../timeline/MainTimeline'
 
 import DevelopView from '../develop/DevelopView'
 
+import DayView from './dayview/DayView'
+
 import Topbar from '../main/Topbar'
 import TaskStateType from '../../constants/TaskStateType';
 
@@ -107,6 +109,7 @@ class TodoApp extends React.Component{
 				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
 				<DevelopView dispatch={this.props.dispatch} config={this.props.config} />
 				{viewContent}
+				<DayView dispatch={this.props.dispatch} config={this.props.config} />
 				<header>
 					<h1>Give Me Task</h1>
 					<div className="view-toggle" onClick={this.toggleView.bind(this)} onTouchStart={this.toggleView.bind(this)}>
