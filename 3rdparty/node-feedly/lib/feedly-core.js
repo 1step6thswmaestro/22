@@ -211,7 +211,11 @@ Feedly.prototype.getStreamIds = function (params, error, success) {
 **/
 Feedly.prototype.getStreamContents = function (params, error, success) {
 	console.log(encodeURIComponent(params.streamId));
-	var path = 'streams/' + encodeURIComponent(params.streamId) + '/contents';
+	var path = 'streams/' + encodeURIComponent(params.streamId) + '/contents?';
+	if(params.count)
+		path += 'count=' + params.count + '&';
+	if(params.newerThan)
+		path += 'newerThan=' + params.newerThan + '&';
 	var url = this.baseUrl + path;
 	this.doRequest(url, error, success);
 }

@@ -14,6 +14,7 @@ module.exports = function(){
 		, feedly: {
 			access_token: String
 			, id: String
+			, date: Date
 		}
 
 		, timestampLastActivity: {type: Date, default: ""}

@@ -96,8 +96,16 @@ class FeedlyHelper{
 
 	update(user){
 		let streamId = `user/${user.feedly.id}/category/global.all`
-		
-		return this.getStream(user, {count: 5, streamId})
+
+		let params = {streamId};
+		if(user.feedly && user.feedly.date){
+			params.newerThan = new Date(user.feedly.date).getTime();
+		}
+		else{
+			params.count = 100;
+		}
+
+		return this.getStream(user, params)
 		.then(results=>{
 			results = JSON.parse(results);
 			var articles = _.map(results.items, item=>_.pick(item, 'title', 'content', 'originId'));
@@ -109,12 +117,19 @@ class FeedlyHelper{
 				if(articleRaw.content && articleRaw.content.content)
 					articleRaw.content = articleRaw.content.content;
 				var article = new Article(articleRaw);
-				console.log(article);
 				return Q.nbind(article.save, article)()
-				.fail(err=>logger.error);
+				.fail(err=>undefined);
 			})
 
 			return Q.all(promises);
+		})
+		.then(function(results){
+			let findByIdAndUpdate = Q.nbind(Account.findByIdAndUpdate, Account);	
+			return findByIdAndUpdate(user._id, {$set: {'feedly.date': Date.now()}})
+			.then(function(result){
+				
+			})
+			.fail(err=>console.error(err))
 		})
 		.fail(err=>logger.error)
 	}
