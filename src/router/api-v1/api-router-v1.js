@@ -3,7 +3,6 @@ var fs = require('fs');
 
 var mongoose = require('mongoose');
 var ConnectionLog = mongoose.model('ConnectionLog');
-var TimeSlot = mongoose.model('TimeSlot');
 
 module.exports = function(app){
 	var router_auth = express.Router();
@@ -36,20 +35,6 @@ module.exports = function(app){
 			res.send(connection);
 		});
 	})
-	router_auth.get('/timeslots', function(req, res){
-		TimeSlot.find({'userId' :req.user._id},null, {sort: {'name': 1}}, function (err, timeslot){
-			if (err) return console.error(err);
-			res.send(timeslot);
-		});
-	})
-	router_auth.get('/timeslots/drop', function(req, res){
-		TimeSlot.remove({'userId' :req.user._id}, function (err){
-			if (err) return console.error(err);
-			res.send('ok');
-		});
-	})
-
-
 
 	fs.readdirSync(__dirname + '/modules').forEach(function(file){
 		if(file.search(/.*?\.js$/) != -1){

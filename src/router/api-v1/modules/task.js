@@ -9,14 +9,11 @@ var express = require('express');
 var tokenizer = require('../../../taskprocess/tokenizer');
 var TimeEstimator = require('../../../taskprocess/estimator');
 
-var TimeslotUpdater = require('../../../taskprocess/TimeslotUpdater');
-
 module.exports = function(_router, app){
 	let helper = app.helper;
 	let router = express.Router();
 	_router.use('/tasks', router);
 	var taskTokenizer = new tokenizer(app);
-	var timslotUpdater = new TimeslotUpdater(app);
 	var timeEstimator = new TimeEstimator(app);
 
 	router.get('/testcommand_droptasks', function(req, res){
@@ -128,8 +125,6 @@ module.exports = function(_router, app){
 			})
 		})
 		.then(function(result){
-			timslotUpdater.updateTimeslot(result.log);
-
 			if(!req.body.time)
 				taskTokenizer.processTask(req.user, result.task)
 			else
