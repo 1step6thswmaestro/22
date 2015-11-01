@@ -43,6 +43,7 @@ class Tokenizer{
 	}
 
 	makeTokens(task, log, time, force){
+		// Create PredictToken object. It is only function that create this model.
 		let self = this;
 
 		if(!force && TaskStateType.indexed[log.type].tokenize === false){
@@ -52,15 +53,19 @@ class Tokenizer{
 		return this.tokenizeText(task.name)
 		.then(textTokens=>{
 			let tokens = _.map(textTokens, text => {
+				let NUM_TIMESLOT = 48;
+				let weekdayIndex = self.getWeekDayFromToken(time);
+				let daytime = (time+(9*2))%NUM_TIMESLOT; // (9*2) term offset UTC for Asia/Seoul TimeZone
 				let obj = {
 					userId: task.userId,
 					taskId: task._id,
 					text: text,
 					duration: task.duedate - task.created,
 					priority: task.priority,
-					weekday: self.getWeekDayFromToken(time),
+					weekday: weekdayIndex,
 					time: time,
-					daytime: (time+(9*2))%48,
+					daytime: daytime,
+					timeslotIndex: weekdayIndex*NUM_TIMESLOT+daytime,
 					prevType: task.state,
 					type: log.type,
 					loc: log.loc,
@@ -68,7 +73,7 @@ class Tokenizer{
 
 				return obj;
 			});
-			
+
 			return Q.all(_.map(tokens, function(tokenRaw){
 				return self.app.helper.predictToken.create(tokenRaw);
 			}));
