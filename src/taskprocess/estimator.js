@@ -39,7 +39,8 @@ class TimeEstimator{
 
 		takenTime /= (60 * 60 * 1000);
 
-		if (takenTime <= 0) return 1;
+		if (takenTime < 1) return 1;
+		if (takenTime > 365*24) return 365*24;
 		return takenTime.toFixed(1);
 	}
 
@@ -47,8 +48,6 @@ class TimeEstimator{
 		let calculator = this.calculateTakenTime;
 		let helper = this.app.helper;
 		let splits = taskName.split(" ");
-		let result = 1.0;
-		let count = 0;
 
 		return Q(helper.taskHelper.find(userId))
 		.then(function(results){
@@ -67,19 +66,26 @@ class TimeEstimator{
 				.fail(err=>console.log("TIME CALCULATION ERROR:", err));
 			}))
 			.then(function(results){
-				let result = 1.0;
+				if (!results) return 3;
+				let result = 1.0, totalResult = 1.0;
+				let count = 0, totalCount = 0;
 
 				_.each(results, log=>{
+					++totalCount;
+					totalResult *= log.takenTime;
 					for (var i = 0; i < splits.length; i++) {
 						if(log.name.indexOf(splits[i]) >= 0) {
 							++count;
 							result *= log.takenTime;
 						}
 					}
-				})
+				});
 
-				if (count == 0) return 3;
-				result = Math.pow(result, (1.0/count)).toFixed(1);
+				if (count == 0)
+					result = Math.pow(totalResult, (1.0/totalCount)).toFixed(1);
+				else
+					result = Math.pow(result, (1.0/count)).toFixed(1);
+				
 				return result;
 			})
 			.fail(err=>console.log("TIME CALCULATION ERROR:", err));

@@ -16,7 +16,7 @@ export default class DevelopView extends React.Component{
 
 		var momentObj = moment(unixtime).tz('Asia/Seoul');
 
-		dispatch(setGlobalTime(momentObj.toDate()));
+		dispatch(setGlobalTime(momentObj.toDate().getTime()));
 		dispatch(fetchPrioritizedList());
 	}
 

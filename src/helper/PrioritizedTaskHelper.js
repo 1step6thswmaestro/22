@@ -57,7 +57,7 @@ function init(app){
 	PrioritizedTaskHelper.prototype.find = function(userId, query, time){
 		return this.update(userId, time)
 		.then(function(results){
-			return helper.taskHelper.find(userId, query, null, {sort: {priorityScore: 1}})
+			return helper.taskHelper.find(userId, query, null, {sort: {priorityScore: -1}})
 		});
 	}
 
