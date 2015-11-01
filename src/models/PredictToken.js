@@ -10,8 +10,12 @@ module.exports = function(app){
 		date: {type: Date},
 		priority: {type: Number, default: 1.0},	//0.0~2.0
 		weekday: {type: Number},				//0~6 (sun~sat)
-		time: {type: Number},					//30분 단위의 유닛 사용, 하루는 총 0~47의 값을 갖음.
-		daytime: {type: Number},
+		time: {type: Number},					//30분 단위의 유닛 사용
+		daytime: {type:Number},                 //30분 단위의 유닛 사용, 하루는 총 0~47의 값을 갖음.
+		timeslotIndex: {type:Number}, // Sunday 00:00 is index 0,
+		                              // Monday 00:00 is index 48, ...
+		                              // Saturday 23:30 is index (48 * 7 - 1)
+		prevType: {type: Number},
 		type: {type: Number},
 		loc: {type: { type: String }, coordinates: [ ]},
 		loc_cluster: {type: Number},

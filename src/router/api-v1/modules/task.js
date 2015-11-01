@@ -32,11 +32,13 @@ module.exports = function(_router, app){
 	})
 
 	router.get('/prioritized/:method?', function(req, res){
+		console.log('recieved_str: ', req.query.time);
 		let time = req.query.time?parseInt(req.query.time):Date.now();
 
 		let promise;
 		switch(req.params.method){
 			case 'time':
+				console.log(time)
 				promise = helper.priTaskHelper.findByTimePreference(req.user._id, undefined, time);
 				break;
 			default:

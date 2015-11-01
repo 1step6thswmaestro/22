@@ -43,10 +43,13 @@ function init(app){
 		return this.update(userId, time)
 		.then(function(results){
 			var _time = new Date(time);
-			var timeslotIdx = _time.getHours()*2 + Math.floor(_time.getMinutes()/30);
+			console.log(_time);
+			console.log(_time.getDay());
+			var timeslotIdx = _time.getDay()*48 + _time.getHours()*2 + Math.floor(_time.getMinutes()/30);
 			var scoreLabel = 'timePreferenceScore.'.concat(timeslotIdx);
 			var opt = {sort: {}};
 			opt.sort[scoreLabel]=-1;
+			console.log(scoreLabel);
 			return helper.taskHelper.find(userId, query, null, opt)
 		});
 	}
