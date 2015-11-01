@@ -217,10 +217,10 @@ export default class Timeline extends React.Component{
 				<rect className='background' ref='background' width='100%' height='100%' fill='#fff'>
 				</rect>
 				<text className='rep-time' x="0" y="15" fontSize="10">
-			    	{`${repTime.format('YY/MM/HH hh:mm')}`}
-			  	</text>
-			  	{this.renderLogs()}
-			  	{this.renderNow()}
+					{`${repTime.format('YY/MM/DD HH:mm')}`}
+				</text>
+				{this.renderLogs()}
+				{this.renderNow()}
 				<XAxis
 					xAxisClassName='rd3-areachart-xaxis'
 					xScale={xScale}
