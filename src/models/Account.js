@@ -11,6 +11,11 @@ module.exports = function(){
 		, email: String
 		, hashed_passwd: String
 		, salt: String
+		, feedly: {
+			access_token: String
+			, id: String
+			, date: Date
+		}
 
 		, timestampLastActivity: {type: Date, default: ""}
 

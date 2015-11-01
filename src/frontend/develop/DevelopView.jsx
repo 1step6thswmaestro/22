@@ -3,6 +3,7 @@ import If from '../utility/if'
 import DateTimePicker from '../todo/dialog/DateTimePicker'
 import { setGlobalTime } from '../todo/actions/global'
 import { setConfig } from '../todo/actions/config'
+import { updateFeedly } from '../todo/actions/user'
 import { fetchPrioritizedList } from '../todo/actions/tasks'
 import classNames from 'classnames';
 import moment from 'moment-timezone';
@@ -25,8 +26,14 @@ export default class DevelopView extends React.Component{
 		dispatch(setConfig('globalTimePicker', !this.props.config.globalTimePicker));
 	}
 
+	syncFeedly(){
+		const { dispatch } = this.props;
+		dispatch(updateFeedly());
+	}
+
 	render(){
 		let { dispatch, config } = this.props;
+
 		let buttonRaw = [
 			{text: 'default', command: undefined}
 			, {text: 'time preference', command: 'time'}
@@ -93,6 +100,35 @@ export default class DevelopView extends React.Component{
 						<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
 					</div>
 				</If>
+				<i className='mr10'></i>
+				<If test={this.props.user.intergration.feedly == false}>
+					<a href='/v1/feedly/auth'>
+						<button className='btn btn-default'>
+							Authorize Feedly
+						</button>
+					</a>
+				</If>
+				<If test={this.props.user.intergration.feedly == true}>
+					<span>
+						<a href='/v1/feedly/auth'>
+							<button className='btn btn-checked'>
+								Reauthorize Feedly
+							</button>
+						</a>
+						<a href='/v1/feedly/auth'>
+							<button className='btn btn-default'>
+								Feedly/RefreshToken
+							</button>
+						</a>
+						<button className='btn btn-default btn-primary' onClick={this.syncFeedly.bind(this)}>
+							<If test={this.props.user.feedlyLoading == true}>
+								<i className={`fa fa-spinner fa-spin mr10`}></i>
+							</If>
+							Feedly/Sync
+						</button>
+					</span>
+				</If>
+
 			</div>
 		)
 	}
