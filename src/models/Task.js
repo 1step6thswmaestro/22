@@ -7,7 +7,7 @@ module.exports = function(app){
 		userId: Schema.Types.ObjectId,
 		name: String,
 		description: {type: String, default: ""},
-		importance: {type: Number, default: 0},
+		importance: {type: Number, default: 0}, // 1=important, 0=not
 		priorityScore: {type: Number, default: 1.0},
 		timePreferenceScore: [], // array of (timslotIdx, score) tuples.
 		estimation: {type: Number, default: 1.0},	//unit-hour
