@@ -7,6 +7,8 @@ var fs = require('fs');
 var Q = require('q');
 var mongoose = require('mongoose');
 var Account = mongoose.model('Account');
+var _ = require('underscore');
+var Article = mongoose.model('Article');
 
 class FeedlyHelper{
 	constructor(app){
@@ -90,6 +92,31 @@ class FeedlyHelper{
 		feedly.doRequest(feedly.baseUrl + url, err=>defer.reject(err), results=>defer.resolve(results));
 
 		return defer.promise;
+	}
+
+	update(user){
+		let streamId = `user/${user.feedly.id}/category/global.all`
+		
+		return this.getStream(user, {count: 5, streamId})
+		.then(results=>{
+			results = JSON.parse(results);
+			var articles = _.map(results.items, item=>_.pick(item, 'title', 'content', 'originId'));
+			return articles;
+		})
+		.then(function(articles){
+			var promises = _.map(articles, articleRaw=>{
+				articleRaw.userId = user._id;
+				if(articleRaw.content && articleRaw.content.content)
+					articleRaw.content = articleRaw.content.content;
+				var article = new Article(articleRaw);
+				console.log(article);
+				return Q.nbind(article.save, article)()
+				.fail(err=>logger.error);
+			})
+
+			return Q.all(promises);
+		})
+		.fail(err=>logger.error)
 	}
 
 }

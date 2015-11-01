@@ -8,7 +8,10 @@ DECL('SET_USER_STATUS', (state, action)=>{
 	return Object.assign({}, state, action.status);
 });
 
+DECL('SET_FEEDLY_SYNC', (state, action)=>{
+	return Object.assign({}, state, {feedlyLoading: action.loading})
+})
+
 export const reducer = group.getReducer({
-	feedly: false
 });
 export const type = group.getTypes();

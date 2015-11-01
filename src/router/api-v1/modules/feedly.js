@@ -77,4 +77,11 @@ module.exports = function(_router, app){
 			res.status(400).send(err);
 		})
 	})
+
+	router.get('/update', function(req, res){
+		app.helper.feedly.update(req.user)
+		.then(function(results){
+			res.send(results);
+		})
+	})
 }
