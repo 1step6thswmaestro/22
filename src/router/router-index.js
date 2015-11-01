@@ -1,6 +1,19 @@
+'use strict'
+
 module.exports = function(app){
 	app.get('/', app.needAuthorization, function(req, res){
-		res.renderIndex();
+		let query = req.query || {};
+		switch(query.state){
+			case 'feedly-auth2-auth':
+				app.helper.feedly.processAuthCode(req.user, query.code)
+				.then(function(){
+					res.renderIndex();
+				});
+			break;
+			default:
+				res.renderIndex();
+				break;
+		}
 	});
 	app.get('/signin', app.needUnathorization, function(req, res){
 		res.render('accounts/signin.html')

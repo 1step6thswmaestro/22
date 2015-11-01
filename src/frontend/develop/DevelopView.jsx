@@ -27,6 +27,7 @@ export default class DevelopView extends React.Component{
 
 	render(){
 		let { dispatch, config } = this.props;
+
 		let buttonRaw = [
 			{text: 'default', command: undefined}
 			, {text: 'time preference', command: 'time'}
@@ -93,6 +94,28 @@ export default class DevelopView extends React.Component{
 						<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
 					</div>
 				</If>
+				<If test={this.props.user.intergration.feedly == false}>
+					<a href='/v1/feedly/auth'>
+						<button className='btn btn-default'>
+							Authorize Feedly
+						</button>
+					</a>
+				</If>
+				<If test={this.props.user.intergration.feedly == true}>
+					<span>
+						<a href='/v1/feedly/auth'>
+							<button className='btn btn-checked'>
+								Reauthorize Feedly
+							</button>
+						</a>
+						<a href='/v1/feedly/auth'>
+							<button className='btn btn-default'>
+								Feedly/RefreshToken
+							</button>
+						</a>
+					</span>
+				</If>
+
 			</div>
 		)
 	}
