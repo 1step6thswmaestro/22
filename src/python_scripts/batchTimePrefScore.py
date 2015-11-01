@@ -1,8 +1,10 @@
 #!usr/bin/python
 # -*- coding: utf-8 -*-
 
-CONST_DB_ADDR='128.199.166.149'
-# CONST_DB_ADDR='localhost'
+
+# Please change below DB Address only when you schedule regular job with cron.
+# CONST_DB_ADDR='128.199.166.149'
+CONST_DB_ADDR='localhost'
 CONST_DB_PORT=27340
 
 CONST_NUM_TIMESLOT = 48*7
