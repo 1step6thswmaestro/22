@@ -1,0 +1,511 @@
+2015-10-24 01:07:49,463 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-24 01:07:49,463 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-24 01:10:40,195 - apps.app - INFO - query : 서울로 가요~!! / user_id : dummyID
+2015-10-24 01:10:40,201 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 01:10:51,985 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 01:12:12,690 - apps.app - INFO - query : 제주도 호텔 예약 / user_id : dummyID
+2015-10-24 01:12:12,694 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 01:12:16,334 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 01:12:38,109 - apps.app - INFO - query : 소프트웨어 마에스트로 신청 / user_id : dummyID
+2015-10-24 01:12:38,113 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 01:12:41,936 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 13:07:10,734 - apps.app - INFO - query : 멀티프로세서 시험 공부 / user_id : dummyID
+2015-10-24 13:07:10,739 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 13:07:33,589 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 13:07:47,970 - apps.app - INFO - query : 소프트웨어 마에스트로 신청 / user_id : dummyID
+2015-10-24 13:07:47,974 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 13:07:55,798 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 13:09:25,659 - apps.app - INFO - query : 서울로 가요~!! / user_id : dummyID
+2015-10-24 13:09:25,663 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 13:09:32,034 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 13:16:17,507 - apps.app - INFO - query : 소프트웨어 마에스트로 신청 / user_id : dummyID
+2015-10-24 13:16:17,510 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 14:38:55,746 - apps.app - INFO - query : 멀티프로세서 시험 공부 / user_id : dummyID
+2015-10-24 14:38:55,750 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 14:39:00,085 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 15:36:57,399 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : dummyID
+2015-10-24 15:36:57,403 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 15:37:04,436 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 15:48:28,175 - apps.app - INFO - query : 멀티프로세서 시험 공부 / user_id : dummyID
+2015-10-24 15:48:28,178 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:01:36,372 - apps.app - INFO - query : 서울로 가요~!! / user_id : dummyID
+2015-10-24 16:01:36,376 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:01:38,633 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:10:13,803 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : dummyID
+2015-10-24 16:10:13,807 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:10:17,554 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:13:57,918 - apps.app - INFO - query : 멀티프로세서 시험 공부 / user_id : dummyID
+2015-10-24 16:13:57,922 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:38:08,063 - apps.app - INFO - query : 서울로 가요~!! / user_id : dummyID
+2015-10-24 16:38:08,067 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:39:14,177 - apps.app - INFO - query : 서울로 가요~!! / user_id : dummyID
+2015-10-24 16:39:14,182 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:40:33,205 - apps.app - INFO - query : 제주도 호텔 예약 / user_id : dummyID
+2015-10-24 16:40:33,209 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:40:40,695 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:41:22,081 - apps.app - INFO - query : 서울로 가요~!! / user_id : dummyID
+2015-10-24 16:41:22,085 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:41:24,651 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:44:14,034 - apps.app - INFO - query : 제주도 호텔 예약 / user_id : dummyID
+2015-10-24 16:44:14,038 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:44:23,237 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:45:45,323 - apps.app - INFO - query : 소프트웨어 마에스트로 신청 / user_id : dummyID
+2015-10-24 16:45:45,327 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:45:53,545 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:46:09,786 - apps.app - INFO - query : 소프트웨어 개발 방법론 / user_id : dummyID
+2015-10-24 16:46:09,790 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:46:13,489 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:48:02,278 - apps.app - INFO - query : 소프트웨어 구매 / user_id : dummyID
+2015-10-24 16:48:02,282 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:48:06,009 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:49:55,177 - apps.app - INFO - query : 해운대 호텔 예약 / user_id : dummyID
+2015-10-24 16:49:55,181 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-24 16:49:57,877 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 15:45:26,671 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 15:45:26,671 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 15:46:31,335 - apps.app - INFO - query : 안녕 / user_id : i
+2015-10-25 15:46:31,339 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 15:47:21,464 - apps.app - INFO - query : TASk 안녕 / user_id : i
+2015-10-25 15:47:21,469 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 15:52:22,665 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 15:52:22,665 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 17:03:49,373 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 17:03:49,377 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 17:04:25,672 - apps.app - INFO - query : 제주도 호텔 예약 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 17:04:25,677 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 17:04:35,539 - apps.app - INFO - query : 제주도 호텔 예약 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 17:04:35,544 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 17:28:17,240 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 17:38:34,763 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 17:38:34,767 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 17:39:17,209 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 17:39:17,216 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 17:39:23,193 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 17:39:23,197 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 17:39:27,044 - apps.app - INFO - query : 소프트웨어 마에스트로 신청 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 17:39:27,048 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 17:43:28,988 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 17:43:28,993 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:36:32,816 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 20:36:32,821 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:36:42,430 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:36:49,710 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 20:36:49,714 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:36:52,044 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:37:19,129 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 20:37:19,133 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:37:26,270 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:37:36,840 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 20:37:36,844 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:37:39,891 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:37:59,250 - apps.app - INFO - query : 소프트웨어 마에스트로 신청 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 20:37:59,254 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:38:06,085 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:38:19,809 - apps.app - INFO - query : 해운대 호텔 예약 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-25 20:38:19,813 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:38:23,970 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-25 20:42:36,987 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 20:42:36,987 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 20:58:02,923 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 20:58:02,923 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 21:05:26,807 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 21:05:26,808 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 21:08:46,743 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-25 21:08:46,743 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-26 10:39:24,387 - apps.app - INFO - query : ㅇㅇ / user_id : id
+2015-10-26 10:39:24,390 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 11:18:58,866 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-26 11:18:58,866 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-26 11:26:15,810 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 11:26:15,814 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 11:32:35,088 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 11:32:35,092 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 11:34:15,514 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 11:34:15,518 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 11:35:11,578 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 11:35:11,582 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 11:48:45,832 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 11:48:45,836 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 11:49:31,417 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 11:49:31,421 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 11:58:04,163 - apps.app - INFO - query : 소프트웨어 마에스트로 신청 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 11:58:04,167 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 11:58:26,358 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 11:58:26,363 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 11:58:47,779 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 11:58:47,783 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 12:02:34,685 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 12:02:34,689 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 12:03:38,790 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 12:03:38,794 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 12:04:44,042 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 12:04:44,046 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 12:05:11,773 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 12:05:11,778 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 12:37:49,237 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 12:37:49,241 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 13:02:11,499 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 13:02:11,503 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 13:02:29,645 - apps.app - INFO - query : 개발자 컨퍼런스 등록 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 13:02:29,650 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 13:06:19,025 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 13:06:19,028 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 13:10:16,505 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 13:10:16,509 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 13:10:26,802 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-26 13:10:26,805 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 13:10:41,935 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 18:14:00,647 - apps.app - INFO - query : 부산 버스 타고 가기 / user_id : 56220280e5a812d3062b9054
+2015-10-26 18:14:00,650 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 18:14:35,112 - apps.app - INFO - query : 프로세스 분석 및 개선 시험 감독 / user_id : 56220280e5a812d3062b9054
+2015-10-26 18:14:35,116 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 18:15:08,058 - apps.app - INFO - query : 새로운 Task1234 / user_id : 562353d1b81738af24930ab7
+2015-10-26 18:15:08,062 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 18:15:10,486 - apps.app - INFO - query : 새로운 Task1234 / user_id : 562353d1b81738af24930ab7
+2015-10-26 18:15:10,491 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 18:15:11,723 - apps.app - INFO - query : 소요시간테스트 해보자 / user_id : 562353d1b81738af24930ab7
+2015-10-26 18:15:11,727 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 18:15:12,871 - apps.app - INFO - query : 새로운 Task1234 / user_id : 562353d1b81738af24930ab7
+2015-10-26 18:15:12,875 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 18:15:14,385 - apps.app - INFO - query : 소요시간테스트 해보자 / user_id : 562353d1b81738af24930ab7
+2015-10-26 18:15:14,391 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 18:16:57,418 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 18:28:51,733 - apps.app - INFO - query : 소요시간테스트 해보자 / user_id : 562353d1b81738af24930ab7
+2015-10-26 18:28:51,737 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 18:28:53,207 - apps.app - INFO - query : 새로운 Task1234 / user_id : 562353d1b81738af24930ab7
+2015-10-26 18:28:53,210 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 19:14:46,282 - apps.app - INFO - query : Task 클러스터링 방법 생각해보기.소마 1단계 2차 플젝 / user_id : 56220280e5a812d3062b9054
+2015-10-26 19:14:46,286 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 20:05:55,777 - apps.app - INFO - query : 부산 버스 타고 가기 / user_id : 56220280e5a812d3062b9054
+2015-10-26 20:05:55,780 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 21:06:35,139 - apps.app - INFO - query : Task 클러스터링 방법 생각해보기.소마 1단계 2차 플젝 / user_id : 56220280e5a812d3062b9054
+2015-10-26 21:06:35,145 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 21:06:39,070 - apps.app - INFO - query : 웹페이지 텍스트 필터링 기능 구현크롤링한 페이지 텍스트 필터링을 통해서 정제 시키기 / user_id : 56220280e5a812d3062b9054
+2015-10-26 21:06:39,074 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 21:28:57,016 - apps.app - INFO - query : 새로운 Task1234 / user_id : 562353d1b81738af24930ab7
+2015-10-26 21:28:57,021 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 21:30:34,184 - apps.app - INFO - query : 새로운 Task1234 / user_id : 562353d1b81738af24930ab7
+2015-10-26 21:30:34,188 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-26 21:37:11,390 - apps.app - INFO - query : 소요시간테스트 해보자 / user_id : 562353d1b81738af24930ab7
+2015-10-26 21:37:11,394 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 13:32:37,021 - apps.app - INFO - query : 논리회로설계 수업 / user_id : 562353d1b81738af24930ab7
+2015-10-27 13:32:37,025 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 13:32:50,167 - apps.app - INFO - query : 논리회로설계 수업 / user_id : 562353d1b81738af24930ab7
+2015-10-27 13:32:50,172 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 13:32:51,743 - apps.app - INFO - query : 논리회로설계 수업 / user_id : 562353d1b81738af24930ab7
+2015-10-27 13:32:51,746 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 13:33:14,498 - apps.app - INFO - query : 논리회로설계 수업 / user_id : 562353d1b81738af24930ab7
+2015-10-27 13:33:14,502 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 13:33:25,503 - apps.app - INFO - query : 논리회로설계 수업 / user_id : 562353d1b81738af24930ab7
+2015-10-27 13:33:25,507 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 13:33:50,348 - apps.app - INFO - query : 논리회로설계 수업 / user_id : 562353d1b81738af24930ab7
+2015-10-27 13:33:50,352 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 13:33:54,935 - apps.app - INFO - query : 논리회로설계 수업 / user_id : 562353d1b81738af24930ab7
+2015-10-27 13:33:54,938 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 13:34:12,828 - apps.app - INFO - query : 논리회로설계 수업 / user_id : 562353d1b81738af24930ab7
+2015-10-27 13:34:12,833 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 13:34:14,571 - apps.app - INFO - query : 소요시간테스트 해보자 / user_id : 562353d1b81738af24930ab7
+2015-10-27 13:34:14,575 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 13:34:15,649 - apps.app - INFO - query : 새로운 Task1234 / user_id : 562353d1b81738af24930ab7
+2015-10-27 13:34:15,652 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 15:42:29,650 - apps.app - INFO - query : 프로세스 분석 및 개선 시험 감독 / user_id : 56220280e5a812d3062b9054
+2015-10-27 15:42:29,655 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 15:42:39,243 - apps.app - INFO - query : Task 클러스터링 방법 생각해보기.소마 1단계 2차 플젝 / user_id : 56220280e5a812d3062b9054
+2015-10-27 15:42:39,247 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 15:42:46,013 - apps.app - INFO - query : 웹페이지 텍스트 필터링 기능 구현크롤링한 페이지 텍스트 필터링을 통해서 정제 시키기 / user_id : 56220280e5a812d3062b9054
+2015-10-27 15:42:46,017 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-27 15:42:53,371 - apps.app - INFO - query : 피들리 현재 작업에 합치기 / user_id : 56220280e5a812d3062b9054
+2015-10-27 15:42:53,374 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:25:10,267 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:25:10,271 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:25:18,653 - apps.app - INFO - query : 치과 예약 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:25:18,658 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:25:24,214 - apps.app - INFO - query : 머리자르러 가기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:25:24,217 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:25:29,566 - apps.app - INFO - query : 하루치 요리 해 놓기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:25:29,572 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:25:37,593 - apps.app - INFO - query : 형태소 분석기로 명사 및 용언 추출기 만들기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:25:37,597 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:26:00,350 - apps.app - INFO - query : 명상하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:26:00,352 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:26:07,132 - apps.app - INFO - query : 사람들이 돈쓰는 방법 조사하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:26:07,136 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:26:34,612 - apps.app - INFO - query : 사람들이 돈쓰는 방법 조사하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:26:34,615 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:26:47,307 - apps.app - INFO - query : 영어학원 등록 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:26:47,311 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:27:10,647 - apps.app - INFO - query : 등 운동 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:27:10,653 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:27:18,641 - apps.app - INFO - query : 달리기 하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:27:18,646 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:27:23,971 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:27:34,511 - apps.app - INFO - query : 동물병원 방문 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:27:34,514 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:27:40,494 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:28:21,398 - apps.app - INFO - query : Deview 사전 예약 신청 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:28:21,402 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:33:05,572 - apps.app - INFO - query : 형태소 분석기로 명사 및 용언 추출기 만들기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:33:05,577 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:33:24,265 - apps.app - INFO - query : 형태소 분석기로 명사 및 용언 추출기 만들기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:33:24,270 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:33:34,804 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:33:34,807 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:40:13,286 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:40:13,292 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:40:17,320 - apps.app - INFO - query : 사람들이 돈쓰는 방법 조사하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:40:17,324 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:40:27,096 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:40:27,100 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-28 19:41:00,701 - apps.app - INFO - query : 등 운동 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-28 19:41:00,706 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 15:07:54,968 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 15:07:54,972 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 15:08:15,213 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 15:08:15,220 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 15:09:17,303 - apps.app - INFO - query : 달리기 하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 15:09:17,306 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 15:09:19,219 - apps.app - INFO - query : 달리기 하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 15:09:19,222 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 15:09:20,869 - apps.app - INFO - query : 등 운동 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 15:09:20,873 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 20:05:11,608 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 20:05:11,613 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 20:05:13,376 - apps.app - INFO - query : 명상하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 20:05:13,377 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 20:11:12,558 - apps.app - INFO - query : 부산 버스 타고 가기 / user_id : 56220280e5a812d3062b9054
+2015-10-29 20:11:12,563 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 20:11:17,413 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 20:38:07,095 - apps.app - INFO - query : 부산 버스 타고 가기 / user_id : 56220280e5a812d3062b9054
+2015-10-29 20:38:07,100 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 20:38:09,792 - apps.app - INFO - query : 프로세스 분석 및 개선 시험 감독 / user_id : 56220280e5a812d3062b9054
+2015-10-29 20:38:09,798 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 20:38:13,510 - apps.app - INFO - query : Task 클러스터링 방법 생각해보기.소마 1단계 2차 플젝 / user_id : 56220280e5a812d3062b9054
+2015-10-29 20:38:13,514 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 21:08:24,072 - apps.app - INFO - query : 피들리 현재 작업에 합치기 / user_id : 56220280e5a812d3062b9054
+2015-10-29 21:08:24,076 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 21:08:32,166 - apps.app - INFO - query : 웹페이지 텍스트 필터링 기능 구현크롤링한 페이지 텍스트 필터링을 통해서 정제 시키기 / user_id : 56220280e5a812d3062b9054
+2015-10-29 21:08:32,170 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 21:08:38,634 - apps.app - INFO - query : 주가 정보 분 단위 스크랩주가 정보 분 단위 스크랩
+1. 코드 과정 생각 해보기
+2. Python Code로 완성 / user_id : 56220280e5a812d3062b9054
+2015-10-29 21:08:38,639 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:05:43,119 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:05:43,123 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:06:03,824 - apps.app - INFO - query : 멘토링 자료 준비 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:06:03,828 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:06:23,169 - apps.app - INFO - query : 멘토링 자료 준비 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:06:23,173 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:03,409 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:03,413 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:06,757 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:07,636 - apps.app - INFO - query : 형태소 분석기로 명사 및 용언 추출기 만들기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:07,644 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:12,266 - apps.app - INFO - query : 명상하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:12,268 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:16,505 - apps.app - INFO - query : 사람들이 돈쓰는 방법 조사하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:16,509 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:20,962 - apps.app - INFO - query : 영어학원 등록 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:20,966 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:25,074 - apps.app - INFO - query : 등 운동 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:25,078 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:29,324 - apps.app - INFO - query : 달리기 하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:29,330 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:33,092 - apps.app - INFO - query : 동물병원 방문 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:33,095 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:47,732 - apps.app - INFO - query : 명상하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:47,734 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:50,249 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:50,253 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:52,613 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:13:57,967 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:13:57,970 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:14:00,880 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:14:13,013 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:14:13,017 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:14:25,665 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:14:31,985 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:14:31,989 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:15:19,687 - apps.app - INFO - query : 영어학원 등록 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:15:19,691 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:15:33,213 - apps.app - INFO - query : Deview 사전 예약 신청 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:15:33,218 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:16:43,536 - apps.app - INFO - query : 개발 컨퍼런스 등록 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:16:43,539 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:16:54,505 - apps.app - INFO - query : 머리자르러 가기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:16:54,509 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:17:08,149 - apps.app - INFO - query : 아이폰6S 로즈골드 구매 / user_id : 562353d1b81738af24930ab7
+2015-10-29 22:17:08,155 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:17:33,150 - apps.app - INFO - query : Deview 사전 예약 신청 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-29 22:17:33,155 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:18:28,498 - apps.app - INFO - query : 논리회로설계 수업 / user_id : 562353d1b81738af24930ab7
+2015-10-29 22:18:28,501 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:18:31,913 - apps.app - INFO - query : 소요시간테스트 해보자 / user_id : 562353d1b81738af24930ab7
+2015-10-29 22:18:31,917 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-29 22:48:26,632 - apps.app - INFO - query : 부산 버스 타고 가기 / user_id : 56220280e5a812d3062b9054
+2015-10-29 22:48:26,636 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-30 15:31:19,448 - apps.app - INFO - query : 형태소 분석기로 명사 및 용언 추출기 만들기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-30 15:31:19,452 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-30 15:32:16,227 - apps.app - INFO - query : 머리자르러 가기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-30 15:32:16,231 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-30 15:47:43,413 - apps.app - INFO - query : 버스 예매  / user_id : 56220280e5a812d3062b9054
+2015-10-30 15:47:43,417 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-30 16:04:47,089 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-30 16:04:47,089 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-30 16:04:54,071 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-30 16:04:54,071 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-30 16:04:55,676 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-30 16:04:55,676 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-30 16:05:04,456 - apps.app - INFO - query : 서울로 가요~!! / user_id : 5602abc17e0592bdc2fc329a
+2015-10-30 16:05:04,459 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-30 16:05:39,124 - apps.app - INFO - query : 버스 타러 가기 / user_id : undefined
+2015-10-30 16:05:39,128 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-30 16:05:39,340 - apps.app - INFO - query : 버스 타러 가기 / user_id : 5602abc17e0592bdc2fc329a
+2015-10-30 16:05:39,344 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 09:57:09,507 - apps.app - INFO - query : 버스 터미널 이동 / user_id : 56220280e5a812d3062b9054
+2015-10-31 09:57:09,511 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 09:57:19,090 - apps.app - INFO - query : 버스 예매  / user_id : 56220280e5a812d3062b9054
+2015-10-31 09:57:19,096 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:07:42,765 - apps.app - INFO - query : 프로세스 분석 및 개선 시험 감독 / user_id : 56220280e5a812d3062b9054
+2015-10-31 18:07:42,770 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:07:48,267 - apps.app - INFO - query : 부산 버스 타고 가기 / user_id : 56220280e5a812d3062b9054
+2015-10-31 18:07:48,271 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:08:09,906 - apps.app - INFO - query : 부산 버스 타고 가기 / user_id : 56220280e5a812d3062b9054
+2015-10-31 18:08:09,910 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:08:33,937 - apps.app - INFO - query : 피들리 현재 작업에 합치기 / user_id : 56220280e5a812d3062b9054
+2015-10-31 18:08:33,941 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:08:35,101 - apps.app - INFO - query : 웹페이지 텍스트 필터링 기능 구현크롤링한 페이지 텍스트 필터링을 통해서 정제 시키기 / user_id : 56220280e5a812d3062b9054
+2015-10-31 18:08:35,105 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:08:36,139 - apps.app - INFO - query : 주가 정보 분 단위 스크랩주가 정보 분 단위 스크랩
+1. 코드 과정 생각 해보기
+2. Python Code로 완성 / user_id : 56220280e5a812d3062b9054
+2015-10-31 18:08:36,143 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:08:37,542 - apps.app - INFO - query : Task 클러스터링 방법 생각해보기.소마 1단계 2차 플젝 / user_id : 56220280e5a812d3062b9054
+2015-10-31 18:08:37,546 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:22:06,017 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 18:22:06,021 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:22:13,787 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 18:22:13,791 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:24:07,605 - apps.app - INFO - query : 부산 버스 타고 가기 / user_id : 56220280e5a812d3062b9054
+2015-10-31 18:24:07,608 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 18:24:13,018 - apps.app - INFO - query : 프로세스 분석 및 개선 시험 감독 / user_id : 56220280e5a812d3062b9054
+2015-10-31 18:24:13,022 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:02:54,762 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-31 20:02:54,762 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-31 20:05:44,040 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-31 20:05:44,040 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-31 20:05:51,483 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-31 20:05:51,483 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-31 20:05:59,615 - apps.app - INFO - query : 안녕 / user_id : id
+2015-10-31 20:05:59,619 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:09:49,784 - apps.app - INFO - query : 등 운동 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:09:49,788 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:09:51,308 - apps.app - INFO - query : 등 운동 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:09:51,312 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:10:14,367 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:10:14,371 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:19:33,704 - apps.app - INFO - query : 시간별 작업 선호도 코드 리뷰 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:19:33,707 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:20:35,167 - apps.app - INFO - query : 명상하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:20:35,169 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:20:37,341 - apps.app - INFO - query : 사람들이 돈쓰는 방법 조사하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:20:37,346 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:20:40,294 - apps.app - INFO - query : 영어학원 등록 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:20:40,298 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:20:56,439 - apps.app - INFO - query : 토큰 생성 잘 되나 확인하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:20:56,442 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:22:54,619 - apps.app - INFO - query : 토큰 생성 잘 되나 확인하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:22:54,623 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:23:13,661 - apps.app - INFO - query : 토큰 생성 확인하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:23:13,664 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:25:07,234 - apps.app - INFO - query : 부산 버스 타고 가기 / user_id : 56220280e5a812d3062b9054
+2015-10-31 20:25:07,238 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:27:13,184 - apps.app - INFO - query : 토큰 생성 확인하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:27:13,187 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 20:28:52,486 - apps.app - INFO - query : 토큰 생성 확인하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 20:28:52,490 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 21:01:53,911 - apps.app - INFO - query : 재현시나리오 작성 및 재현 확인해보기 / user_id : 5621d65ee6e980260f5bd37d
+2015-10-31 21:01:53,916 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 23:33:37,217 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-31 23:33:37,217 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-31 23:33:46,189 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-31 23:33:46,189 - apps.app.cors - DEBUG - No CORS rule matches
+2015-10-31 23:33:52,444 - apps.app - INFO - query : 하이 / user_id : id
+2015-10-31 23:38:14,009 - apps.app - INFO - query : 하이 / user_id : id
+2015-10-31 23:39:54,984 - apps.app - INFO - query : 하이 / user_id : id
+2015-10-31 23:39:55,468 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 23:41:51,858 - apps.app - INFO - query : 여행 / user_id : 5634a53cd5f8236b2060a7f5
+2015-10-31 23:41:52,106 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 23:42:01,391 - apps.app - INFO - query : 야구 / user_id : 5634a53cd5f8236b2060a7f5
+2015-10-31 23:42:01,602 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 23:43:53,584 - apps.app - INFO - query : 한국 시리즈 5차전 관람두산 vs 삼성 3:1 / user_id : 5634a53cd5f8236b2060a7f5
+2015-10-31 23:43:53,767 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 23:45:43,615 - apps.app - INFO - query : 한국 시리즈 5차전 관람 / user_id : 5634a53cd5f8236b2060a7f5
+2015-10-31 23:45:43,797 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 23:46:54,454 - apps.app - INFO - query : 한국시리즈 / user_id : 5634a53cd5f8236b2060a7f5
+2015-10-31 23:46:54,633 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-10-31 23:51:16,229 - apps.app - INFO - query : 한국시리즈 / user_id : 5634a53cd5f8236b2060a7f5
+2015-10-31 23:51:16,561 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 09:13:05,554 - apps.app - INFO - query : 한국 시리즈 5차전 관람 / user_id : 5634a53cd5f8236b2060a7f5
+2015-11-01 09:13:05,735 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 09:41:10,958 - apps.app - INFO - query : 한국 시리즈 5차전 관람 / user_id : 5634a53cd5f8236b2060a7f5
+2015-11-01 09:41:11,180 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:17:25,516 - apps.app - INFO - query : 한국 시리즈 5차전 관람 / user_id : 5634a53cd5f8236b2060a7f5
+2015-11-01 11:17:25,681 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:38:59,639 - apps.app - INFO - query : 야구 관람 일정 생성 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:38:59,741 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:39:03,359 - apps.app - INFO - query : 야구 관람 일정 생성 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:39:03,461 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:39:05,087 - apps.app - INFO - query : 토큰 생성 확인하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:39:05,189 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:39:07,329 - apps.app - INFO - query : 재현시나리오 작성 및 재현 확인해보기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:39:07,431 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:39:09,682 - apps.app - INFO - query : 멘토링 자료 준비 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:39:09,784 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:39:12,511 - apps.app - INFO - query : 형태소 분석기로 명사 및 용언 추출기 만들기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:39:12,613 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:39:14,221 - apps.app - INFO - query : 머리자르러 가기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:39:14,323 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:39:16,916 - apps.app - INFO - query : 달리기 하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:39:17,018 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:40:05,092 - apps.app - INFO - query : 한국 시리즈 5차전 관람 / user_id : 5634a53cd5f8236b2060a7f5
+2015-11-01 11:40:05,231 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:41:38,557 - apps.app - INFO - query : 헌혈 / user_id : 562353d1b81738af24930ab7
+2015-11-01 11:41:38,660 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:41:55,336 - apps.app - INFO - query : 논리회로설계 수업 / user_id : 562353d1b81738af24930ab7
+2015-11-01 11:41:55,439 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:41:58,473 - apps.app - INFO - query : 아이폰6S 로즈골드 구매 / user_id : 562353d1b81738af24930ab7
+2015-11-01 11:41:58,576 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:42:22,062 - apps.app - INFO - query : 등 운동 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:42:22,165 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:42:28,424 - apps.app - INFO - query : 등 운동 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:42:28,526 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 11:42:35,135 - apps.app - INFO - query : 재현시나리오 작성 및 재현 확인해보기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 11:42:35,245 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 12:27:57,936 - apps.app - INFO - query : 형태소 분석기로 명사 및 용언 추출기 만들기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 12:27:58,038 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 12:28:22,761 - apps.app - INFO - query : 등 운동 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 12:28:22,863 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 12:28:23,801 - apps.app - INFO - query : 머리자르러 가기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 12:28:23,904 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 12:28:43,719 - apps.app - INFO - query : 하루치 요리 해 놓기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 12:28:43,822 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 12:28:57,513 - apps.app - INFO - query : Deview 사전 예약 신청 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 12:28:57,616 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 12:47:15,814 - apps.app - INFO - query : 아이폰6S 로즈골드 구매 / user_id : 562353d1b81738af24930ab7
+2015-11-01 12:47:15,917 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 12:49:30,867 - apps.app - INFO - query : 멘토링 자료 준비 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 12:49:30,972 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 19:39:46,218 - apps.app - INFO - query : 형태소 분석기로 명사 및 용언 추출기 만들기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 19:39:46,320 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 19:39:56,032 - apps.app - INFO - query : 야구 관람 일정 생성 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 19:39:56,138 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 19:39:59,917 - apps.app - INFO - query : 집에가서 운동하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 19:40:00,019 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 19:40:30,922 - apps.app - INFO - query : 야구 관람 일정 생성 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 19:40:31,024 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 19:40:51,845 - apps.app - INFO - query : 멘토링 자료 준비 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 19:40:51,947 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 19:41:03,695 - apps.app - INFO - query : 달리기 하기 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 19:41:03,797 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping
+2015-11-01 19:41:05,309 - apps.app - INFO - query : 동물병원 방문 / user_id : 5621d65ee6e980260f5bd37d
+2015-11-01 19:41:05,413 - apps.app.cors - DEBUG - CORS have been already evaluated, skipping

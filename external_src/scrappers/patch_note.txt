@@ -1,0 +1,70 @@
+naconda python 2.7.10 > 2.7.9
+
+2. Virtualenv venv
+
+3. python setting
+- numpy, pandas
+- cython
+
+(brew install gcc)
+    /usr/local/share/info -chmod 777  #-chown zeromind
+    /usr/local/Library/LinkedKegs  - chmod 777 
+    brew install gcc
+
+    그러나 scipy가 안깔림.
+
+    Mac version : 
+    sw_vers -productVersion
+    확인.
+    gfortran compiler : http://coudert.name/software/gfortran-5.2-Yosemite.dmg
+    sudo hdiutil attach gfortran-5.2-Yosemite.dmg
+    sudo installer -package gfortran.pkg -target /
+
+
+    - scipy 성공!
+    - gensim, ipython, scrapy
+    - git clone https://github.com/snudm/naver-blog-crawler.git / sudo pip install -r requirements.txt
+
+
+    ----------------------
+
+    brew link node
+    - sudo chmod 777 /usr/local/bin
+    - sudo chmode 777 /usr/local/share/man/man1
+    - sudo chmod 777 /usr/local/share
+
+    brew update 실패 - permisson error
+    sudo chown -R "$USER":admin /usr/local
+    brew update 성공!
+    brew install node (4.1.2
+
+            -----------------------
+            $HOME/Project/givemetask 
+            git clone https://github.com/insikk/givemetask.git
+            git pull origin feedly
+
+            ------------------------
+            brew install mongodb
+            sudo sh dev-env-setup.sh
+            brew install tmux
+
+            sudo mkdir /data
+            sudo mkdir /data/db
+
+
+            -------------------------
+            bash_profile
+
+              1
+                2 # added by Anaconda 2.3.0 installer
+      3 export PATH="/Users/inosphe/anaconda/bin:$PATH"
+        4
+          5 # Tell ls to be colourful
+            6 export PS1="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ "
+              7 export CLICOLOR=1
+                8 export LSCOLORS=ExFxBxDxCxegedabagacad
+                  9 alias ls='ls -GFh'
+                  -----------------------------
+# for git
+                  sudo chown -R "$USER":admin ~/.config
+
