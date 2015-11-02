@@ -6,7 +6,8 @@ module.exports = function(app){
 		userId: Schema.Types.ObjectId,
 		originId: String,
 		title: String,
-		content: String
+		content: String,
+		summary: String
 	});
 
 	articleSchema.index({ userId: 1, originId: 1 }, {unique: true});
