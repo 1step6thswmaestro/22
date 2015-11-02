@@ -17,16 +17,22 @@ import MainTimeline from '../timeline/MainTimeline'
 
 import DevelopView from '../develop/DevelopView'
 
+import DayView from './dayview/DayView'
+
 import Topbar from '../main/Topbar'
 import TaskStateType from '../../constants/TaskStateType';
+import { syncUserStatus } from '../todo/actions/user';
 
 class TodoApp extends React.Component{
-	constructor(){
-		super();
+	constructor(props){
+		super(props);
 		this.state = {
 			location: '',
 			currentView: 'task' // Save current user's view
 		};
+
+		let { dispatch } = this.props;
+		dispatch(syncUserStatus());
 	}
 
 	componentDidMount() {
@@ -41,8 +47,6 @@ class TodoApp extends React.Component{
 			// NOTE: When user inactive the tab in Chrome, the timer is paused.
 			setInterval(this.sendStillAlive, 5*60*1000);
 		});
-
-
 	}
 
 	sendStillAlive(){
@@ -105,8 +109,9 @@ class TodoApp extends React.Component{
 				<Topbar/>
 				<MainTimeline tasklog={this.props.tasklog}/>
 				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
-				<DevelopView dispatch={this.props.dispatch} config={this.props.config} />
+				<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user}/>
 				{viewContent}
+				<DayView dispatch={this.props.dispatch} config={this.props.config} />
 				<header>
 					<h1>Give Me Task</h1>
 					<div className="view-toggle" onClick={this.toggleView.bind(this)} onTouchStart={this.toggleView.bind(this)}>

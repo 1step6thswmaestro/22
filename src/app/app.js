@@ -24,7 +24,7 @@ module.exports = function(opt){
 
 	init(['app/init.js', 'app/init_mongodb.js', 'models/', 'app/init_passport.js', 'router/', 'helper/']);
 
-	app.config = readJson(path.resolve(app.rootdir, '../config.json'));
+	app.config = getConfig('config.json');
 
 	app.start = function(){
 		var port = app.config.port || 3000;

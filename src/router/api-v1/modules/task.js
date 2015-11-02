@@ -9,14 +9,11 @@ var express = require('express');
 var tokenizer = require('../../../taskprocess/tokenizer');
 var TimeEstimator = require('../../../taskprocess/estimator');
 
-var TimeslotUpdater = require('../../../taskprocess/TimeslotUpdater');
-
 module.exports = function(_router, app){
 	let helper = app.helper;
 	let router = express.Router();
 	_router.use('/tasks', router);
 	var taskTokenizer = new tokenizer(app);
-	var timslotUpdater = new TimeslotUpdater(app);
 	var timeEstimator = new TimeEstimator(app);
 
 	router.get('/testcommand_droptasks', function(req, res){
@@ -35,11 +32,13 @@ module.exports = function(_router, app){
 	})
 
 	router.get('/prioritized/:method?', function(req, res){
+		console.log('recieved_str: ', req.query.time);
 		let time = req.query.time?parseInt(req.query.time):Date.now();
 
 		let promise;
 		switch(req.params.method){
 			case 'time':
+				console.log(time)
 				promise = helper.priTaskHelper.findByTimePreference(req.user._id, undefined, time);
 				break;
 			default:
@@ -77,7 +76,7 @@ module.exports = function(_router, app){
 	router.post('/modify', function(req, res){
 		// This request modifies given task's name and description field.
 		let task = _.pick(req.body, '_id', 'name', 'description', 'created', 'duedate');
-
+		let modifiedTask = Task(task).toObject();
 
 		app.helper.taskHelper.update(req.user._id, {_id: task._id}, modifiedTask)
 		.then(function(){
@@ -128,8 +127,10 @@ module.exports = function(_router, app){
 			})
 		})
 		.then(function(result){
-			timslotUpdater.updateTimeslot(result.log);
-			taskTokenizer.processTask(req.user, result.task)
+			if(!req.body.time)
+				taskTokenizer.processTask(req.user, result.task)
+			else
+				taskTokenizer.processTask(req.user, result.task)
 
 			res.send(result);
 		})

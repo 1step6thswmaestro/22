@@ -1,0 +1,33 @@
+{
+  "default": "sandbox",
+  "live": {
+    "feedly" : {
+      "baseUrl" : "http://cloud.feedly.com/v3/",
+      "accessTokenUrl" : "auth/token",
+      "authenticateUrl" : "auth/auth",
+      "apiUrl" : "http://developer.feedly.com/",
+      "scope" : "https://cloud.feedly.com/subscriptions"
+    },
+    "secrets" : {
+      "responseType" : "code",
+      "clientId" : "invalid",
+      "clientSecret" : "invalid",
+      "redirectUrl" : "http://localhost"
+    }
+  },
+  "sandbox": {
+    "feedly" : {
+      "baseUrl" : "http://sandbox.feedly.com/v3/",
+      "accessTokenUrl" : "auth/token",
+      "authenticateUrl" : "auth/auth",
+      "apiUrl" : "http://developer.feedly.com/",
+      "scope" : "https://cloud.feedly.com/subscriptions"
+    },
+    "secrets" : {
+      "responseType" : "code",
+      "clientId" : "sandbox",
+      "clientSecret" : "L5L3EBB9XMVLA8OETMO3",
+      "redirectUrl" : "http://localhost:8080/"
+    }
+  }
+}

@@ -15,7 +15,6 @@ class Tokenizer{
 	tokenizeText(text){
 		// var tokens = text.split(' '); // Very simple tokenizer.
 		var tokens = py_interpreter.getToken(text); // Get nouns and verbs
-		console.log(tokens)
 		return Q(tokens);
 		// return Q(grab(tokens));
 
@@ -44,6 +43,7 @@ class Tokenizer{
 	}
 
 	makeTokens(task, log, time, force){
+		// Create PredictToken object. It is only function that create this model.
 		let self = this;
 
 		if(!force && TaskStateType.indexed[log.type].tokenize === false){
@@ -53,15 +53,19 @@ class Tokenizer{
 		return this.tokenizeText(task.name)
 		.then(textTokens=>{
 			let tokens = _.map(textTokens, text => {
+				let NUM_TIMESLOT = 48;
+				let weekdayIndex = self.getWeekDayFromToken(time);
+				let daytime = (time+(9*2))%NUM_TIMESLOT; // (9*2) term offset UTC for Asia/Seoul TimeZone
 				let obj = {
 					userId: task.userId,
 					taskId: task._id,
 					text: text,
 					duration: task.duedate - task.created,
 					priority: task.priority,
-					weekday: self.getWeekDayFromToken(time),
+					weekday: weekdayIndex,
 					time: time,
-					daytime: (time+(9*2))%48,
+					daytime: daytime,
+					timeslotIndex: weekdayIndex*NUM_TIMESLOT+daytime,
 					prevType: task.state,
 					type: log.type,
 					loc: log.loc,
@@ -69,7 +73,7 @@ class Tokenizer{
 
 				return obj;
 			});
-			
+
 			return Q.all(_.map(tokens, function(tokenRaw){
 				return self.app.helper.predictToken.create(tokenRaw);
 			}));
@@ -100,13 +104,18 @@ class Tokenizer{
 		// console.log({lastTime});
 
 		let p0 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$gt: lastTime}}, undefined, {sort: {time: -1}});
-		let p1 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$lte: lastTime}}, undefined, {limit: 1});
+		let p1 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$lte: lastTime}}, undefined, {sort: {type: -1}, limit: 1});
 		// let p2 = this.app.helper.predictToken.find(task.userId, {taskId: task._id}, undefined, {sort: {time: 1}, limit: 1});
 
 		return Q.spread([p0, p1], function(logs, lastlog){
+
+			// console.log({logs, lastlog});
+
 			lastlog = lastlog[0];
 			var promises = [];
 			_.each(logs, (log) => {
+				// console.log(log);
+				// console.log({_time, 'log.time': log.time});
 				// console.log('p0', self.getTimeDivision(_time), self.getTimeDivision(log.time), _.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1));
 				_.each(_.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1), time=>{
 					//TODO
@@ -119,8 +128,8 @@ class Tokenizer{
 			});
 			//create token
 			if(lastlog){
-				// console.log('p1', task.created, task.lastProcessed)
-				// console.log(task.created.getTime(), task.lastProcessed.getTime(), task.created.getTime() == task.lastProcessed.getTime());
+				// console.log('===p1===');
+				// console.log({created: task.created, lastProcessed: task.lastProcessed});
 				if(task.created.getTime() == task.lastProcessed.getTime()){
 					// console.log(task, lastlog, self.getTimeDivision(lastlog.time));
 					promises.push(self.makeTokens(task, lastlog, self.getTimeDivision(lastlog.time), true));
@@ -128,11 +137,13 @@ class Tokenizer{
 			}
 
 			if(lastlog){
-				// console.log('p2', _.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime), -1));
+				// console.log('===p2===');
+				// console.log(lastlog);
+				// console.log({_time});
+				// console.log(_.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime), -1));
 				_.each(_.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime), -1), time=>{
 					//TODO
 					//need to ignore mistaken action
-					// console.log('p2', task, lastlog, time);
 					promises.push(self.makeTokens(task, lastlog, time));
 				});
 			}

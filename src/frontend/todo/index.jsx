@@ -10,6 +10,9 @@ let store = configureStore({
 	, _plist: []
 	, _tlist: []
   }
+  , user: {
+  	intergration: {}
+  }
 });
 
 global.store = store;

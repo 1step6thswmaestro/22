@@ -79,16 +79,23 @@ export function makeNewItem(item){
 }
 
 export function modifyItem(task){
-	return request({
-		url: '/v1/tasks/modify'
-		, type: 'post'
-		, data: task
-	})
-	.then(result => {
-		dispatch({type: type.TASK_MODIFY_ITEM, task});
-	}, err => {
-		dispatch({type: type.TASK_ERROR, err});
-	});
+	return function(dispatch) {
+		dispatch({
+			type: type.TASK_REQ_UPDATE,
+			item: task
+		});
+
+		return request({
+			url: '/v1/tasks/modify'
+			, type: 'post'
+			, data: task
+		})
+		.then(result => {
+			dispatch({type: type.TASK_RECV_ITEM, task});
+		}, err => {
+			dispatch({type: type.TASK_ERROR, err});
+		});
+	}
 }
 
 export function startItem(task){
@@ -136,40 +143,11 @@ function updateState(task, actionType){
 	}
 }
 
-export function getRemainTime(task, logs) {
-	function dateToMillisec(date) {
-		return new Date(date);
-	}
-
-	var remainTime = ((dateToMillisec(task.duedate) - Date.now()) / 1000 / 60 / 60).toFixed(1);
+export function getRemainTime(task) {
+	var remainTime = ((new Date(task.duedate) - Date.now()) / 1000 / 60 / 60).toFixed(1);
 	var estimationTime = task.estimation;
-	var activatedTime = 0;
 
-	let from = 0;
-	var lognum;
-	if(!logs) {
-		lognum = -1;
-	}
-	else {
-		lognum = logs.length;
-	}
-	while (from < lognum) {
-		if (logs[from].type == 200) {
-			let to = from + 1;
-			while (to < lognum) {
-				if (logs[to].type == 300) {
-					activatedTime += (dateToMillisec(logs[to].time) - dateToMillisec(logs[from].time));
-					from = to;
-					break;
-				}
-				to += 1;
-			}
-		}
-		from += 1;
-	}
-	activatedTime /= (1000 * 60 * 60);
-
-	let result = (remainTime - estimationTime + activatedTime).toFixed(1);
+	let result = (remainTime - estimationTime).toFixed(1);
 	return result;
 }
 

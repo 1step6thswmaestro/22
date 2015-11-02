@@ -1,0 +1,35 @@
+{
+  "name": "feedly",
+  "version": "0.0.1",
+  "description": "NodeJS Wrapper for the Feedly API",
+  "main": "lib/feedly-core.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/roomnoise/node-feedly.git"
+  },
+  "keywords": [
+    "feedly",
+    "api",
+    "rss",
+    "wrapper",
+    "article"
+  ],
+  "author": {
+    "name": "Marcus Smith",
+    "email": "marcus.smith@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/roomnoise/node-feedly/issues"
+  },
+  "devDependencies": {
+    "mocha": "~1.12.1",
+    "express": "~3.3.8"
+  },
+  "dependencies": {
+    "oauth": "~0.9.10"
+  }
+}
