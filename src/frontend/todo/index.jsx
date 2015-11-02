@@ -13,6 +13,7 @@ let store = configureStore({
   , user: {
   	intergration: {}
   }
+  , thirdparty: {}
 });
 
 global.store = store;

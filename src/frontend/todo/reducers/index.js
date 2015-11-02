@@ -4,6 +4,7 @@ import { reducer as taskLogReducer} from '../actions/tasklog_decl'
 import { reducer as globalReducer} from '../actions/global_decl'
 import { reducer as configReducer} from '../actions/config_decl'
 import { reducer as userReducer} from '../actions/user_decl'
+import { reducer as googleReducer} from '../actions/thirdparty/google.decl'
 
 
 const rootReducer = combineReducers({
@@ -12,6 +13,9 @@ const rootReducer = combineReducers({
 	, global: globalReducer
 	, config: configReducer
 	, user: userReducer
+	, thirdparty: combineReducers({
+		google: googleReducer
+	})
 });
 
 export default rootReducer;
