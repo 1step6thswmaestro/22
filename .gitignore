@@ -5,6 +5,8 @@ node_modules
 __database
 mongodb
 run.sh
+# -- git ignore for pycharm
+external_src/givemetask_py_rest/.idea/
 
 # --- GIT IGNORE FOR OSX ----
 .DS_Store
