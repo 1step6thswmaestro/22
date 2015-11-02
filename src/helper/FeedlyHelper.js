@@ -20,6 +20,11 @@ class FeedlyHelper{
 		return this.feedly.getAuthClientRedirectUrl('feedly-auth2-auth');
 	}
 
+	clearAuth(user){
+		let findByIdAndUpdate = Q.nbind(Account.findByIdAndUpdate, Account);
+		return findByIdAndUpdate(user._id, {$unset: {feedly: 1}})
+	}
+
 	processAuthCode(user, code){
 		return this._processAuthCode(code)
 		.then(function(results){

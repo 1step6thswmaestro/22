@@ -7,7 +7,7 @@ module.exports = function(app){
 			case 'feedly-auth2-auth':
 				app.helper.feedly.processAuthCode(req.user, query.code)
 				.then(function(){
-					res.renderIndex();
+					res.redirect('/');
 				});
 			break;
 			default:

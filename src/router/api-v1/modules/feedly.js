@@ -13,8 +13,14 @@ module.exports = function(_router, app){
 
 	router.get('/auth', function(req, res){
 		let redirectTo = app.helper.feedly.getAuthURL();
-		console.log(redirectTo);
-		res.redirect(redirectTo);
+		
+		app.helper.feedly.clearAuth(req.user)
+		.then(()=>res.redirect(redirectTo));
+	})
+
+	router.get('/unauth', function(req, res){
+		app.helper.feedly.clearAuth(req.user)
+		.then(()=>res.send());
 	})
 
 	router.get('/subscription', function(req, res){
