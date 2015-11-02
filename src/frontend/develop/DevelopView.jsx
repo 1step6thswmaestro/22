@@ -14,11 +14,10 @@ export default class DevelopView extends React.Component{
 	setGlobalTime(time){
 		const { dispatch } = this.props;
 		var unixtime= time.valueOf();
-
 		var momentObj = moment(unixtime).tz('Asia/Seoul');
 
 		dispatch(setGlobalTime(momentObj.toDate().getTime()));
-		dispatch(fetchPrioritizedList());
+		dispatch(fetchPrioritizedList());		
 	}
 
 	toggleDatePicker(){
@@ -101,7 +100,7 @@ export default class DevelopView extends React.Component{
 					</div>
 				</If>
 				<i className='mr10'></i>
-				<If test={this.props.user.intergration.feedly == false}>
+				<If test={this.props.user.intergration.feedly == false || this.props.user.intergration.feedly == undefined}>
 					<a href='/v1/feedly/auth'>
 						<button className='btn btn-default'>
 							Authorize Feedly

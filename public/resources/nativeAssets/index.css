@@ -378,6 +378,9 @@ ul {
 .mr10 {
   margin-right: 10px; }
 
+.authorize-div {
+  display: none; }
+
 .card {
   border-radius: 2px;
   box-sizing: border-box;

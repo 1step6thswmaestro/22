@@ -102,13 +102,14 @@ class FeedlyHelper{
 			params.newerThan = new Date(user.feedly.date).getTime();
 		}
 		else{
-			params.count = 100;
+			params.count = 1000;
 		}
 
 		return this.getStream(user, params)
 		.then(results=>{
 			results = JSON.parse(results);
-			var articles = _.map(results.items, item=>_.pick(item, 'title', 'content', 'originId'));
+			console.log(results.items[0])
+			var articles = _.map(results.items, item=>_.pick(item, 'title', 'content', 'originId', 'summary'));
 			return articles;
 		})
 		.then(function(articles){
@@ -116,6 +117,8 @@ class FeedlyHelper{
 				articleRaw.userId = user._id;
 				if(articleRaw.content && articleRaw.content.content)
 					articleRaw.content = articleRaw.content.content;
+				if(articleRaw.summary && articleRaw.summary.content)
+					articleRaw.summary = articleRaw.summary.content;
 				var article = new Article(articleRaw);
 				return Q.nbind(article.save, article)()
 				.fail(err=>undefined);
