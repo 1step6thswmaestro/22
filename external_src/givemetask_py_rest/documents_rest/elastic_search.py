@@ -38,6 +38,7 @@ class DocumentES():
         # insert document hits
         hits = []
         for item in res['hits']['hits']:
+            print item
             if not all([k in item['_source'] for k in filter_keys]):
                 continue
             dic = {'_id' : item['_id']}
