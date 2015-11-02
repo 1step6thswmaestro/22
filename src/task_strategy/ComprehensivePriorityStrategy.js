@@ -42,9 +42,13 @@ function getRemainTime(task, logs) {
 	}
 	activatedTime /= (1000 * 60 * 60);
 
-	// 8760 mean hours of the year (365 * 24)
-	let emergence = 8760 - (remainTime - estimationTime + activatedTime).toFixed(1);
-	if (emergence > 8760) emergence = 8760;
+	// 8760 mean total hours of the year (365 * 24)
+	let requiredTime = (remainTime - estimationTime + activatedTime).toFixed(1);
+	if (requiredTime < 12) emergence = 100000;
+	else {
+		let emergence = 8760 - requiredTime;
+		if (emergence > 8760) emergence = 8760;
+	}
 
 	let importance = task.importance * 10000;
 
