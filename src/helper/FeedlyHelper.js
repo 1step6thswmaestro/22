@@ -119,7 +119,6 @@ class FeedlyHelper{
 					articleRaw.content = articleRaw.content.content;
 				if(articleRaw.summary && articleRaw.summary.content)
 					articleRaw.summary = articleRaw.summary.content;
-				console.log(articleRaw)
 				var article = new Article(articleRaw);
 				return Q.nbind(article.save, article)()
 				.fail(err=>undefined);
