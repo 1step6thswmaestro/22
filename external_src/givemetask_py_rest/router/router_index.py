@@ -10,6 +10,7 @@ def apply(app):
     @crossdomain(origin='*', headers=['Content-Type','Authorization'], methods=['POST'])
     def log_doc(user_id, doc_id, task_title):
         log = article_log(user_id, doc_id, task_title)
+        print log
         app.query_pool2.insert_read_log(log)
         print 'User : %s  // Doc_id : %s' % (user_id, doc_id)
         return 'hello'
