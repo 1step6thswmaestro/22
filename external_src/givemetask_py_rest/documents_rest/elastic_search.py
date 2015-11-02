@@ -26,7 +26,7 @@ class DocumentES():
         result ={"query" :  {"bool" : {"must" : [{"term" : {"userId" : user_id}},{"match" : {"summary" : query}}]}}}
         return result
 
-    def res_to_json(self, res, top_n):
+    def res_to_json(self, res, top_n, score=0):
         if res is None:
             return {'total':0, 'hits':[]}
         filter_keys = config.ES_SEARCH_INDEX # response keys
@@ -38,10 +38,14 @@ class DocumentES():
         # insert document hits
         hits = []
         for item in res['hits']['hits']:
+            if score > item['_score']: break # break on specified score
             if not all([k in item['_source'] for k in filter_keys]):
                 continue
             dic = {'_id' : item['_id']}
             for k in filter_keys:
+                if k == 'originId':
+                    dic['link'] = item['_source'][k]
+                    continue
                 dic[k] = item['_source'][k]
             hits.append(dic)
         result['hits'] = hits[:top_n]
