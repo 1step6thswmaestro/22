@@ -29,6 +29,8 @@ class SearchController():
 
     def search(self, user_id, query):
         rss_number, cluster_number = self.determine_numbers(user_id)
+
+        print 'RSS NUMBER : %d, CLUSTER NUMBER : %d' % (rss_number, cluster_number)
         if rss_number > 0:
             rss_list = self.es.search(query, user_id, rss_number)
         else:
