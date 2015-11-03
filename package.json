@@ -15,7 +15,6 @@
     "express": "^4.10.2",
     "express-session": "^1.11.3",
     "feedly": "file:3rdparty/node-feedly",
-    "google-auth-library": "^0.9.6",
     "googleapis": "^2.1.6",
     "gulp": "^3.9.0",
     "gulp-concat": "*",

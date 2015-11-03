@@ -134,6 +134,13 @@ export default class DevelopView extends React.Component{
 					</span>
 				</If>
 
+				<If test={this.props.user.intergration.google != true}>
+					<a href='/v1/google/auth'>
+						<button className='btn btn-default'>
+							Authorize Google
+						</button>
+					</a>
+				</If>
 			</div>
 		)
 	}

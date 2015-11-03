@@ -16,8 +16,9 @@ import If from '../utility/if'
 import MainTimeline from '../timeline/MainTimeline'
 
 import DevelopView from '../develop/DevelopView'
+import ConfigView from '../config/ConfigView'
 
-import DayView from './dayview/DayView'
+import GoogleCalendarList from '../calendar/GoogleCalendarList'
 
 import Topbar from '../main/Topbar'
 import TaskStateType from '../../constants/TaskStateType';
@@ -95,7 +96,13 @@ class TodoApp extends React.Component{
 
 		if(this.state.currentView == 'task'){
 			viewContent = (
-				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global} config={this.props.config}/>
+				<TaskView dispatch={this.props.dispatch} 
+					tasks={this.props.tasks}
+					tasklog={this.props.tasklog}
+					global={this.props.global}
+					config={this.props.config}
+					events={this.props.events}
+				/>
 			);
 		}
 		else if(this.state.currentView == 'user'){
@@ -110,8 +117,11 @@ class TodoApp extends React.Component{
 				<MainTimeline tasklog={this.props.tasklog}/>
 				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
 				<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user}/>
+				<ConfigView dispatch={this.props.dispatch} config={this.props.config}/>
+				<If test={this.props.config.showCalendarList==true}>
+					<GoogleCalendarList dispatch={this.props.dispatch} config={this.props.config} google={this.props.thirdparty.google}/>
+				</If>
 				{viewContent}
-				<DayView dispatch={this.props.dispatch} config={this.props.config} />
 				<header>
 					<h1>Give Me Task</h1>
 					<div className="view-toggle" onClick={this.toggleView.bind(this)} onTouchStart={this.toggleView.bind(this)}>

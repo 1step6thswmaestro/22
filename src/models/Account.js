@@ -16,6 +16,12 @@ module.exports = function(){
 			, id: String
 			, date: Date
 		}
+		, thirdparty: {
+			google: {
+				auth: Schema.Types.Mixed
+				, calendars: [Schema.Types.Mixed]
+			}
+		}
 
 		, timestampLastActivity: {type: Date, default: ""}
 

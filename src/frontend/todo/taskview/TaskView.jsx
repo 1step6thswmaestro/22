@@ -1,5 +1,6 @@
 import React from 'react'
 import TaskItem from './TaskItem'
+import EventItem from './EventItem'
 import TaskInputForm from './TaskInputForm'
 import MapImage from '../dialog/MapImage'
 
@@ -7,6 +8,7 @@ import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
 import { fetchList, fetchPrioritizedList, makeNewItem, removeItem } from '../actions/tasks'
+import { fetchList as fetchEventList } from '../actions/events'
 
 import _ from 'underscore'
 
@@ -20,6 +22,7 @@ class TaskView extends React.Component{
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch(fetchList());
+		dispatch(fetchEventList());
 		dispatch(fetchPrioritizedList());
 	}
 
@@ -56,11 +59,21 @@ class TaskView extends React.Component{
 		var self = this;
 		var tasks = this.props.tasks;
 		var tasklog = this.props.tasklog;
+
+		var events = this.props.events;
 		const { global, config, dispatch } = this.props;
 
-	    function createTaskElements(list, logs){
+		console.log({events});
+
+	    function createTaskElements(list){
 			return _.map(list, task => (
 		        <TaskItem key={task._id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} global={global} onTaskModify={self.showModifyDialog.bind(self, task)} />)
+			);
+	    }
+
+	    function createEventElements(list){
+			return _.map(list, item => (
+		        <EventItem key={item._id} event={item} dispatch={dispatch} global={global} />)
 			);
 	    }
 
@@ -73,12 +86,14 @@ class TaskView extends React.Component{
 					<div className="task-list-wrapper">
 						<div className="task-list">
 							<div className="row">
-								<div className="col-md-12">
+								<div className="col-sm-6 no-padding-right">
 									{createTaskElements(
 										config.displayActiveListOnly?
 											tasks.activeList
-											:tasks.plist
-										, tasklog)}
+											:tasks.plist)}
+								</div>
+								<div className="col-sm-6 no-padding-left">
+									{createEventElements(events.list)}
 								</div>
 							</div>
 						</div>
