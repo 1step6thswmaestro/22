@@ -34,11 +34,28 @@ class SearchController():
         if rss_number > 0:
             rss_list = self.es.search(query, user_id, rss_number)
         else:
-            rss_list = []
+            rss_list = {'hits':[]}
 
         if cluster_number > 0:
             cluster_list = self.cluster.get_articles(user_id, query, cluster_number)
         else:
             cluster_list = []
 
-        return rss_list + cluster_list
+        return self.convert_list_to_json_type(rss_list, cluster_list)
+
+    def convert_list_to_json_type(self, rss_list, cluster_list):
+        result = {'hits':[]}
+
+        result['hits'] = rss_list['hits']
+        for item in cluster_list:
+            conv_item = {'link':item['originId'],
+                         'summary':item['summary'],
+                         'title':item['title'],
+                         '_id':item['_id']}
+            result['hits'].append(conv_item)
+        return result
+        # <div className="doc-item" onClick={this.onDocumentClick.bind(this, this.props.doc._id)}>
+			# 	<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
+			# 		{this.props.doc.title}
+			# 	</a>
+			# </div>
