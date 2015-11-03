@@ -73,10 +73,10 @@ class QueryPool():
         log_collection = self.conn.get_collection('article_read_log')
 
         ls = log_collection.group(
-            key={'article_id':1},
-            cond={'label' : label, 'user_id' : {'$ne' : user_id}},
-            initial={'count' : 0},
-            reduce='function(obj, prev) {prev.count++}'
+            {'article_id':1},
+            {'label' : label, 'user_id' : {'$ne' : user_id}},
+            {'count' : 0},
+            'function(obj, prev) {prev.count++}'
         )
 
         ls_conv = {'article_id' :[], 'count': []}
