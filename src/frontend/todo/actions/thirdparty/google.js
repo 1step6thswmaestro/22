@@ -6,7 +6,7 @@ import _ from 'underscore'
 export function fetchCalendarList(){
 	return function(dispatch, getState){
 		$.ajax({
-			url: '/v1/google/list'
+			url: '/v1/google/calendarlist/list'
 		})
 		.then(function(results){
 			console.log(results);

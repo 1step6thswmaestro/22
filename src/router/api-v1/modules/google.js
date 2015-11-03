@@ -26,8 +26,24 @@ module.exports = function(_router, app){
 		.then(()=>res.redirect('/'));
 	})
 
-	router.get('/list', function(req, res){
-		app.helper.google.list(req.user)
+	router.get('/calendarlist/list', function(req, res){
+		app.helper.google.getCalendarList(req.user)
+		.then(results=>res.send(results));
+	})
+
+	router.get('/calendar/list', function(req, res){
+		app.helper.google.getCalendarEvents(req.user, req.query)
+		.then(results=>res.send(results));
+	})
+
+	//this is just for develop test (copy of the below.)
+	router.get('/calendar/nextlist', function(req, res){
+		app.helper.google.nextCalendarEvents(req.user, req.query)
+		.then(results=>res.send(results));
+	})
+
+	router.put('/calendar/fetchlist', function(req, res){
+		app.helper.google.nextCalendarEvents(req.user)
 		.then(results=>res.send(results));
 	})
 
@@ -46,8 +62,9 @@ module.exports = function(_router, app){
 	})
 
 	router.get('/calendarlist/selection', function(req, res){
-		app.helper.google.getSelectedCalendars(req.user)
+		app.helper.google.getSelectedCalendarIds(req.user)
 		.then(function(list){
+			console.log({list});
 			let result = {};
 			_.each(list, item=>{result[item]=true});
 			res.send(result);

@@ -79,6 +79,10 @@ class GoogleHelper{
 		return defer.promise;
 	}
 
+	getOAuth(user, oauth){
+		return oauth || this.refreshToken(user);
+	}
+
 	refreshToken(user){
 		let auth;
 		try{
@@ -100,8 +104,17 @@ class GoogleHelper{
 		})
 	}
 
-	list(user){
-		return this.refreshToken(user)
+	getCalendar(user, calendarId, oauth){
+		return this.getOAuth(user, oauth)
+		.then(oauth => {
+			var calendar = google.calendar({ version: 'v3', auth: oauth });
+			return Q.nbind(calendar.calendarList.get, calendar.calendarList)({calendarId})
+			.fail(err=>logger.error(err));
+		})
+	}
+
+	getCalendarList(user, oauth){
+		return this.getOAuth(user, oauth)
 		.then(oauth => {
 			var calendar = google.calendar({ version: 'v3', auth: oauth });
 			return Q.nbind(calendar.calendarList.list, calendar.calendarList)({})
@@ -109,24 +122,91 @@ class GoogleHelper{
 		})
 	}
 
-	selectCalendar(user, calId, selected){
-		function updateAccount(){
+	getCalendarEvents(user){
+		return this.getSelectedCalendars(user)
+		.then(list=>{
+			return Q.all(_.map(list, item=>{
+				return this._getCalendarEvents(user, null, item.id)
+				.then(result=>{
+					let items = result.items;
+					return _.map(items, item => _.pick(item, 'id', 'summary', 'created', 'start', 'end', 'iCalUID'))
+				});
+			}))
+			.then(results=>_.flatten(results));
+		})
+	}
+
+	nextCalendarEvents(user, opt){
+		opt = opt || {};
+
+		return this.getSelectedCalendars(user)
+		.then(list=>{
+			return Q.all(_.map(list, item=>{
+				return this._getCalendarEvents(user, null, item.id, !opt.reset&&item.nextSyncToken, {saveSyncToken: true})
+				.then(result=>{
+					let items = result.items;
+					return _.map(items, item => _.pick(item, 'id', 'summary', 'created', 'start', 'end', 'iCalUID'))
+				});
+			}))
+			.then(results=>_.flatten(results))
+			.fail(err=>logger.error(err))
+		})
+	}
+
+	_getCalendarEvents(user, oauth, calendarId, syncToken, opt){
+		function updateNextSyncToken(result){
+			let nextSyncToken = result.nextSyncToken;
+			var update = Q.nbind(Account.update, Account);
+			return update({_id: user._id, 'thirdparty.google.calendars.id': calendarId}, {'thirdparty.google.calendars.$.nextSyncToken': nextSyncToken}, {multi: true})
+			.then(()=>result)
+		}
+
+		return this.refreshToken(user)
+		.then(oauth => {
+			var calendar = google.calendar({ version: 'v3', auth: oauth });
+			var params = {calendarId};
+			if(syncToken){
+				params.syncToken = syncToken;
+			}
+
+			console.log({params});
+
+			return Q.nbind(calendar.events.list, calendar.events)(params)
+			.then(results=>results[0])
+			.then(result=>{
+				if(opt && opt.saveSyncToken){
+					return updateNextSyncToken(result);
+				}
+				else{
+					return result;
+				}
+			})
+			// .then(result=>{console.log(result); return result;})
+			.fail(err=>logger.error(err));
+		})
+	}
+
+	selectCalendar(user, calendarId, selected){
+		function updateAccount(item){
 			let findByIdAndUpdate = Q.nbind(Account.findByIdAndUpdate, Account);
 			if(selected){
-				return findByIdAndUpdate(user._id, {$addToSet: {'thirdparty.google.calendars': calId}})
+				return findByIdAndUpdate(user._id, {$addToSet: {'thirdparty.google.calendars': item}});
 			}
 			else{
-				return findByIdAndUpdate(user._id, {$pull: {'thirdparty.google.calendars': calId}})
+				return findByIdAndUpdate(user._id, {$pull: {'thirdparty.google.calendars': {id: calendarId}}}, {multi: true});
 			}
 		}	
 
-		return updateAccount()
-		.then(()=>this.getSelectedCalendars(user))
+		return this.getCalendar(user, calendarId)
+		.then(function(items){
+			return items[0];
+		})
+		.then(updateAccount)
+		.then(()=>this.getSelectedCalendarIds(user))
 		.then(function(list){
-			console.log(list);
 			return {
-				id: calId
-				, selected: list.indexOf(calId)>=0
+				id: calendarId
+				, selected: list.indexOf(calendarId)>=0
 			}
 		})
 		.fail(err=>logger.error(err))
@@ -142,8 +222,15 @@ class GoogleHelper{
 				return _user.thirdparty.google.calendars;
 			}
 			catch(e){
-				return [];
+				return {};
 			}
+		})
+	}
+
+	getSelectedCalendarIds(user){
+		return this.getSelectedCalendars(user)
+		.then(function(calendars){
+			return _.map(calendars, item=>item.id);
 		})
 	}
 
