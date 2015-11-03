@@ -1,3 +1,5 @@
+// Should be merged with google calendar model.
+
 import React from 'react';
 import If from '../../utility/if';
 
