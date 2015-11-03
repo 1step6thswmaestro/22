@@ -27,4 +27,5 @@ class SearchCluster():
     def get_articles(self, user_id, task, topn=3):
         label = self.__predict_label(task)
         article_id_list = list(self.app.query_pool2.get_same_cluster_articles(user_id, label, topn))
+        self.app.logger.info('article_id_list length : %d' % len(article_id_list))
         return list(self.app.query_pool2.get_article_list_by_id(article_id_list))
