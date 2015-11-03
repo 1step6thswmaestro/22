@@ -48,12 +48,11 @@ class SearchController():
 
         result['hits'] = rss_list['hits']
         for item in cluster_list:
-            conv_item = {'link':item['originId'],
-                         'summary':item['summary'],
-                         'title':item['title'],
-                         '_id':item['_id']}
+            conv_item = {'link': item['originId'],
+                         'summary': item['summary'],
+                         'title': item['title'],
+                         '_id': str(item['_id'])}
             result['hits'].append(conv_item)
-        self.app.logger.info(result)
         return result
         # <div className="doc-item" onClick={this.onDocumentClick.bind(this, this.props.doc._id)}>
 			# 	<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
