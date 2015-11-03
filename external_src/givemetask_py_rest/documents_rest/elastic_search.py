@@ -23,7 +23,19 @@ class DocumentES():
             return return_object
 
     def get_search_body(self, query, user_id):
-        result ={"query" :  {"bool" : {"must" : [{"term" : {"userId" : user_id}},{"match" : {"summary" : query}}]}}}
+        result ={"query":
+                     {"bool": {
+                          {"must": [
+                              {"term": {"userId" : user_id}},
+                              {"match": {"title" : query}}
+                            ]
+                          } ,
+                          {"should":
+                               {"match": {"summary": query}}
+                          }
+                        }
+                    }
+                 }
         return result
 
     def res_to_json(self, res, top_n, score=0):
