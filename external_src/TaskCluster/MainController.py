@@ -55,8 +55,8 @@ def task_clustering(method, word2vec=None):
 def determine_cluster_numbers(log_length):
     # 네이버 블로그에서는 섹션을 총 31개로 나눔
     # 따라서, 정책은 다음과 같다
-    # 총 로그 수를 10으로 나눴을 때, 31개 보다 작으면 그 몫을 그대로, 그 이상일 시 31개로
-    number = log_length / 10
+    # 총 로그 수를 5으로 나눴을 때, 31개 보다 작으면 그 몫을 그대로, 그 이상일 시 31개로
+    number = log_length / 5
     if number > SECTION_NUMBER:
         return SECTION_NUMBER
     else:
