@@ -3,7 +3,7 @@
 .task-view-wrapper{
 	width: 100%;
 	margin-top: 20px;
-  padding: 0px 10px;
+  padding: 0px 0px;
 }
 
 .task-view{
@@ -18,9 +18,9 @@
   position: relative;	
 }
 
-@media (min-width: 700px) {
-  .task-view{
-    width: 700px;
+@media (min-width: 768px) {
+  .task-view-wrapper{
+    padding: 0px 10px;
   }
 }
  

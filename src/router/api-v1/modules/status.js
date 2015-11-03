@@ -17,6 +17,15 @@ module.exports = function(_router, app){
 			status.intergration.feedly = true
 		}
 
+		try{
+			if(user.thirdparty.google.auth.access_token){
+				status.intergration.google = true;
+			}
+		}
+		catch(e){
+
+		}
+
 		res.send(status);
 	})
 }

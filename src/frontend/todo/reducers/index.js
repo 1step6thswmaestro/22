@@ -5,6 +5,7 @@ import { reducer as globalReducer} from '../actions/global_decl'
 import { reducer as configReducer} from '../actions/config_decl'
 import { reducer as userReducer} from '../actions/user_decl'
 import { reducer as googleReducer} from '../actions/thirdparty/google.decl'
+import { reducer as eventsReducer} from '../actions/events.decl'
 
 
 const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
 	, thirdparty: combineReducers({
 		google: googleReducer
 	})
+	, events: eventsReducer
 });
 
 export default rootReducer;

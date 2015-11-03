@@ -96,7 +96,13 @@ class TodoApp extends React.Component{
 
 		if(this.state.currentView == 'task'){
 			viewContent = (
-				<TaskView dispatch={this.props.dispatch} tasks={this.props.tasks} tasklog={this.props.tasklog} global={this.props.global} config={this.props.config}/>
+				<TaskView dispatch={this.props.dispatch} 
+					tasks={this.props.tasks}
+					tasklog={this.props.tasklog}
+					global={this.props.global}
+					config={this.props.config}
+					events={this.props.events}
+				/>
 			);
 		}
 		else if(this.state.currentView == 'user'){

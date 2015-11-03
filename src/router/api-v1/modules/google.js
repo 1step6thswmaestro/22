@@ -31,22 +31,6 @@ module.exports = function(_router, app){
 		.then(results=>res.send(results));
 	})
 
-	router.get('/calendar/list', function(req, res){
-		app.helper.google.getCalendarEvents(req.user, req.query)
-		.then(results=>res.send(results));
-	})
-
-	//this is just for develop test (copy of the below.)
-	router.get('/calendar/nextlist', function(req, res){
-		app.helper.google.nextCalendarEvents(req.user, req.query)
-		.then(results=>res.send(results));
-	})
-
-	router.put('/calendar/fetchlist', function(req, res){
-		app.helper.google.nextCalendarEvents(req.user)
-		.then(results=>res.send(results));
-	})
-
 	router.put('/calendarlist/unselect/:id', function(req, res){
 		app.helper.google.selectCalendar(req.user, req.params.id, false)
 		.then(function(result){
@@ -70,4 +54,16 @@ module.exports = function(_router, app){
 			res.send(result);
 		})
 	})
+
+	//put /events와 get /events가 다름에 유의
+	router.get('/events', function(req, res){
+		app.helper.google.getCalendarEvents(req.user, req.query)
+		.then(results=>res.send(results));
+	})
+
+	router.put('/events', function(req, res){
+		app.helper.google.nextCalendarEvents(req.user)
+		.then(results=>res.send(results));
+	})
+
 }

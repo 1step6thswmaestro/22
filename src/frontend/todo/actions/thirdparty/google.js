@@ -1,6 +1,7 @@
 'use strict'
 
 import { type } from './google.decl';
+import { fetchList } from '../events';
 import _ from 'underscore'
 
 export function fetchCalendarList(){
@@ -54,6 +55,8 @@ export function selectCalendarItem(item, value){
 				, item
 				, value: false
 			})
+			
+			dispatch(fetchList())
 		})
 	}
 }
