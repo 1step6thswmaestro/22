@@ -9,7 +9,8 @@ module.exports = function(app){
 		created: Date,
 		start: Date,
 		end: Date,
-		fullday: Boolean
+		fullday: Boolean,
+		calendarId: String
 	});
 
 	eventSchema.index({ id: 1 }, { unique: true });

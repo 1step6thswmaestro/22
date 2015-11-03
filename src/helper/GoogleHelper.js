@@ -127,14 +127,18 @@ class GoogleHelper{
 		opt = opt || {};
 		let find = Q.nbind(EventModel.find, EventModel);
 
+		return this.getSelectedCalendarIds(user)
+		.then(list=>{
+			console.log({list});
+			if(opt.update){
+				return this._updateCalendarEvents(user, opt)
+				.then(()=>find({userId: user._id, calendarId: {$in: list}}, undefined, {sort: {start: 1}}));
+			}
+			else{
+				return find({userId: user._id, calendarId: {$in: list}}, undefined, {sort: {start: 1}});
+			}
+		})
 
-		if(opt.update){
-			return this._updateCalendarEvents(user, opt)
-			.then(()=>find({userId: user._id}, undefined, {sort: {start: 1}}));
-		}
-		else{
-			return find({userId: user._id}, undefined, {sort: {start: 1}});
-		}
 	}
 
 	_updateCalendarEvents(user, opt){
@@ -162,23 +166,27 @@ class GoogleHelper{
 			save = true;
 		}
 
-		let promise = this.getSelectedCalendars(user)
+		return this.getSelectedCalendars(user)
 		.then(list=>{
 			return Q.all(_.map(list, item=>{
-				return this.__getCalendarEventsFromGoogle(user, null, item.id, !reset&&item.nextSyncToken, {saveSyncToken: saveSyncToken})
+				let promise = this.__getCalendarEventsFromGoogle(user, null, item.id, !reset&&item.nextSyncToken, {saveSyncToken: saveSyncToken})
 				.then(result=>{
 					let items = result.items;
 					return _.map(items, item => _.pick(item, 'id', 'summary', 'created', 'start', 'end'))
 				});
+
+				if(save){
+					promise = promise.then(this.__saveCalenderEvents.bind(this, user, item.id))
+					.fail(err=>logger.error(err));
+				}
+
+				return promise;
 			}))
 			.then(results=>_.flatten(results))
 			.fail(err=>logger.error(err))
+			
 		})
 
-		if(save){
-			promise = promise.then(this.__saveCalenderEvents.bind(this, user))
-			.fail(err=>logger.error(err));
-		}
 
 		return promise;
 	}
@@ -214,17 +222,18 @@ class GoogleHelper{
 		})
 	}
 
-	__saveCalenderEvents(user, items){
-		let __saveCalenderEvent = this.__saveCalenderEvent.bind(this, user);
+	__saveCalenderEvents(user, calendarId, items){
+		let __saveCalenderEvent = this.__saveCalenderEvent.bind(this, user, calendarId);
 		return Q.all(_.map(items, __saveCalenderEvent));
 	}
 
-	__saveCalenderEvent(user, item){
+	__saveCalenderEvent(user, calendarId, item){
 		var raw = _.pick(item, 'id', 'summary', 'created', 'start', 'end');
 		raw.start = item.start.dateTime || item.start.date;
 		raw.end = item.end.dateTime || item.end.date;
 		raw.fullday = item.start.date!=undefined || item.end.date!=undefined;
 		raw.userId = user._id;
+		raw.calendarId = calendarId;
 
 		var findOneAndUpdate = Q.nbind(EventModel.findOneAndUpdate, EventModel);
 		return findOneAndUpdate({id: raw.id}, raw, {upsert: true});
