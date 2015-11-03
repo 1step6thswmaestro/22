@@ -30,8 +30,9 @@ class DocumentES():
                               {"match": {"title" : query}}
                             ]
                           } ,
-                          {"should":
+                          {"should": [
                                {"match": {"summary": query}}
+                            ]
                           }
                         }
                     }
