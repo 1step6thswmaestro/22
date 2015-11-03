@@ -21,7 +21,7 @@ def apply(app):
         if query == "" or user_id == "":
             abort(404)
         app.logger.info('query : %s / user_id : %s' % (query, user_id))
-        return jsonify(app.es.search(query, user_id))
+        return jsonify(app.es.search(user_id, query))
 
 
 def crossdomain(origin=None, methods=None, headers=None,
