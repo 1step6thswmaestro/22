@@ -72,13 +72,12 @@ class QueryPool():
     def get_same_cluster_articles(self, user_id, label, topn=3):
         log_collection = self.conn.get_collection('article_read_log')
 
-        print 'User Id : %s, label : %s' % (user_id, label)
         print 'function(obj, prev) {prev.count++}'
         ls = log_collection.group(
             {'article_id': True},
             {'label' : label, 'user_id' : {'$ne' : user_id}},
             {'count' : 0},
-            'function(obj, prev) {prev.count[0]++}'
+            'function(obj, prev) {prev.count++}'
         )
 
         ls_conv = {'article_id' :[], 'count': []}

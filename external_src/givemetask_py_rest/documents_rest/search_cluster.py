@@ -22,7 +22,7 @@ class SearchCluster():
 
     def __predict_label(self, task):
         vector = self.__task_to_vector(task)
-        return self.cluster_pipe.predict(vector)
+        return self.cluster_pipe.predict(vector)[0]
 
     def get_articles(self, user_id, task, topn=3):
         label = self.__predict_label(task)
