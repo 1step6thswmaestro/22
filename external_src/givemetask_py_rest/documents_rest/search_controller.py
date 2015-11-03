@@ -53,6 +53,7 @@ class SearchController():
                          'title':item['title'],
                          '_id':item['_id']}
             result['hits'].append(conv_item)
+        self.app.logger.info(result)
         return result
         # <div className="doc-item" onClick={this.onDocumentClick.bind(this, this.props.doc._id)}>
 			# 	<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
