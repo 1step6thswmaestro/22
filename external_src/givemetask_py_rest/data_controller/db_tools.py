@@ -75,7 +75,7 @@ class QueryPool():
         ls = log_collection.group(
             {'article_id':1},
             {'label' : label, 'user_id' : {'$ne' : user_id}},
-            {'count' : 0},
+            {'count' : 0.0},
             'function(obj, prev) {prev.count++}'
         )
 
