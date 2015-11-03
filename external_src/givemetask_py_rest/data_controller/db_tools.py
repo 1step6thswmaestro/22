@@ -94,4 +94,4 @@ class QueryPool():
 
     def get_article_list_by_id(self, article_id_list):
         article_collection = self.conn.get_collection('articles')
-        return list(article_collection.find({'userId' : {'$in' : [ObjectId(id) for id in article_id_list]}}))
+        return list(article_collection.find({'_id' : {'$in' : [ObjectId(id) for id in article_id_list]}}))
