@@ -26,12 +26,12 @@ class DocumentES():
         result ={"query":
                      {"bool":
                           {"must": [
-                              {"term": {"userId" : user_id}},
-                              {"match": {"summary" : query}}
+                              {"term": {"userId" : user_id}}
                             ]
                            ,
                           "should": [
-                               {"match": {"title": query}}
+                               {"match": {"title": query}},
+                               {"match": {"summary" : query}}
                             ]
                           }
                       }
