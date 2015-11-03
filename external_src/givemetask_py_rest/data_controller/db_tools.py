@@ -78,7 +78,7 @@ class QueryPool():
             {'article_id': True},
             {'label' : label, 'user_id' : {'$ne' : user_id}},
             {'count' : 0},
-            'function(obj, prev) {prev.count++}'
+            'function(obj, prev) {prev.count[0]++}'
         )
 
         ls_conv = {'article_id' :[], 'count': []}
