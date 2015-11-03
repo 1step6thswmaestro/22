@@ -35,6 +35,11 @@ export default class DevelopView extends React.Component{
 		dispatch(unauthFeedly());
 	}
 
+	toggleUserView(){
+		const { dispatch } = this.props;
+		dispatch(setConfig('userview', !this.props.config.userview));
+	}
+
 	render(){
 		let { dispatch, config } = this.props;
 
@@ -85,6 +90,16 @@ export default class DevelopView extends React.Component{
 
 		return (
 			<div>
+				<If test={this.props.config.userview==true}>
+					<button className='btn btn-checked' onClick={this.toggleUserView.bind(this)}>
+						TaskView 보이기
+					</button>
+				</If>
+				<If test={this.props.config.userview!=true}>
+					<button className='btn btn-default' onClick={this.toggleUserView.bind(this)}>
+						UserView 보이기
+					</button>
+				</If>
 				<If test={this.props.config.globalTimePicker!=true}>
 					<button className='btn btn-default' onClick={this.toggleDatePicker.bind(this)}>
 						DatePicker 보이기

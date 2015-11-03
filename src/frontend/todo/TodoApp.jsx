@@ -92,25 +92,6 @@ class TodoApp extends React.Component{
 	}
 
 	render() {
-		var viewContent;
-
-		if(this.state.currentView == 'task'){
-			viewContent = (
-				<TaskView dispatch={this.props.dispatch} 
-					tasks={this.props.tasks}
-					tasklog={this.props.tasklog}
-					global={this.props.global}
-					config={this.props.config}
-					events={this.props.events}
-				/>
-			);
-		}
-		else if(this.state.currentView == 'user'){
-			viewContent = (
-				<UserView dispatch={this.props.dispatch} global={this.props.global}/>
-			);
-		}
-
 		return (
 			<div className="task-app-container">
 				<Topbar/>
@@ -121,13 +102,19 @@ class TodoApp extends React.Component{
 				<If test={this.props.config.showCalendarList==true}>
 					<GoogleCalendarList dispatch={this.props.dispatch} config={this.props.config} google={this.props.thirdparty.google}/>
 				</If>
-				{viewContent}
-				<header>
-					<h1>Give Me Task</h1>
-					<div className="view-toggle" onClick={this.toggleView.bind(this)} onTouchStart={this.toggleView.bind(this)}>
-						Click HERE to Toggle UserView/TaskView
-					</div>
-				</header>
+
+				<If test={this.props.config.userview!=true}>
+					<TaskView dispatch={this.props.dispatch} 
+						tasks={this.props.tasks}
+						tasklog={this.props.tasklog}
+						global={this.props.global}
+						config={this.props.config}
+						events={this.props.events}
+					/>
+				</If>
+				<If test={this.props.config.userview==true}>
+					<UserView dispatch={this.props.dispatch} global={this.props.global}/>
+				</If>
 			</div>
 		);
 	}
