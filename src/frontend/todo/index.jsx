@@ -9,9 +9,12 @@ let store = configureStore({
 	, _list: []
 	, _plist: []
 	, _tlist: []
-  }
-  , user: {
+  }, 
+  user: {
   	intergration: {}
+  }, 
+  timetable: {
+  	tablelist: {}
   }
 });
 

@@ -30,7 +30,7 @@ function init(app){
 		return Q.nbind(Timetable.findOneAndUpdate, Timetable)(Object.assign({userId}, query), {$set: doc});
 	}
 
-	app.helper.TimetableHelper = new TimetableHelper();
+	app.helper.timetable = new TimetableHelper();
 }
 
 module.exports = init;

@@ -109,9 +109,9 @@ class TodoApp extends React.Component{
 				<Topbar/>
 				<MainTimeline tasklog={this.props.tasklog}/>
 				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
+				<DayView timetable={this.props.timetable} dispatch={this.props.dispatch} config={this.props.config} />
 				<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user}/>
 				{viewContent}
-				<DayView dispatch={this.props.dispatch} config={this.props.config} />
 				<header>
 					<h1>Give Me Task</h1>
 					<div className="view-toggle" onClick={this.toggleView.bind(this)} onTouchStart={this.toggleView.bind(this)}>
@@ -137,6 +137,8 @@ function mapStateToProps(state){
 	})
 
 	props.tasks.activeList = _.map(_activeList, _id => state.tasks.tasks[_id]);
+
+	props.timetable.timelist = state.timetable.timelist;
 
 	return props;
 };

@@ -6,8 +6,12 @@ module.exports = function(app){
 		userId: Schema.Types.ObjectId,
 		taskId: Schema.Types.ObjectId,
 		lastModified: {type: Date, default: Date(Date.now())},
+		
 		// 00:00 is index 0, 00:30 is index 1, ..., 23:30 is index 47
-		tableslotIndex: {type:Number},
+		tableslotIndex: {type: Number},
+
+		// Taken time of each task.
+		tableslotLength: {type: Number, default: 1},
 	});
 
 	timetableSchema.index({ userId: 1 });
