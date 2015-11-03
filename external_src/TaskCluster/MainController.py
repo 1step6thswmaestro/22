@@ -1,7 +1,7 @@
 #/Users/inosphe/anaconda/bin/python
 # -*- coding: utf-8 -*-
 from DBConnector.db_tools import Pool, QueryPool
-from base_config import WORD2VEC_LINE_TEXT, WORD2VEC_MODEL, PIPE_DUMPING, CLUSTERING_METHOD, CLUSTERING_OPTION
+from base_config import WORD2VEC_LINE_TEXT, WORD2VEC_MODEL, PIPE_DUMPING, CLUSTERING_METHOD, SECTION_NUMBER
 from TextProcedure.TextParser import law_contents_to_file
 from MachineLearner import Trainer
 import gensim
@@ -9,7 +9,7 @@ import os
 import sys
 
 query_pool = QueryPool(Pool())
-#webserver_query_pool = QueryPool(Pool(host_type_local=False))
+webserver_query_pool = QueryPool(Pool(host_type_local=False))
 
 def train_or_load_word2vec(delete=False):
     # load articles from db
@@ -34,9 +34,9 @@ def train_or_load_word2vec(delete=False):
     return Trainer.train_and_save_vector(WORD2VEC_LINE_TEXT, WORD2VEC_MODEL)
 
 
-def task_clustering(method, option, word2vec=None):
+def task_clustering(method, word2vec=None):
     # load db from remote
-    _ids, tasks = query_pool.get_article_logs()
+    _ids, tasks = webserver_query_pool.get_article_logs()
 
     # word2vec load
     if word2vec is None:
@@ -45,14 +45,26 @@ def task_clustering(method, option, word2vec=None):
     # create and dump pipe
     # percentage 는 전체 태스크 수를 클러스터링 했을 때 한 클러스터의 차지하는 비중
     print 'Start Clustering'
-    pipe, labels = Trainer.decompose_and_cluster(tasks, word2vec, PIPE_DUMPING, method=method, option=option)
+    log_length = len(tasks)
+    cluster_number = determine_cluster_numbers(log_length)
+    pipe, labels = Trainer.decompose_and_cluster(tasks, word2vec, PIPE_DUMPING, method=method, option=cluster_number)
 
     # update task db
-    query_pool.attach_task_label(_ids=_ids, labels=labels)
+    webserver_query_pool.attach_task_label(_ids=_ids, labels=labels)
+
+def determine_cluster_numbers(log_length):
+    # 네이버 블로그에서는 섹션을 총 31개로 나눔
+    # 따라서, 정책은 다음과 같다
+    # 총 로그 수를 5으로 나눴을 때, 31개 보다 작으면 그 몫을 그대로, 그 이상일 시 31개로
+    number = log_length / 5
+    if number > SECTION_NUMBER:
+        return SECTION_NUMBER
+    else:
+        return number
 
 def main():
     word2vec = train_or_load_word2vec(delete=False)
-    task_clustering(method=CLUSTERING_METHOD, option=CLUSTERING_OPTION, word2vec=word2vec)
+    task_clustering(method=CLUSTERING_METHOD, word2vec=word2vec)
 
 if __name__=='__main__':
     main()

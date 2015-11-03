@@ -1,6 +1,8 @@
 __author__ = 'iljichoi'
 import json
 import pymongo
+from pandas import Series
+from bson.objectid import ObjectId
 
 class Pool():
     config_path = './db_config.json' # db_name, host, port,
@@ -66,3 +68,30 @@ class QueryPool():
         if not result:
             return None
         return result['rss_list']
+
+    def get_same_cluster_articles(self, user_id, label, topn=3):
+        log_collection = self.conn.get_collection('article_read_log')
+
+        ls = log_collection.group(
+            {'article_id': True},
+            {'label' : str(label), 'user_id' : {'$ne' : user_id}},
+            {'count' : 0},
+            'function(obj, prev) {prev.count++}'
+        )
+
+        ls_conv = {'article_id' :[], 'count': []}
+        for item in ls:
+            ls_conv['article_id'].append(item['article_id'])
+            ls_conv['count'].append(item['count'])
+        s = Series(index=ls_conv['article_id'], data=ls_conv['count'])
+
+        s.sort(ascending=False) # sorting
+        return s.keys()[:topn]
+
+    def get_article_count(self, user_id):
+        article_collection = self.conn.get_collection('articles')
+        return article_collection.find({'userId' : ObjectId(user_id)}).count()
+
+    def get_article_list_by_id(self, article_id_list):
+        article_collection = self.conn.get_collection('articles')
+        return list(article_collection.find({'_id' : {'$in' : [ObjectId(id) for id in article_id_list]}}))
