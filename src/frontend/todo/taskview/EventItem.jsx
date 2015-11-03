@@ -11,7 +11,7 @@ class EventItem extends React.Component{
 
 	getSimpleView(){
 		var event = this.props.event;
-		let duedate = moment(event.end.dateTime);
+		let duedate = moment(event.end);
 
 		return (
 			<div className='task-item'>

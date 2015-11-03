@@ -8,6 +8,7 @@
 var Q = require('q');
 var mongoose = require('mongoose');
 var Account = mongoose.model('Account');
+var EventModel = mongoose.model('Event');
 var _ = require('underscore');
 
 var google = require('googleapis');
@@ -122,38 +123,67 @@ class GoogleHelper{
 		})
 	}
 
-	getCalendarEvents(user){
-		return this.getSelectedCalendars(user)
-		.then(list=>{
-			return Q.all(_.map(list, item=>{
-				return this._getCalendarEvents(user, null, item.id)
-				.then(result=>{
-					let items = result.items;
-					return _.map(items, item => _.pick(item, 'id', 'summary', 'created', 'start', 'end', 'iCalUID'))
-				});
-			}))
-			.then(results=>_.flatten(results));
-		})
+	getCalendarEvents(user, opt){
+		opt = opt || {};
+		let find = Q.nbind(EventModel.find, EventModel);
+
+
+		if(opt.update){
+			return this._updateCalendarEvents(user, opt)
+			.then(()=>find({userId: user._id}, undefined, {sort: {start: 1}}));
+		}
+		else{
+			return find({userId: user._id}, undefined, {sort: {start: 1}});
+		}
 	}
 
-	nextCalendarEvents(user, opt){
+	_updateCalendarEvents(user, opt){
 		opt = opt || {};
 
-		return this.getSelectedCalendars(user)
+		let update = true;
+		let reset = false;
+		if(opt.update !== undefined)
+			update = opt.update;
+		if(opt.reset !== undefined)
+			reset = opt.reset;
+
+		return this._fetchCalendarEvents(user, {update, reset})
+	}
+
+	_fetchCalendarEvents(user, opt){
+		opt = opt || {};
+		
+		let reset = opt.reset;
+		let saveSyncToken = false;
+		let save = false;
+		
+		if(opt.update == true){
+			saveSyncToken = true;
+			save = true;
+		}
+
+		let promise = this.getSelectedCalendars(user)
 		.then(list=>{
 			return Q.all(_.map(list, item=>{
-				return this._getCalendarEvents(user, null, item.id, !opt.reset&&item.nextSyncToken, {saveSyncToken: true})
+				return this.__getCalendarEventsFromGoogle(user, null, item.id, !reset&&item.nextSyncToken, {saveSyncToken: saveSyncToken})
 				.then(result=>{
 					let items = result.items;
-					return _.map(items, item => _.pick(item, 'id', 'summary', 'created', 'start', 'end', 'iCalUID'))
+					return _.map(items, item => _.pick(item, 'id', 'summary', 'created', 'start', 'end'))
 				});
 			}))
 			.then(results=>_.flatten(results))
 			.fail(err=>logger.error(err))
 		})
+
+		if(save){
+			promise = promise.then(this.__saveCalenderEvents.bind(this, user))
+			.fail(err=>logger.error(err));
+		}
+
+		return promise;
 	}
 
-	_getCalendarEvents(user, oauth, calendarId, syncToken, opt){
+	__getCalendarEventsFromGoogle(user, oauth, calendarId, syncToken, opt){
 		function updateNextSyncToken(result){
 			let nextSyncToken = result.nextSyncToken;
 			var update = Q.nbind(Account.update, Account);
@@ -169,8 +199,6 @@ class GoogleHelper{
 				params.syncToken = syncToken;
 			}
 
-			console.log({params});
-
 			return Q.nbind(calendar.events.list, calendar.events)(params)
 			.then(results=>results[0])
 			.then(result=>{
@@ -184,6 +212,22 @@ class GoogleHelper{
 			// .then(result=>{console.log(result); return result;})
 			.fail(err=>logger.error(err));
 		})
+	}
+
+	__saveCalenderEvents(user, items){
+		let __saveCalenderEvent = this.__saveCalenderEvent.bind(this, user);
+		return Q.all(_.map(items, __saveCalenderEvent));
+	}
+
+	__saveCalenderEvent(user, item){
+		var raw = _.pick(item, 'id', 'summary', 'created', 'start', 'end');
+		raw.start = item.start.dateTime || item.start.date;
+		raw.end = item.end.dateTime || item.end.date;
+		raw.fullday = item.start.date!=undefined || item.end.date!=undefined;
+		raw.userId = user._id;
+
+		var findOneAndUpdate = Q.nbind(EventModel.findOneAndUpdate, EventModel);
+		return findOneAndUpdate({id: raw.id}, raw, {upsert: true});
 	}
 
 	selectCalendar(user, calendarId, selected){
@@ -217,7 +261,6 @@ class GoogleHelper{
 		let findById = Q.nbind(Account.findById, Account);
 		return findById(user._id, {'thirdparty.google.calendars': 1})
 		.then(function(_user){
-			console.log(_user);
 			try{
 				return _user.thirdparty.google.calendars;
 			}
