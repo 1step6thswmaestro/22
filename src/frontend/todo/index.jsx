@@ -13,10 +13,7 @@ let store = configureStore({
   user: {
   	intergration: {}
   }, 
-  timetable: {
-  	tablelist: {}
-  }
-  , thirdparty: {}
+  thirdparty: {}
 });
 
 global.store = store;
