@@ -9,6 +9,18 @@ function init(app){
 	}
 
 	TimetableHelper.prototype.find = function(user, query, proj, opt){
+		function getTodayEvent(events) {
+			var _events = [];
+
+			_.each(events, event=>{
+				if (Date.now()+(1000*60*60*24) >= event.start.getTime() && event.start.getTime() >= Date.now()) {
+					_events.push(event);
+				}
+			});
+
+			return _events;
+		}
+
 		opt = opt || {};
 		opt.sort = opt.sort || {created: 1};
 
@@ -20,10 +32,10 @@ function init(app){
 			app.helper.priTaskHelper.find(user._id, undefined, time)
 		])
 		.then(results=>{
-			let events = results[0];
+			let events = getTodayEvent(results[0]);
 			let plist = results[1];
 
-			return results;
+			return events;
 		});
 	}
 

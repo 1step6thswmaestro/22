@@ -97,7 +97,6 @@ class TodoApp extends React.Component{
 				<Topbar/>
 				<MainTimeline tasklog={this.props.tasklog}/>
 				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
-				<DayView timetable={this.props.timetable} dispatch={this.props.dispatch} config={this.props.config} />
 				<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user}/>
 				<ConfigView dispatch={this.props.dispatch} config={this.props.config}/>
 				<If test={this.props.config.showCalendarList==true}>
