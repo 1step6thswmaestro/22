@@ -16,6 +16,7 @@ let store = configureStore({
   timetable: {
   	tablelist: {}
   }
+  , thirdparty: {}
 });
 
 global.store = store;

@@ -1,0 +1,9 @@
+{
+  "default": "develop",
+  "develop": {
+    "clientId": "199263260413-d9la67nokq2873broqrrm90k342mo98b.apps.googleusercontent.com"
+    , "scopes": ["https://www.googleapis.com/auth/calendar.readonly"]
+    , "clientSecret" : "isCJKLD0zsP33gwuUFd_ZaRD"
+    , "redirectUrl" : "http://localhost:8080/v1/google/oauthcallback"
+  }
+}
