@@ -8,7 +8,7 @@ export function fetchList(){
 	return (dispatch, getState) => {
 		return $.ajax({
 			url: '/v1/google/events/'
-			, type: 'get'
+			, type: 'put'
 		})
 		.then(
 			result => {

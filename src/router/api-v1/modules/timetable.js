@@ -8,7 +8,7 @@ module.exports = function(router, app){
 	let helper = app.helper;
 
 	router.get('/timetable', function(req, res){
-		helper.timetable.find(req.user._id)
+		helper.timetable.find(req.user, req.query)
 		.then(list=>res.send(list));
 	})
 }

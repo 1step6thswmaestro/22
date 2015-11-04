@@ -8,26 +8,23 @@ function init(app){
 	function TimetableHelper(){
 	}
 
-	TimetableHelper.prototype.find = function(userId, query, proj, opt){
+	TimetableHelper.prototype.find = function(user, query, proj, opt){
 		opt = opt || {};
 		opt.sort = opt.sort || {created: 1};
-		return Q.nbind(Timetable.find, Timetable)(Object.assign({userId}, query), proj, opt);
-	}
 
-	TimetableHelper.prototype.create = function(userId, body){
-		let Timetable = new Timetable(_.extend({userId}, body));
-		return Q.nbind(Timetable.save, Timetable)()
-		.then(function(obj){
-			return obj[0];
-		})
-	}
+		let update = query.update == 'true'; //default false
+		let reset = query.reset != 'false'; //default true
+		let time = query.time?parseInt(query.time):Date.now();
+		return Q.all([
+			app.helper.google.getCalendarEvents(user, {update, reset}),
+			app.helper.priTaskHelper.find(user._id, undefined, time)
+		])
+		.then(results=>{
+			let events = results[0];
+			let plist = results[1];
 
-	TimetableHelper.prototype.update = function(userId, query, doc){
-		return Q.nbind(Timetable.update, Timetable)(Object.assign({userId}, query), {$set: doc});
-	}
-
-	TimetableHelper.prototype.findOneAndUpdate = function(userId, query, doc){
-		return Q.nbind(Timetable.findOneAndUpdate, Timetable)(Object.assign({userId}, query), {$set: doc});
+			return results;
+		});
 	}
 
 	app.helper.timetable = new TimetableHelper();
