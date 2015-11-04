@@ -138,7 +138,37 @@ class GoogleHelper{
 				return find({userId: user._id, calendarId: {$in: list}}, undefined, {sort: {start: 1}});
 			}
 		})
+	}
 
+	getCalendarEventsToday(user, opt){
+		let now = null;
+		let events = null;
+
+		function getTodayEvent(events) {
+			var _events = [];
+
+			_.each(events, event=>{
+				if (now+(1000*60*60*24) >= event.start.getTime() && event.start.getTime() >= now) {
+					_events.push(event);
+				}
+			});
+
+			return _events;
+		}
+
+		now = Date.now();
+		now = now - now%(1000*60*30);
+
+		opt = opt || {};
+		opt.sort = opt.sort || {created: 1};
+
+		let update = opt.update == 'true'; //default false
+		let reset = opt.reset != 'false'; //default true
+		return Q(this.getCalendarEvents(user, {update, reset}))
+		.then(results=>{
+			events = getTodayEvent(results);
+			return events;
+		});
 	}
 
 	_updateCalendarEvents(user, opt){

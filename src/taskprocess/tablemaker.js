@@ -49,7 +49,7 @@ class TimeMaker{
 		}))
 		.then(tasks=>{
 			_.each(tasks, task=>{
-				let start = getTimeslot(task.duedate)-Math.floor((task.estimation*2));
+				let start = getTimeslot(task.duedate)-Math.floor((task.estimation*2))-1;
 				let end = getTimeslot(task.duedate);
 
 				if (now <= end && end < now+48) {

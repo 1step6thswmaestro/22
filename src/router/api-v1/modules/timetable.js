@@ -10,14 +10,14 @@ module.exports = function(router, app){
 	let tableMaker = new TableMaker(app);
 
 	router.get('/timetable', function(req, res){
-		helper.timetable.find(req.user, req.query)
+		helper.google.getCalendarEventsToday(req.user, req.query)
 		.then(events=>tableMaker.make(req.user._id, events))
 		.then(list=>{res.send(list);})
 		.fail(err=>console.log(err));
 	})
 
 	router.put('/timetable', function(req, res){
-		helper.timetable.find(req.user, {update: true, reset: false})
+		helper.google.getCalendarEventsToday(req.user, {update: true, reset: false})
 		.then(events=>tableMaker.make(req.user._id, events))
 		.then(list=>{res.send(list);})
 		.fail(err=>console.log(err));
