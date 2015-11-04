@@ -49,13 +49,13 @@ class TimeMaker{
 		}))
 		.then(tasks=>{
 			_.each(tasks, task=>{
-				let start = getTimeslot(task.duedate)
-				let end = getTimeslot(task.duedate)
+				let start = getTimeslot(task.duedate)-Math.floor((task.estimation*2));
+				let end = getTimeslot(task.duedate);
 
 				if (now <= end && end < now+48) {
 
 					let tableTask = {
-						tableslotStart: start-4,
+						tableslotStart: start,
 						tableslotEnd: end,
 						summary: task.name
 					}
@@ -77,10 +77,6 @@ class TimeMaker{
 		this.userId = userId;
 
 		return Q(this.process());
-
-		//return Q(app.helper.priTaskHelper.find(userId, undefined))
-		//.then(plist=>Q(this.process(userId, plist)))
-		//.fail(err=>{console.log(err)})
 	}
 }
 
