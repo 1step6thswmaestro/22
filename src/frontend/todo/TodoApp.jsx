@@ -135,6 +135,8 @@ function mapStateToProps(state){
 
 	props.tasks.activeList = _.map(_activeList, _id => state.tasks.tasks[_id]);
 
+	props.timetable.timelist = state.timetable.timelist;
+
 	return props;
 };
 

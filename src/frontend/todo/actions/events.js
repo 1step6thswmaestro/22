@@ -19,3 +19,19 @@ export function fetchList(){
 		)
 	}
 }
+
+export function fetchTimetable(){
+	return (dispatch, getState) => {
+		return $.ajax({
+			url: '/v1/timetable/'
+			, type: 'put'
+		})
+		.then(
+			result => {
+				console.log(result);
+				dispatch({type: type.FETCH_EVENT_LIST, list: result});
+			}
+			, err => console.error(err)
+		)
+	}
+}

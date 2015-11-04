@@ -8,7 +8,7 @@ import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
 import { fetchList, fetchPrioritizedList, makeNewItem, removeItem } from '../actions/tasks'
-import { fetchList as fetchEventList } from '../actions/events'
+import { fetchList as fetchEventList, fetchTimetable } from '../actions/events'
 
 import _ from 'underscore'
 
@@ -22,7 +22,8 @@ class TaskView extends React.Component{
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch(fetchList());
-		dispatch(fetchEventList());
+		//dispatch(fetchEventList());
+		dispatch(fetchTimetable());
 		dispatch(fetchPrioritizedList());
 	}
 
