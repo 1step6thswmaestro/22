@@ -64,7 +64,12 @@ class TimeMaker{
 				}
 			})
 		})
-		.then(function(){return timetable;});
+		.then(function(){
+			timetable.sort(function(a, b){
+				return a.tableslotStart-b.tableslotStart;
+			});
+			return timetable;
+		});
 	}
 
 	make(userId, events) {
