@@ -86,8 +86,10 @@ class TimeMaker{
 		.then(tasks => _.map(tasks, task=>{
 			let _now = now;
 			now += 2;
+
 			return {
-				tableslotStart: _now
+				taskId: task._id
+				, tableslotStart: _now
 				, tableslotEnd: now
 				, summary: task.name
 				, estimation: task.estimation

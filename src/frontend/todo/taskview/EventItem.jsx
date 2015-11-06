@@ -40,7 +40,7 @@ class EventItem extends React.Component{
 		console.log({event});
 
 		return (
-			<div className='table-item'>
+			<div className='table-item' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} >
 				<div className='table-item-header border-right'>
 					<If test={important}>
 						<i className='fa fa-exclamation' onClick={this.setImportant.bind(this, false)}></i>

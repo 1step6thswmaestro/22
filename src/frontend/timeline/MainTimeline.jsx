@@ -12,11 +12,13 @@ export default class MainTimeline extends React.Component{
 	}
 
 	render(){
+		let { focusedTask } = this.props.config;
 		let elements = _.map(this.props.timetable.list, item=>{
 			return {
 				begin: (item.tableslotStart) * (30 * 60 * 1000)
 				, end: (item.tableslotEnd) * (30 * 60 * 1000)
 				, content: item.summary
+				, focused: item.taskId == focusedTask
 			}
 		})
 

@@ -4,6 +4,7 @@
 
 .task-log-elem{
 	fill: #FEE7DF;
+	transition: 0.3s;
 	
 	&:hover{
 		fill: #FEB4B9;
@@ -14,6 +15,10 @@
 		height: 40px;
 		delay: 0.2s;
 		transition: 0.3s;
+	}
+
+	&.focused{
+		fill: rgb(163, 219, 189);
 	}
 }
 

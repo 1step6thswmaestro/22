@@ -9,11 +9,11 @@
 	.table-item-header{
 		display: inline-block;
 		width: 40px;
+		text-align: center;
 	}
 
 	.date{
 		width: 55px;
-		text-align: center;
 		background: rgba(123, 68, 49, 0.15);
 		font-family: 'Kelly Slab', cursive;
 		font-size: 11pt;
@@ -21,6 +21,10 @@
 
 	.date2{
 		background: rgba(123, 68, 49, 0.25);
+	}
+
+	.border-right{
+		border-right: 1px solid #ccc;
 	}
 }
 
