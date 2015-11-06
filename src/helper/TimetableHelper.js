@@ -25,7 +25,6 @@ function init(app){
 		let table = new Timetable(_.extend({userId}, body));
 		return Q.nbind(table.save, table)()
 		.then(function(obj){
-			console.log({obj});
 			return obj[0];
 		})
 		.fail(err=>logger.error(err))

@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var Q = require('q');
 
 const SLOT_SIZE = 1000*60*30;
+const TIMELEVEL_SIZE = 3; //hours
 
 class TimeMaker{
 
@@ -28,9 +29,42 @@ class TimeMaker{
 		return Math.floor(time.getTime()/SLOT_SIZE);
 	}
 
+	getTimeLevel(task) {
+		let remainTime = ((new Date(task.duedate) - Date.now()) / (1000*60*60)).toFixed(1);
+		let estimationTime = task.estimation;
+
+		let level = Math.floor((remainTime - estimationTime)/TIMELEVEL_SIZE);
+
+		console.log(task.name, level);
+		return level;
+	}
+
+	sortByTimelevel(_a, _b) {
+		return _a.timelevel-_b.timelevel;
+	}
+
+	sortByTime(_a, _b) {
+		return _a.tableslotStart-_b.tableslotStart;
+	}
+
+	makeNewEvent(_id, _start, _end, _summary) {
+		let newVal = {
+			userId: _id,
+			tableslotStart: _start, 
+			tableslotEnd: _end,
+			summary: _summary
+		}
+
+		return newVal;
+	}
+
 	process() {
 		let getTimeslot = this.getTimeslot;
+		let getTimeLevel = this.getTimeLevel;
 		let isTaken = this.isTaken;
+		let makeNewEvent = this.makeNewEvent;
+		let sortByTime = this.sortByTime;
+		let sortByTimelevel = this.sortByTimelevel;
 
 		let now = Math.floor(Date.now()/SLOT_SIZE);
 		let timetable = [];
@@ -39,42 +73,33 @@ class TimeMaker{
 			let start = getTimeslot(event.start);
 			let end = getTimeslot(event.end);
 
-			let tableEvent = {
-				userId: this.userId,
-				tableslotStart: start,
-				tableslotEnd: end,
-				summary: event.summary
-			}
+			let tableEvent = makeNewEvent(this.userId, start, end, event.summary);
 
-			if (!isTaken(this.events, tableEvent)) timetable.push(tableEvent);
+			if (!isTaken(this.events, tableEvent))
+				timetable.push(tableEvent);
 		});
 
-		return Q(this.app.helper.priTaskHelper.find(this.userId, undefined, now))
+		return Q(this.app.helper.taskHelper.find(this.userId))
 		.then(plist=>plist.map(function(task){
+			task.timelevel = getTimeLevel(task);
 			return task;
 		}))
 		.then(tasks=>{
+			tasks.sort(sortByTimelevel.bind(this));
+
 			_.each(tasks, task=>{
 				let start = getTimeslot(task.duedate)-Math.floor((task.estimation*2))-1;
 				let end = getTimeslot(task.duedate);
 
-				if (now <= end && end < now+48) {
+				if (now <= end && end < now + (48*7)) {
+					let tableTask = makeNewEvent(this.userId, start, end, task.name);
 
-					let tableTask = {
-						userId: this.userId,
-						tableslotStart: start,
-						tableslotEnd: end,
-						summary: task.name
-					}
-
-				if (!isTaken(this.events, tableTask)) timetable.push(tableTask);
+					if (!isTaken(this.events, tableTask)) timetable.push(tableTask);
 				}
 			})
 		})
 		.then(function(){
-			timetable.sort(function(a, b){
-				return a.tableslotStart-b.tableslotStart;
-			});
+			timetable.sort(sortByTime);
 			return timetable;
 		});
 	}

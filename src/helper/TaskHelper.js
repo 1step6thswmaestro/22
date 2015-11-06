@@ -14,6 +14,12 @@ function init(app){
 		return Q.nbind(Task.find, Task)(Object.assign({userId}, query), proj, opt);
 	}
 
+	TaskHelper.prototype.findByEstimation = function(userId, query, proj, opt){
+		opt = opt || {};
+		opt.sort = opt.sort || {estimation: 1};
+		return Q.nbind(Task.find, Task)(Object.assign({userId}, query), proj, opt);
+	}
+
 	TaskHelper.prototype.create = function(userId, body){
 		let task = new Task(_.extend({userId}, body));
 		return Q.nbind(task.save, task)()
