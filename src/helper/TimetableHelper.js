@@ -12,7 +12,7 @@ function init(app){
 
 	TimetableHelper.prototype.find = function(user, query, proj, opt){
 		opt = opt || {};
-		opt.sort = opt.sort || {created: 1};
+		opt.sort = opt.sort || {tableslotStart: 1};
 		return Q.nbind(Timetable.find, Timetable)(Object.assign(query), proj, opt);
 	}
 

@@ -24,7 +24,7 @@ export function fetchTimetable(){
 	return (dispatch, getState) => {
 		return $.ajax({
 			url: '/v1/timetable/'
-			, type: 'put'
+			, type: 'get'
 		})
 		.then(
 			result => {

@@ -14,7 +14,7 @@ module.exports = function(_router, app){
 
 	router.get('/', function(req, res){
 		helper.timetable.find(req.user._id, {userId: req.user._id})
-		.then(results=>res.send({list: results}));
+		.then(results=>res.send(results));
 	})
 
 	router.get('/make', function(req, res){
