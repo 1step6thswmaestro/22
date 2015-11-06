@@ -10,6 +10,10 @@
 		display: inline-block;
 		width: 40px;
 		text-align: center;
+
+		&.property:hover{
+			background: rgba(123, 68, 68, 0.35);
+		}
 	}
 
 	.date{
@@ -23,20 +27,41 @@
 		background: rgba(123, 68, 49, 0.25);
 	}
 
+	.border-left{
+		border-left: 1px solid #ccc;
+	}
+
 	.border-right{
 		border-right: 1px solid #ccc;
+	}
+
+	.float-right{
+		float: right;
+	}
+
+	.task-progress-container{
+		width: 80px;
+		background: rgba(123, 68, 49, 0.1);
+		height: 100%;
+		text-align: left;
+		padding-left: 10px;
+	}
+
+	&:first-child .task-progress-container{
+		border-top-right-radius: 10px;
+	}
+
+	&:last-child .task-progress-container{
+		border-bottom-right-radius: 10px;
 	}
 }
 
 
 .task-progress{
-	position: absolute;
-	top: 15px;
-    right: 25px;
 	height: 100%;
 	.progress-elem{
-		fill: rgba(172, 95, 70, 1.0);
+		fill: rgba(172, 95, 70, 0.45);
 		width: 5px;
-		height: 20px;
+		height: 30px;
 	}
 }

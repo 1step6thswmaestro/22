@@ -16,7 +16,7 @@ export default class TaskProgress extends React.Component{
 			let _x = x;
 			x += 5 + 3;
 			return (
-				<rect x={_x} className='progress-elem'>
+				<rect x={_x} y={10} className='progress-elem'>
 				</rect>
 			)
 		})

@@ -14,7 +14,6 @@ class EventItem extends React.Component{
 
 	setImportant(value){
 		let { dispatch } = this.props;
-		alert(value);
 		if(this.props.task)
 			dispatch(setTaskProperty(this.props.task, {important: value}));
 	}
@@ -37,18 +36,19 @@ class EventItem extends React.Component{
 		let end = moment(new Date(event.tableslotEnd * (1000*60*30)));
 		let important = task && task.important==true;
 
-		console.log({event});
-
 		return (
 			<div className='table-item' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} >
-				<div className='table-item-header border-right'>
-					<If test={important}>
-						<i className='fa fa-exclamation' onClick={this.setImportant.bind(this, false)}></i>
-					</If>
-					<If test={!important}>
-						<i className='fa fa-circle-o' onClick={this.setImportant.bind(this, true)}></i>
-					</If>
-				</div>
+				<If test={important}>
+					<div className='table-item-header border-right property' onClick={this.setImportant.bind(this, false)}>
+						<i className='fa fa-exclamation'></i>
+					</div>
+				</If>
+				<If test={!important}>
+					<div className='table-item-header border-right property' onClick={this.setImportant.bind(this, true)}>
+						<i className='fa fa-circle-o'></i>
+					</div>
+				</If>
+
 				<div className='table-item-header border-right'>
 					<i className='fa fa-check-circle'></i>
 				</div>
@@ -62,7 +62,9 @@ class EventItem extends React.Component{
 					{end.format("HH:mm")}
 				</div>
 				{event.summary}
-				<TaskProgress count={event.estimation}/>
+				<div className='table-item-header border-left float-right task-progress-container'>
+					<TaskProgress count={event.estimation * 3}/>
+				</div>
 			</div>
 		);
 	}
