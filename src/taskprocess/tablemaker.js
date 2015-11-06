@@ -35,6 +35,7 @@ class TimeMaker{
 			let end = getTimeslot(event.end);
 
 			let tableEvent = {
+				userId: this.userId,
 				tableslotStart: start,
 				tableslotEnd: end,
 				summary: event.summary
@@ -55,6 +56,7 @@ class TimeMaker{
 				if (now <= end && end < now+48) {
 
 					let tableTask = {
+						userId: this.userId,
 						tableslotStart: start,
 						tableslotEnd: end,
 						summary: task.name
