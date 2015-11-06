@@ -53,7 +53,7 @@ module.exports = React.createClass({
 
     var t = `translate(0 ,${props.xAxisOffset + props.height})`;
 
-    var tickArguments, tickArguments2;
+    var tickArguments, tickArguments2, tickArguments3;
     if (typeof props.xAxisTickCount !== 'undefined') {
       tickArguments = [props.xAxisTickCount];
     }
@@ -61,6 +61,7 @@ module.exports = React.createClass({
     if (typeof props.xAxisTickInterval !== 'undefined') {
       tickArguments = [d3.time[props.xAxisTickInterval.unit], props.xAxisTickInterval.interval];
       tickArguments2 = [d3.time[props.xAxisTickInterval2.unit], props.xAxisTickInterval2.interval];
+      tickArguments3 = [d3.time[props.xAxisTickInterval3.unit], props.xAxisTickInterval3.interval];
     }
 
     var fontSize = props.fontSize;
@@ -69,6 +70,8 @@ module.exports = React.createClass({
     var tickFormatting2 = [];
     var tickValues = xScale.ticks.apply(xScale, tickArguments);
     var tickValues2 = xScale.ticks.apply(xScale, tickArguments2);
+    var tickValues3 = xScale.ticks.apply(xScale, tickArguments3);
+    tickValues3 = _.without(tickValues3, tickValues, tickValues2);
     tickValues2 = _.without(tickValues2, tickValues);
 
     console.log({tickValues, tickValues2});
@@ -84,7 +87,7 @@ module.exports = React.createClass({
           tickArguments={tickArguments}
           tickStroke={props.tickStroke}
           tickTextStroke={props.tickTextStroke}
-          innerTickSize={props.tickSize}
+          innerTickSize={props.tickSize * 1.3}
           scale={props.xScale}
           orient={props.xOrient}
           orient2nd={props.yOrient}
@@ -102,7 +105,25 @@ module.exports = React.createClass({
           tickArguments={tickArguments}
           tickStroke={props.tickStroke}
           tickTextStroke={props.tickTextStroke}
-          innerTickSize={props.tickSize}
+          innerTickSize={props.tickSize * 1.0}
+          scale={props.xScale}
+          orient={props.xOrient}
+          orient2nd={props.yOrient}
+          height={props.height}
+          width={props.width}
+          gridVertical={props.gridVertical}
+          gridVerticalStroke={props.gridVerticalStroke}
+          gridVerticalStrokeWidth={props.gridVerticalStrokeWidth}
+          gridVerticalStrokeDash={props.gridVerticalStrokeDash}
+          fontSize={fontSize}
+        />
+        <AxisTicks
+          tickValues={tickValues3}
+          tickFormatting={()=>''}
+          tickArguments={tickArguments}
+          tickStroke={props.tickStroke}
+          tickTextStroke={props.tickTextStroke}
+          innerTickSize={props.tickSize * 0.5}
           scale={props.xScale}
           orient={props.xOrient}
           orient2nd={props.yOrient}

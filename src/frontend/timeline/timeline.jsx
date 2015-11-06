@@ -6,6 +6,7 @@ import d3tip from 'd3-tip';
 import { Chart, XAxis, YAxis } from '../d3/common';
 import { ViewBoxMixin } from '../d3/mixins';
 import _ from 'underscore';
+import classnames from 'classnames'
 var TaskStateType = require('../../constants/TaskStateType');
 
 
@@ -17,6 +18,7 @@ export default class Timeline extends React.Component{
 		this.state = {
 			tickInterval: {unit: 'hour', interval: 3}
 			, tickInterval2: {unit: 'hour', interval: 1}
+			, tickInterval3: {unit: 'minute', interval: 30}
 			, domainSize: 24
 			, leftOffset: 0
 		}
@@ -112,7 +114,7 @@ export default class Timeline extends React.Component{
 
 			return (
 				<g>
-					<rect className='task-log-elem' x={x0} width={width+1} y='0' height='40' 
+					<rect className={classnames({'task-log-elem': true, 'focused': log.focused})} x={x0} width={width+1} y='0' height='40' 
 						onClick={this.clickLog.bind(this, log)}
 						onMouseOver={this.onMouseOver.bind(this, tip, log)}
 						onMouseOut={this.onMouseOut.bind(this, tip, log)}
@@ -215,6 +217,7 @@ export default class Timeline extends React.Component{
 					xAxisTickValues={props.xAxisTickValues}
 					xAxisTickInterval={this.state.tickInterval}
 					xAxisTickInterval2={this.state.tickInterval2}
+					xAxisTickInterval3={this.state.tickInterval3}
 					xAxisTickCount={props.xAxisTickCount}
 					xAxisLabel={props.xAxisLabel}
 					xAxisLabelOffset={props.xAxisLabelOffset}
@@ -231,6 +234,7 @@ export default class Timeline extends React.Component{
 					stroke='#ddd'
 					tickStroke='#ddd'
 					fontSize={10}
+					tickSize={8}
 				/>
 	  		</g>
 		);
