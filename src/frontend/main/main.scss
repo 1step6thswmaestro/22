@@ -10,8 +10,22 @@
 	};
 };
 
+#main-timeline-container{
+	height: 60px;
+}
+
 #main-timeline{
 	margin-bottom: 0px;
+	z-index: 10;
+}
+
+.fixed-to-top{
+	#main-timeline{
+		position: fixed;
+		top: 0px;
+
+		background: rgba(243, 149, 118, 1.0);
+	}
 }
 
 .task-banner{

@@ -8,11 +8,21 @@
 	&:hover{
 		fill: #FEB4B9;
 	}
+
+	&:hover + .task-log-elem-bottom{
+		y: 0;
+		height: 40px;
+		delay: 0.2s;
+		transition: 0.3s;
+	}
 }
 
 .task-log-elem-bottom{
 	fill: #95bca7;
+	pointer-events: none;
 }
+
+
 
 .timeline {
 	.rep-time{

@@ -23,13 +23,15 @@ import GoogleCalendarList from '../calendar/GoogleCalendarList'
 import Topbar from '../main/Topbar'
 import TaskStateType from '../../constants/TaskStateType';
 import { syncUserStatus } from '../todo/actions/user';
+import $ from 'jquery';
 
 class TodoApp extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
 			location: '',
-			currentView: 'task' // Save current user's view
+			currentView: 'task', // Save current user's view
+			timelineState: ''
 		};
 
 		let { dispatch } = this.props;
@@ -47,6 +49,14 @@ class TodoApp extends React.Component{
 			// Send still alive signal on every 5 min.
 			// NOTE: When user inactive the tab in Chrome, the timer is paused.
 			setInterval(this.sendStillAlive, 5*60*1000);
+		});
+
+		var self = this;
+		var wrap = window;
+		$(wrap).scroll(function(){
+			let timelineState = $(wrap).scrollTop() > 30?'fixed-to-top':'';
+			if(timelineState != self.state.timelineState)
+				self.setState(Object.assign({}, self.state, {timelineState}));
 		});
 	}
 
@@ -93,9 +103,9 @@ class TodoApp extends React.Component{
 
 	render() {
 		return (
-			<div className="task-app-container">
+			<div className={"task-app-container " + this.state.timelineState}>
 				<Topbar/>
-				<MainTimeline tasklog={this.props.tasklog}/>
+				<MainTimeline timetable={this.props.timetable}/>
 				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
 				<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user}/>
 				<ConfigView dispatch={this.props.dispatch} config={this.props.config}/>
@@ -109,7 +119,7 @@ class TodoApp extends React.Component{
 						tasklog={this.props.tasklog}
 						global={this.props.global}
 						config={this.props.config}
-						events={this.props.events}
+						timetable={this.props.timetable}
 					/>
 				</If>
 				<If test={this.props.config.userview==true}>
