@@ -78,6 +78,23 @@ class TimeMaker{
 
 		return Q(this.process());
 	}
+
+	testData(user){
+		let getTimeslot = this.getTimeslot;
+		let now = Math.floor(Date.now()/SLOT_SIZE);
+		return this.app.helper.taskHelper.find(user._id)
+		.then(tasks => _.map(tasks, task=>{
+			let _now = now;
+			now += 2;
+			return {
+				tableslotStart: _now
+				, tableslotEnd: now
+				, summary: task.name
+				, estimation: task.estimation
+			}
+		}));
+
+	}
 }
 
 module.exports = TimeMaker;

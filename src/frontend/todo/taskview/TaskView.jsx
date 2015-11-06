@@ -8,7 +8,7 @@ import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
 import { fetchList, fetchPrioritizedList, makeNewItem, removeItem } from '../actions/tasks'
-import { fetchList as fetchEventList, fetchTimetable } from '../actions/events'
+import { fetchTimetable } from '../actions/timetable'
 
 import _ from 'underscore'
 
@@ -22,7 +22,6 @@ class TaskView extends React.Component{
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch(fetchList());
-		//dispatch(fetchEventList());
 		dispatch(fetchTimetable());
 		dispatch(fetchPrioritizedList());
 	}
@@ -61,10 +60,8 @@ class TaskView extends React.Component{
 		var tasks = this.props.tasks;
 		var tasklog = this.props.tasklog;
 
-		var events = this.props.events;
+		var timetable = this.props.timetable;
 		const { global, config, dispatch } = this.props;
-
-		console.log({events});
 
 	    function createTaskElements(list){
 			return _.map(list, task => (
@@ -87,14 +84,8 @@ class TaskView extends React.Component{
 					<div className="task-list-wrapper">
 						<div className="task-list">
 							<div className="row">
-								<div className="col-sm-6 no-padding-right">
-									{createTaskElements(
-										config.displayActiveListOnly?
-											tasks.activeList
-											:tasks.plist)}
-								</div>
-								<div className="col-sm-6 no-padding-left">
-									{createEventElements(events.list)}
+								<div className="col-sm-12">
+									{createEventElements(timetable.list)}
 								</div>
 							</div>
 						</div>

@@ -11,6 +11,7 @@ module.exports = function(router, app){
 
 	router.get('/timetable', function(req, res){
 		helper.google.getCalendarEventsToday(req.user, req.query)
+		.then(events=>{logger.log(events); return events;})
 		.then(events=>tableMaker.make(req.user._id, events))
 		.then(list=>{res.send(list);})
 		.fail(err=>console.log(err));
@@ -19,6 +20,12 @@ module.exports = function(router, app){
 	router.put('/timetable', function(req, res){
 		helper.google.getCalendarEventsToday(req.user, {update: true, reset: false})
 		.then(events=>tableMaker.make(req.user._id, events))
+		.then(list=>{res.send(list);})
+		.fail(err=>console.log(err));
+	})
+
+	router.put('/timetable/test', function(req, res){
+		tableMaker.testData(req.user)
 		.then(list=>{res.send(list);})
 		.fail(err=>console.log(err));
 	})
