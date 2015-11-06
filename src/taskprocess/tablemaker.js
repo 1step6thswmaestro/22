@@ -12,11 +12,14 @@ class TimeMaker{
 		this.app = app;
 	}
 
-	isTaken(slottime) {
+	isTaken(events, _event) {
+		let starttime = _event.tableslotStart;
+		let endtime = _event.tableslotEnd;
 		let result = false;
 		_.each(events, event=>{
-			if (event.start.getTime() <= slottime && slottime <= event.end.getTime())
-				result.true;
+			if (event.start.getTime() <= starttime && starttime <= event.end.getTime()
+				&& event.start.getTime() <= endtime && endtime <= event.end.getTime())
+				result = true;
 		});
 		return result;
 	}
@@ -27,6 +30,8 @@ class TimeMaker{
 
 	process() {
 		let getTimeslot = this.getTimeslot;
+		let isTaken = this.isTaken;
+
 		let now = Math.floor(Date.now()/SLOT_SIZE);
 		let timetable = [];
 
@@ -41,7 +46,7 @@ class TimeMaker{
 				summary: event.summary
 			}
 
-			timetable.push(tableEvent);
+			if (!isTaken(this.events, tableEvent)) timetable.push(tableEvent);
 		});
 
 		return Q(this.app.helper.priTaskHelper.find(this.userId, undefined, now))
@@ -62,7 +67,7 @@ class TimeMaker{
 						summary: task.name
 					}
 
-					timetable.push(tableTask);
+				if (!isTaken(this.events, tableTask)) timetable.push(tableTask);
 				}
 			})
 		})
