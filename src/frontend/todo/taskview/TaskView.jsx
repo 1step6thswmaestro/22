@@ -70,8 +70,9 @@ class TaskView extends React.Component{
 	    }
 
 	    function createEventElements(list){
+	    	console.log('createEventElements', list);
 			return _.map(list, item => (
-		        <EventItem key={item._id} event={item} dispatch={dispatch} global={global} />)
+		        <EventItem key={item._id} event={item} task={tasks.tasks[item.taskId]} dispatch={dispatch} global={global} />)
 			);
 	    }
 
