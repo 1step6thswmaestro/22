@@ -5,6 +5,7 @@ var d3 = require('d3');
 var AxisTicks = require('./AxisTicks');
 var AxisLine = require('./AxisLine');
 var Label = require('./Label');
+var _ = require('underscore');
 
 module.exports = React.createClass({
 
@@ -52,16 +53,25 @@ module.exports = React.createClass({
 
     var t = `translate(0 ,${props.xAxisOffset + props.height})`;
 
-    var tickArguments;
+    var tickArguments, tickArguments2;
     if (typeof props.xAxisTickCount !== 'undefined') {
       tickArguments = [props.xAxisTickCount];
     }
 
     if (typeof props.xAxisTickInterval !== 'undefined') {
       tickArguments = [d3.time[props.xAxisTickInterval.unit], props.xAxisTickInterval.interval];
+      tickArguments2 = [d3.time[props.xAxisTickInterval2.unit], props.xAxisTickInterval2.interval];
     }
 
     var fontSize = props.fontSize;
+
+    var xScale = props.xScale;
+    var tickFormatting2 = [];
+    var tickValues = xScale.ticks.apply(xScale, tickArguments);
+    var tickValues2 = xScale.ticks.apply(xScale, tickArguments2);
+    tickValues2 = _.without(tickValues2, tickValues);
+
+    console.log({tickValues, tickValues2});
 
     return (
       <g
@@ -71,6 +81,24 @@ module.exports = React.createClass({
         <AxisTicks
           tickValues={props.xAxisTickValues}
           tickFormatting={props.tickFormatting}
+          tickArguments={tickArguments}
+          tickStroke={props.tickStroke}
+          tickTextStroke={props.tickTextStroke}
+          innerTickSize={props.tickSize}
+          scale={props.xScale}
+          orient={props.xOrient}
+          orient2nd={props.yOrient}
+          height={props.height}
+          width={props.width}
+          gridVertical={props.gridVertical}
+          gridVerticalStroke={props.gridVerticalStroke}
+          gridVerticalStrokeWidth={props.gridVerticalStrokeWidth}
+          gridVerticalStrokeDash={props.gridVerticalStrokeDash}
+          fontSize={fontSize}
+        />
+        <AxisTicks
+          tickValues={tickValues2}
+          tickFormatting={()=>''}
           tickArguments={tickArguments}
           tickStroke={props.tickStroke}
           tickTextStroke={props.tickTextStroke}

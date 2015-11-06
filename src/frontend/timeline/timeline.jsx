@@ -2,10 +2,12 @@
 
 import React from 'react'
 import d3 from 'd3'
+import d3tip from 'd3-tip';
 import { Chart, XAxis, YAxis } from '../d3/common';
 import { ViewBoxMixin } from '../d3/mixins';
 import _ from 'underscore';
 var TaskStateType = require('../../constants/TaskStateType');
+
 
 export default class Timeline extends React.Component{
 	constructor(props){
@@ -13,7 +15,8 @@ export default class Timeline extends React.Component{
 		Object.assign(this, ViewBoxMixin);
 
 		this.state = {
-			tickInterval: {unit: 'hour', interval: 6}
+			tickInterval: {unit: 'hour', interval: 3}
+			, tickInterval2: {unit: 'hour', interval: 1}
 			, domainSize: 24
 			, leftOffset: 0
 		}
@@ -72,11 +75,10 @@ export default class Timeline extends React.Component{
 	}
 
 	renderLogs(){
-		let logs = this.state.logs;
-		logs = _.filter(this.state.logs, log=>log._time.begin!=undefined)
-		let items = _.map(logs, log=>{
-			let begin = new Date(log._time.begin);
-			let end = new Date(log._time.end);
+		let elements = this.state.elements;
+		let items = _.map(elements, log=>{
+			let begin = new Date(log.begin);
+			let end = new Date(log.end);
 			let x0 = this.state.xScale(begin);
 			let x1 = this.state.xScale(end);
 			let width = x1-x0;
@@ -100,9 +102,21 @@ export default class Timeline extends React.Component{
 				width = 7;
 			}
 
+			console.log({begin, end, x0, x1, width});
+
+			var tip = d3tip(d3)().attr('class', 'd3-tip').html(function(d) { return d.content; });
+			if(this.props.svg){
+				console.log('d3-tip', this.props.svg, tip);
+				this.props.svg.call(tip);
+			}
+
 			return (
 				<g>
-					<rect className='task-log-elem' x={x0} width={width} y='0' height='40' onClick={this.clickLog.bind(this, log)}>
+					<rect className='task-log-elem' x={x0} width={width+1} y='0' height='40' 
+						onClick={this.clickLog.bind(this, log)}
+						onMouseOver={this.onMouseOver.bind(this, tip, log)}
+						onMouseOut={this.onMouseOut.bind(this, tip, log)}
+					>
 					</rect>
 					<rect className='task-log-elem-bottom' x={x0} width={width} y='37' height='3' onClick={this.clickLog.bind(this, log)}>
 					</rect>
@@ -113,6 +127,14 @@ export default class Timeline extends React.Component{
 		return (
 			{items}
 		)
+	}
+
+	onMouseOver(tip, element, e){
+		tip.show.apply(this, [element, e.target]);
+	}
+
+	onMouseOut(tip, element, e){
+		tip.hide.apply(this, [element, e.target]);
 	}
 
 	renderNow(){
@@ -134,44 +156,10 @@ export default class Timeline extends React.Component{
 	render() {
 		var props = this.props;
 
-		if(!this.props.logs || !this.props.logs.length){
-			return (<g>
-				<rect ref='background' width='100%' height='100%' fill='#fff'>
-				</rect>
-			</g>)
-		}
-
 		var interpolationType = props.interpolationType || (props.interpolate ? 'cardinal' : 'linear');
 
-		let logs = [];
-		let last;
-		for(var i in this.props.logs){
-			iterateLogs(this.props.logs[i]);
-		}
-		if(last){
-			last._time.end = Date.now();
-			logs.push(last);
-			last = undefined;
-		}
-
-		function iterateLogs(log){
-			last = last || log;
-			last._time = last._time || {};
-
-			let type = log.type;
-			if(type == TaskStateType.named.start.id){
-				last._time.begin = last._time.begin || log.time;
-			}
-			else if(type == TaskStateType.named.pause.id 
-				|| type == TaskStateType.named.pause.id){
-				last._time.end = log.time;
-				logs.push(last);
-				last = undefined;
-			}
-
-		}
-		this.state.logs = logs;
-		// Calculate inner chart dimensions
+		let elements = this.props.elements || [];
+		this.state.elements = elements;
 
 		var width = this.props.width;
 		var height = this.props.height;		
@@ -183,7 +171,7 @@ export default class Timeline extends React.Component{
 			.range([innerHeight, 0]);
 
 		//var xValues = [new Date('2014-03-08T12:00:00.000Z'), new Date('2014-03-10T00:00:00.000Z')];
-		var xValues = _.map(this.props.logs, log=>new Date(log.time));
+		var xValues = _.map(this.props.elements, log=>new Date(log.time));
 		var domainWindow = d3.extent(xValues);
 		var domainSize = this.state.domainSize*60*60*1000;
 		var leftDomainWindow = [domainWindow[0], domainWindow[1]-domainSize];
@@ -226,6 +214,7 @@ export default class Timeline extends React.Component{
 					xScale={xScale}
 					xAxisTickValues={props.xAxisTickValues}
 					xAxisTickInterval={this.state.tickInterval}
+					xAxisTickInterval2={this.state.tickInterval2}
 					xAxisTickCount={props.xAxisTickCount}
 					xAxisLabel={props.xAxisLabel}
 					xAxisLabelOffset={props.xAxisLabelOffset}
