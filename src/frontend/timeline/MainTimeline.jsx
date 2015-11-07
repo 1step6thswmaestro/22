@@ -12,23 +12,36 @@ export default class MainTimeline extends React.Component{
 	}
 
 	render(){
-		let { focusedTask } = this.props.config;
+		let { focusedTableId, selectedTableId } = this.props.config;
+		let selectedTableItem;
 		let elements = _.map(this.props.timetable.list, item=>{
+
+			if(selectedTableId!=null && item._id == selectedTableId){
+				selectedTableItem = item;
+			}
+
 			return {
 				begin: (item.tableslotStart) * (30 * 60 * 1000)
 				, end: (item.tableslotEnd) * (30 * 60 * 1000)
 				, content: item.summary
-				, focused: item.taskId == focusedTask
+				, focused: focusedTableId!=null && item._id == focusedTableId
 			}
 		})
 
-		console.log({timetable: this.props.timetable});
-		console.log(this.props, elements);
+		let leftCursor;
+		if(selectedTableItem!=null){
+			leftCursor = new Date((selectedTableItem.tableslotStart) * (30 * 60 * 1000));
+		}
 
 		return (
 			<div id='main-timeline-container'>
 				<SvgContainer _id='main-timeline' width='100%' height='60px' ref='svg'>
-					<Timeline svg={d3.select(React.findDOMNode(this.refs.svg))} elements={elements} height={60} />
+					<Timeline 
+						svg={d3.select(React.findDOMNode(this.refs.svg))} 
+						elements={elements} 
+						height={60} 
+						leftCursor={leftCursor}
+					/>
 				</SvgContainer>
 			</div>
 		)
