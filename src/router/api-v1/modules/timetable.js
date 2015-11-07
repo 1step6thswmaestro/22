@@ -13,8 +13,10 @@ module.exports = function(_router, app){
 	_router.use('/timetable', router);
 
 	router.get('/', function(req, res){
-		helper.timetable.find(req.user._id, {userId: req.user._id})
-		.then(results=>res.send(results));
+		helper.timetable.find(req.user._id, {userId: req.user._id}, undefined, {sort: {tableslotStart: 1}})
+		.then(results=>{
+			res.send(results)
+		});
 	})
 
 	router.get('/make', function(req, res){
