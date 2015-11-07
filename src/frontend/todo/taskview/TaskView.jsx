@@ -2,6 +2,7 @@ import React from 'react'
 import TaskItem from './TaskItem'
 import TaskInputForm from './TaskInputForm'
 import MapImage from '../dialog/MapImage'
+import If from '../../utility/if'
 
 import { createStore } from 'redux'
 import { connect } from 'react-redux';
@@ -55,6 +56,23 @@ class TaskView extends React.Component{
 		});
 	}
 
+	addSleepTask(){
+		let time = new Date(this.props.global.time || Date.now());
+		let hour = time.getHours();
+		if(hour > 12){
+			time = new Date(time.getTime() + 24 * 60 * 60 * 1000);
+		}
+		time.setHours(12);
+		time.setMinutes(0);
+
+		let created = this.props.global.time || Date.now();
+		let duedate = time;
+
+		let data = {name: 'sleep', description: 'sleep', duedate, created, estimation: 8, adjustable: true};
+		const { dispatch } = this.props;
+		dispatch(makeNewItem(data));
+	}
+
 	render() {
 		var self = this;
 		var tasklog = this.props.tasklog;
@@ -72,18 +90,28 @@ class TaskView extends React.Component{
 					<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showInputDialog.bind(this)}>
 						Add New Task
 					</button>
+					<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.addSleepTask.bind(this)}>
+						Add Sleep Task
+					</button>
 					<div className="task-list-wrapper">
 						<div className="task-list">
 							<div className="row">
 								<div className="col-sm-12">
-									<TimeTable 
-										global={global} 
-										config={config} 
-										tasks={tasks} 
-										timetable={timetable} 
-										dispatch={dispatch}
-										tasklog={tasklog}
-									/>
+									<If test={this.props.config.showEvent!=false}>
+										<TimeTable 
+											global={global} 
+											config={config} 
+											tasks={tasks} 
+											timetable={timetable} 
+											dispatch={dispatch}
+											tasklog={tasklog}
+										/>
+									</If>
+									<If test={this.props.config.showEvent==false}>
+										<div>
+											{createTaskElements(tasks.plist)}
+										</div>
+									</If>
 								</div>
 							</div>
 						</div>
