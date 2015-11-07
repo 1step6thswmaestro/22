@@ -3,7 +3,7 @@ import gensim
 import numpy as np
 import os
 from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans, DBSCAN
+from sklearn.cluster import KMeans, DBSCAN, AffinityPropagation
 from sklearn.pipeline import Pipeline
 from sklearn.externals import joblib
 from Vectorizer import tasks_to_vectors
@@ -44,6 +44,9 @@ def decompose_and_cluster(tasks, word2vec, output_file, method='KMeans', option=
     elif method=='DBSCAN':
         print 'Training DBSCAN ... '
         cluster = DBSCAN(eps=option)
+    elif method=='Affinity':
+        print 'Training on Affinity Propagation..'
+        cluster = AffinityPropagation(preference=option)
 
     labels = cluster.fit_predict(whole_vector)
 
