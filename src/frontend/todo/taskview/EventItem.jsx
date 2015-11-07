@@ -83,7 +83,7 @@ class EventItem extends React.Component{
 					{event.summary}
 				</div>
 				<div className='table-item-header border-left float-right task-progress-container'>
-					<TaskProgress count={event.estimation * 3}/>
+					<TaskProgress count={event.estimation}/>
 				</div>
 			</div>
 		);
