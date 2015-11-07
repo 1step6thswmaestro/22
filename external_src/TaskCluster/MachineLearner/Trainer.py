@@ -8,6 +8,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.externals import joblib
 from Vectorizer import tasks_to_vectors
 
+from base_config import PCA_OPTION
+
 def train_and_save_vector(input_file, output_file):
     line_obj = gensim.models.word2vec.LineSentence(input_file)
     print 'Start to train word2vec model'
@@ -29,8 +31,11 @@ def decompose_and_cluster(tasks, word2vec, output_file, method='KMeans', option=
     """
     print 'Get task vector'
     whole_vector = tasks_to_vectors(tasks, word2vec)
-    print 'Down dimension...'
-    pca = PCA(5)
+
+    if PCA_OPTION:
+        print 'Down dimension...'
+        pca = PCA(5)
+
     d_vector = pca.fit_transform(whole_vector)
 #    print 'PCA Log Likelihood Score : ' + str(pca.score())
 
@@ -43,12 +48,16 @@ def decompose_and_cluster(tasks, word2vec, output_file, method='KMeans', option=
 
     labels = cluster.fit_predict(d_vector)
 
-    pipe = Pipeline(steps=[
-        ('w2v_200_to_5_PCA', pca), ('clustering', cluster)
-    ])
+    if PCA_OPTION:
+        cluster_clf = Pipeline(steps=[
+            ('w2v_200_to_5_PCA', pca), ('clustering', cluster)
+        ])
+    else:
+        cluster_clf = cluster
+
     if os.path.exists(output_file):
         os.remove(output_file)
-    joblib.dump(pipe, output_file, compress=3)
+    joblib.dump(cluster_clf, output_file, compress=3)
     print 'Complete dumping'
 
-    return pipe, labels
+    return cluster_clf, labels
