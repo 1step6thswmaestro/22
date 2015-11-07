@@ -55,8 +55,6 @@ def task_clustering(method, word2vec=None):
     # update task db
     webserver_query_pool.attach_task_label(_ids=_ids, labels=labels)
 
-
-
 def determine_cluster_numbers(log_length):
     # 네이버 블로그에서는 섹션을 총 31개로 나눔
     # 따라서, 정책은 다음과 같다

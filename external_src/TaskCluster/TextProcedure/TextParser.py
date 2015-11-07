@@ -20,7 +20,6 @@ def mk_training_file(content_list, file_path):
             a.write(content)
 
 def analyzing_morphem(content_list):
-
     if MORPHEM_OPTION=='Mecab':
         analyzer = Mecab()
         mytags = ['NNG', 'NNP', 'VV', 'VA', 'MM', 'SL', 'XR']

@@ -40,10 +40,10 @@ def decompose_and_cluster(tasks, word2vec, output_file, method='KMeans', option=
 
     if method=='KMeans':
         print 'Training K-means...'
-        cluster = KMeans(n_clusters=option, n_jobs=3)
+        cluster = KMeans(n_clusters=option, n_jobs=3, random_state=123)
     elif method=='DBSCAN':
         print 'Training DBSCAN ... '
-        cluster = DBSCAN(eps=option)
+        cluster = DBSCAN(eps=option, random_state=123)
     elif method=='Affinity':
         print 'Training on Affinity Propagation..'
         cluster = AffinityPropagation(preference=option)
