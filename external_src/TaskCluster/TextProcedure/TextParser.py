@@ -20,11 +20,12 @@ def mk_training_file(content_list, file_path):
 
 def analyzing_morphem(content_list):
     mecab = Mecab()
+    mytags = ['NNG', 'NNP', 'VV', 'VA', 'MM', 'SL', 'XR']
     for idx, doc in enumerate(content_list):
         if idx % 5000 == 0 :
             print 'Morphem Analysis on %d' % idx
-        #yield ' '.join([part for part, pos in mecab.pos(doc.decode('utf-8'))]).encode('utf-8')
-        yield ' '.join(mecab.nouns(doc.decode('utf-8'))).encode('utf-8')
+        yield ' '.join([part for part, pos in mecab.pos(doc.decode('utf-8')) if pos in mytags]).encode('utf-8')
+        #yield ' '.join(mecab.nouns(doc.decode('utf-8'))).encode('utf-8')
 
 def split_line(content_list):
     for content in content_list:
