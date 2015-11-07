@@ -10,7 +10,7 @@ export default class DaySeperator extends React.Component{
 
 		return (
 			<div className='day-seperator'>
-				{momentTime.format('MMM DD')}
+				{momentTime.format('MMM DD ddd')}
 			</div>
 		)
 	}

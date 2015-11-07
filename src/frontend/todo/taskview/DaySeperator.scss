@@ -6,4 +6,8 @@
 	background: rgba(249, 99, 50, 0.35);
 	color: #666;
 	font-family: 'Kelly Slab', cursive;
+	
+	&:first-child{
+		border-top-right-radius: 10px;
+	}
 }
