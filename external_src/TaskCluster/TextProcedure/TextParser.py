@@ -23,7 +23,8 @@ def analyzing_morphem(content_list):
     for idx, doc in enumerate(content_list):
         if idx % 5000 == 0 :
             print 'Morphem Analysis on %d' % idx
-        yield ' '.join([part for part, pos in mecab.pos(doc.decode('utf-8'))]).encode('utf-8')
+        #yield ' '.join([part for part, pos in mecab.pos(doc.decode('utf-8'))]).encode('utf-8')
+        yield ' '.join(mecab.nouns(doc.decode('utf-8'))).encode('utf-8')
 
 def split_line(content_list):
     for content in content_list:
