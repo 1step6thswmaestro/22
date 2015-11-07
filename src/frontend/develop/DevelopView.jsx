@@ -7,8 +7,7 @@ import { updateFeedly, unauthFeedly } from '../todo/actions/user'
 import { fetchPrioritizedList } from '../todo/actions/tasks'
 import classNames from 'classnames';
 import moment from 'moment-timezone';
-
-
+import { fetchTimetable } from '../todo/actions/timetable'
 
 export default class DevelopView extends React.Component{
 	setGlobalTime(time){
@@ -38,6 +37,48 @@ export default class DevelopView extends React.Component{
 	toggleUserView(){
 		const { dispatch } = this.props;
 		dispatch(setConfig('userview', !this.props.config.userview));
+	}
+
+	fetchTimeTable(){
+		const { dispatch } = this.props;
+		dispatch(fetchTimetable());
+	}
+
+	renderTableButton(){
+		let { dispatch, config } = this.props;
+
+		let buttonRaw = [
+			{text: 'schedule', command: true}
+			, {text: 'raw list', command: false}
+		]
+
+		let checkedObj;
+		buttonRaw.forEach(obj=>{
+			if(obj.command == this.props.config.showEvent){
+				obj.checked = true;
+				checkedObj = obj;
+			}
+		});
+		if(!checkedObj){
+			buttonRaw[0].checked = true;
+		}
+
+		function set(obj){
+			dispatch(setConfig('showEvent', obj.command));
+		}
+
+		return buttonRaw.map(obj=>{
+			var btnClass = classNames({
+		    	'btn': true,
+		    	'btn-checked': obj.checked,
+		    	'btn-default': !obj.checked
+		    });
+		    return (
+		    	<button key={obj.text} className={btnClass} onClick={set.bind(this, obj)}>
+		    		{obj.text}
+		    	</button>
+		    )
+		})
 	}
 
 	render(){
@@ -110,8 +151,13 @@ export default class DevelopView extends React.Component{
 						DatePicker 감추기
 					</button>
 				</If>
+				<button className='btn btn-default' onClick={this.fetchTimeTable.bind(this)}>
+					Fetch Time Table
+				</button>
 				<i className='mr10'></i>
 				{buttons}
+				<i className='mr10'></i>
+				{this.renderTableButton()}
 				<i className='mr10'></i>
 				{onlyActiveButton}
 				<If test={this.props.config.globalTimePicker==true}>
