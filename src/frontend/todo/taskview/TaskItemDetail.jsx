@@ -167,101 +167,167 @@ class TaskItemDetail extends React.Component {
 			))
 		}
 
+		let locationPresetButtons = (
+			<div className="btn-group">
+				<button className={"btn " + locButtonState.home} data-toggle="집" label="집" onClick={this.toggleLocationButton.bind(this, 'home')}>
+					<span className="glyphicon glyphicon-home"></span>
+				</button>
+				<button className={"btn " + locButtonState.school} data-toggle="학교" label="학교" onClick={this.toggleLocationButton.bind(this, 'school')}>
+					<span className="glyphicon glyphicon-book"></span>
+				</button>
+				<button className={"btn " + locButtonState.work} data-toggle="직장" label="직장" onClick={this.toggleLocationButton.bind(this, 'work')}>
+					<span className="glyphicon glyphicon-briefcase"></span>
+				</button>
+				<button className={"btn " + locButtonState.etc} data-toggle="기타" label="기타" onClick={this.toggleLocationButton.bind(this, 'etc')}>
+					<span className="glyphicon glyphicon-flash"></span>
+				</button>
+			</div>
+		);
+
+		let important = this.props.task.important;
+
 		return (
 			<div className="task-item-detail-container">
 				<div className='task-item-detail'>
-					<div className="">
-						<div className="row">
-							<div className="col-md-8">
-								<div className="task-description">
-									<span>{task.description}</span>
-								</div>
-								<div className="task-relatedLocation">
-									작업 가능 장소 선택 :
-									<div className="btn-group">
-										<button className={"btn " + locButtonState.home} data-toggle="집" label="집" onClick={this.toggleLocationButton.bind(this, 'home')}>
-											<span className="glyphicon glyphicon-home"></span>
-										</button>
-										<button className={"btn " + locButtonState.school} data-toggle="학교" label="학교" onClick={this.toggleLocationButton.bind(this, 'school')}>
-											<span className="glyphicon glyphicon-book"></span>
-										</button>
-										<button className={"btn " + locButtonState.work} data-toggle="직장" label="직장" onClick={this.toggleLocationButton.bind(this, 'work')}>
-											<span className="glyphicon glyphicon-briefcase"></span>
-										</button>
-										<button className={"btn " + locButtonState.etc} data-toggle="기타" label="기타" onClick={this.toggleLocationButton.bind(this, 'etc')}>
-											<span className="glyphicon glyphicon-flash"></span>
-										</button>
-									</div>
-								</div>
-								<div className="task-startlocation">
-									<p>
-									생성 시 위치:
-									{ this.getCreatedLocation() }
-									</p>
-									<p>
-									완료 위치:
-									{ task.locationstampComplete ? <LocationAddress location={task.locationstampComplete} /> : null }
-									</p>
-								</div>
-							</div>
-							<div className="card-contents col-md-4">
-								<div className="task-importance">
-									중요도: {task.importance}
-								</div>
-								<div className="taskCreatedDate">
-									생성일: {getReadableDate(task.created)}
-								</div>
-								<div className="task-duedate">
-									마감일: {getReadableDate(task.duedate)}
-								</div>
-								<If test={task.state != TaskStateType.named.complete.id}>
-									<div>
-										<div>
-											소요시간: { task.estimation } 시간
+					<div className="panel panel-transparent">
+						<div className='panel-body'>
+							<div className="form-group-attached">
+								<div className='row'>
+									<div className='col-sm-6'>
+										<div className='col-xs-4'>
+											<div className="form-group form-group-default">
+												<label>중요도</label>
+												<If test={important}>
+													<div>
+														<div className='table-item-header property' onClick={this.props.setImportant.bind(this, false)}>
+															<i className='fa fa-exclamation'></i>
+														</div>
+														수행 생략 불가능
+													</div>
+												</If>
+												<If test={!important}>
+													<div>
+														<div className='table-item-header property' onClick={this.props.setImportant.bind(this, true)}>
+															<i className='fa fa-circle-o'></i>
+														</div>
+														수행 생략 가능
+													</div>
+												</If>
+							                </div>
 										</div>
-										<div>
-											{ this.getRemainTime() }
+										<div className='col-xs-4'>
+											<div className="form-group form-group-default">
+												<label>속성2</label>
+												<div className='table-item-header property' onClick={this.props.setImportant.bind(this, true)}>
+													<i className='fa fa-check-circle'></i>
+												</div>
+						                	</div>
+										</div>
+										<div className='col-xs-4'>
+											<div className="form-group form-group-default">
+												<label>속성3</label>
+												<div className='table-item-header property' onClick={this.props.setImportant.bind(this, true)}>
+													<i className='fa fa-check-circle'></i>
+												</div>
+											</div>
 										</div>
 									</div>
-								</If>
-								{'completeDate'}
-							</div>
-						</div>
-						<div>
-							<div className="btn-group">
-								{actionButtons}
-								<button className="btn btn-default" label="Remind me later" onClick={this.postpone.bind(this)}>
-									<span className="glyphicon glyphicon-send"></span> 나중에 알림
-								</button>
-								<button className="btn btn-default" label="Discard this task" onClick={this.props.onTaskModify}>
-									<span className="glyphicon glyphicon-pencil"></span> 수정
-								</button>
-								<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
-									<span className="glyphicon glyphicon-trash"></span> 할 일 제거
-								</button>
-								<button className="btn btn-warning" label="Discard this task" onClick={this.reset.bind(this)}>
-									<span className="glyphicon glyphicon-trash"></span> reset
-								</button>
-								<button className="btn btn-warning" label="Discard this task" href={`/v1/tasktoken/task/${task._id}/`}>
-									<span className="glyphicon glyphicon-trash"></span> tokens
-								</button>
-								<a href={`/v1/tasktoken/time/${this.props.global.time?this.props.global.time:''}`}>
-									<button className="btn btn-warning" label="Discard this task">
-										<span className="glyphicon glyphicon-trash"></span> tokens by time
-									</button>
-								</a>
-								<a href={`/v1/tasklog/task/${task._id}/`}>
-									<button className="btn btn-warning" label="Discard this task">
-										<span className="glyphicon glyphicon-trash"></span> show logs
-									</button>
-								</a>
-
-							</div>
-							
-							<If test={task != null}>
-								<DocView taskID={task._id} keyword={task.name+task.description} user_id={task.userId}/>
-							</If>
-						</div>
+									<div className='col-sm-6'>
+										<div className="form-group form-group-default">
+											<label>작업 가능 장소 선택</label>
+											{locationPresetButtons}
+										</div>
+									</div>
+								</div>
+				                <div className='row'>
+				                	<div className='col-md-6'>
+						                <div className="form-group form-group-default">
+						                	<label>생성 위치</label>
+						                	{ this.getCreatedLocation() }
+						                </div>
+				                	</div>
+				                	<div className='col-md-6'>
+						                <div className="form-group form-group-default">
+						                	<label>완료 위치</label>
+						                	{ task.locationstampComplete ? <LocationAddress location={task.locationstampComplete} /> : null }
+						                </div>
+				                	</div>
+				                </div>
+				                <div className='row'>
+				                	<div className='col-md-3'>
+						                <div className="form-group form-group-default">
+											<label>생성일</label>
+											{getReadableDate(task.created)}
+						                </div>
+				                	</div>
+				                	<div className='col-md-3'>
+						                <div className="form-group form-group-default">
+											<label>마감일</label>
+											{getReadableDate(task.duedate)}
+						                </div>
+				                	</div>
+				                	<div className='col-md-3'>
+						                <div className="form-group form-group-default">
+											<label>소요시간</label>
+											{ task.estimation } 시간
+						                </div>
+				                	</div>
+				                	<div className='col-md-3'>
+						                <div className="form-group form-group-default">
+											<label>여유시간</label>
+											{this.getRemainTime()}
+						                </div>
+				                	</div>
+				                </div>
+				                <div className='row'>
+				                	<div className='col-md-12'>
+				                		<div className="form-group form-group-default">
+				                			<div className="btn-group">
+												{actionButtons}
+												<button className="btn btn-default" label="Remind me later" onClick={this.postpone.bind(this)}>
+													<span className="glyphicon glyphicon-send"></span> 나중에 알림
+												</button>
+												<button className="btn btn-default" label="Discard this task" onClick={this.props.onTaskModify}>
+													<span className="glyphicon glyphicon-pencil"></span> 수정
+												</button>
+												<button className="btn btn-default" label="Discard this task" onClick={this.discard.bind(this)}>
+													<span className="glyphicon glyphicon-trash"></span> 할 일 제거
+												</button>
+												<button className="btn btn-warning" label="Discard this task" onClick={this.reset.bind(this)}>
+													<span className="fa fa-sun-o"></span> reset
+												</button>
+											</div>
+				                		</div>
+				                	</div>
+				                </div>
+				                <div className='row'>
+				                	<div className='col-md-12'>
+				                		<div className="form-group form-group-default">
+				                			<div className='btn-group'>
+												<a href={`/v1/tasktoken/task/${task._id}/`} target='_blank' className="btn btn-default">
+													<span className="fa fa-search"></span> tokens
+												</a>
+												<a href={`/v1/tasktoken/time/${this.props.global.time?this.props.global.time:''}`} target='_blank' className="btn btn-default">
+													<span className="fa fa-search"></span> tokens by time
+												</a>
+												<a href={`/v1/tasklog/task/${task._id}/`} className="btn btn-default" target='_blank'>
+													<span className="fa fa-search"></span> show logs
+												</a>
+											</div>
+										</div>
+				                	</div>
+				                </div>
+				                <div className='row'>
+				                	<div className='col-md-12'>
+					                	<If test={task != null}>
+					                		<div className="form-group form-group-default">
+												<DocView taskID={task._id} keyword={task.name+task.description} user_id={task.userId}/>
+											</div>
+										</If>
+				                	</div>
+				                </div>
+					        </div>
+					    </div>
 					</div>
 				</div>
 			</div>

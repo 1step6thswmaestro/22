@@ -1,8 +1,38 @@
 .task-item-detail-container{
-	padding: 10px;
 }
 
 .task-item-detail{
-	border-radius: 7px;
-	border: solid 1px #999;
+	.form-group-default{
+		background-color: rgba(255, 255, 255, 0.3);
+	}
+
+	.panel{
+		margin-bottom: 0px;
+	}
+
+	.property:hover{
+		background: rgba(123, 68, 68, 0.35);
+	}
+
+	.table-item-header{
+		display: inline-block;
+		width: 40px;
+		height: 40px;
+		text-align: center;
+	}
+
+	.form-group-attached > div.row [class*='col-'] {
+	  padding-right: 0 !important;
+	  padding-left: 0 !important;
+	}
+
+	.form-group-attached > div.row [class*='col-']:not(:only-child):not(:last-child) > .form-group-default {
+	  border-right-color: transparent !important;
+	}
+
+	@media (min-width: 767px) {
+	  	.form-group-attached > div.row [class*='col-']:last-child > .form-group-default {
+			border-right-color: transparent;
+		}
+	}
 }

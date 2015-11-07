@@ -41,7 +41,7 @@ class EventItem extends React.Component{
 
 	onMouseOut(){
 		let { dispatch } = this.props;
-		dispatch(setConfig('focusedTask', null))
+		dispatch(setConfig('focusedTableId', null))
 	}
 
 
@@ -55,7 +55,7 @@ class EventItem extends React.Component{
 		let important = task && task.important==true;
 
 		return (
-			<div className='table-item-title'>
+			<div className='table-item-title' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} onClick={this.onClick.bind(this)}>
 				<If test={important}>
 					<div className='table-item-header border-right property' onClick={this.setImportant.bind(this, false)}>
 						<i className='fa fa-exclamation'></i>
@@ -92,11 +92,12 @@ class EventItem extends React.Component{
 	render() {
 		let selected = this.props.event._id==this.props.config.selectedTableId;
 		return (
-			<div className={classnames({'table-item': true, selected})} onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} onClick={this.onClick.bind(this)}>
+			<div className={classnames({'table-item': true, selected})}>
 				{this.getSimpleView()}
 				<If test={this.props.task!=null && selected} >
 					<TaskItemDetail task={this.props.task} tasklog={this.props.tasklog} dispatch={this.props.dispatch}
 						global={this.props.global}
+						setImportant={this.setImportant.bind(this)}
 					/>
 				</If>
 			</div>
