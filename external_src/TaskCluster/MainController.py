@@ -4,6 +4,7 @@ from DBConnector.db_tools import Pool, QueryPool
 from base_config import WORD2VEC_LINE_TEXT, WORD2VEC_MODEL, PIPE_DUMPING, CLUSTERING_METHOD, OPTION
 from TextProcedure.TextParser import law_contents_to_file
 from MachineLearner import Trainer
+from numpy import sqrt
 import gensim
 import os
 
@@ -60,7 +61,8 @@ def determine_cluster_numbers(log_length):
     # 네이버 블로그에서는 섹션을 총 31개로 나눔
     # 따라서, 정책은 다음과 같다
     # 총 로그 수를 5으로 나눴을 때, 31개 보다 작으면 그 몫을 그대로, 그 이상일 시 31개로
-    number = log_length / 5
+    # number = log_length / 5
+    number = sqrt(log_length)
     if number > OPTION:
         return OPTION
     else:

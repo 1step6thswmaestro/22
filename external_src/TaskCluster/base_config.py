@@ -4,7 +4,7 @@ WORD2VEC_MODEL = FILE_DIR + 'word2vec_model.sv'
 PIPE_DUMPING = FILE_DIR + 'pipe_dump.sv'
 
 # Clustering Configurations
-CLUSTERING_METHOD = 'Affinity'
+CLUSTERING_METHOD = 'KMeans'
 OPTION = -10
 
 # Do pca or not
