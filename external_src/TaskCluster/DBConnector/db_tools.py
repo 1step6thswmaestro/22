@@ -46,9 +46,10 @@ class QueryPool():
 
     def get_unparsed_content(self):
         article_collection = self.conn.get_collection('articles')
-        #unparsed_content = [item['content'] for item in list(article_collection.find({"$where":"this.content.length>0"}))]
-        unparsed_content = [item['summary'] for item in list(article_collection.find({"$where":"this.summary.length>0"}))]
-        return unparsed_content
+        result = []
+        result.extend([item['content'] for item in list(article_collection.find({"$where":"this.content.length>0"}))])
+        result.extend([item['summary'] for item in list(article_collection.find({"smmary":{"$exists":True}}))])
+        return result
 
     def get_tasks(self):
         task_collection = self.conn.get_collection('tasks')
