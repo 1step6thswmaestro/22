@@ -41,8 +41,7 @@ def decompose_and_cluster(tasks, word2vec, output_file, method='KMeans', option=
         print 'Training DBSCAN ... '
         cluster = DBSCAN(eps=option)
 
-    cluster.fit(d_vector)
-    labels = cluster.predict(d_vector)
+    labels = cluster.fit_predict(d_vector)
 
     pipe = Pipeline(steps=[
         ('w2v_200_to_5_PCA', pca), ('clustering', cluster)

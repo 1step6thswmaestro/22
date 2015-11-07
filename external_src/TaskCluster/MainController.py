@@ -47,13 +47,15 @@ def task_clustering(method, word2vec=None):
     if method == 'KMeans':
         log_length = len(tasks)
         cluster_option = determine_cluster_numbers(log_length)
+
     elif method == 'DBSCAN':
         cluster_option = OPTION
 
     pipe, labels = Trainer.decompose_and_cluster(tasks, word2vec, PIPE_DUMPING, method=method, option=cluster_option)
-
     # update task db
     webserver_query_pool.attach_task_label(_ids=_ids, labels=labels)
+
+
 
 def determine_cluster_numbers(log_length):
     # 네이버 블로그에서는 섹션을 총 31개로 나눔
