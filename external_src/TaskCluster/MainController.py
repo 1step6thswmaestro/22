@@ -64,7 +64,7 @@ def determine_cluster_numbers(log_length):
     if number > OPTION:
         return OPTION
     else:
-        return number
+        return int(number)
 
 def main():
     word2vec = train_or_load_word2vec(delete=False)
