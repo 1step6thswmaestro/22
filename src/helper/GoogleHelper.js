@@ -140,7 +140,7 @@ class GoogleHelper{
 		})
 	}
 
-	getCalendarEventsToday(user, opt){
+	getCalendarEventsWeek(user, opt){
 		let now = null;
 		let events = null;
 
@@ -148,7 +148,7 @@ class GoogleHelper{
 			var _events = [];
 
 			_.each(events, event=>{
-				if (now+(1000*60*60*24) >= event.start.getTime() && event.start.getTime() >= now) {
+				if (now+(1000*60*60*24*7) >= event.start.getTime() && event.start.getTime() >= now) {
 					_events.push(event);
 				}
 			});

@@ -4,7 +4,6 @@ var Schema = mongoose.Schema;
 module.exports = function(app){
 	var timetableSchema = new Schema({
 		userId: Schema.Types.ObjectId,
-		taskId: Schema.Types.ObjectId,
 		summary: {type: String},
 
 		tableslotStart: {type: Number},
