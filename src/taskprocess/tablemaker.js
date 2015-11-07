@@ -47,9 +47,10 @@ class TimeMaker{
 		return _a.tableslotStart-_b.tableslotStart;
 	}
 
-	makeNewEvent(_id, _start, _end, _summary, _estimation) {
+	makeNewEvent(userId, taskId, _start, _end, _summary, _estimation) {
 		let newVal = {
-			userId: _id,
+			userId,
+			taskId,
 			tableslotStart: _start, 
 			tableslotEnd: _end,
 			summary: _summary,
@@ -74,7 +75,7 @@ class TimeMaker{
 			let start = getTimeslot(event.start);
 			let end = getTimeslot(event.end);
 
-			let tableEvent = makeNewEvent(this.userId, start, end, event.summary, 0);
+			let tableEvent = makeNewEvent(this.userId, undefined, start, end, event.summary, 0);
 
 			if (!isTaken(timetable, tableEvent))
 				timetable.push(tableEvent);
@@ -129,7 +130,7 @@ class TimeMaker{
 						let start = now + offset;
 						let end = now + offset + timespan;
 
-						tableTask = makeNewEvent(this.userId, start, end, task.name, task.estimation);
+						tableTask = makeNewEvent(this.userId, task._id, start, end, task.name, task.estimation);
 
 						if(!isTaken(timetable, tableTask)) break;
 					}
