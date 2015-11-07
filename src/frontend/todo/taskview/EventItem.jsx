@@ -12,16 +12,27 @@ class EventItem extends React.Component{
 		this.state = {};
 	}
 
-	setImportant(value){
+	setImportant(value, e){
 		let { dispatch } = this.props;
 		if(this.props.task)
 			dispatch(setTaskProperty(this.props.task, {important: value}));
+
+		e.stopPropagation();
 	}
 
 	onMouseOver(){
 		let { dispatch } = this.props;
-		console.log('focusedTask', this.props.event);
-		dispatch(setConfig('focusedTask', this.props.event.taskId))
+		dispatch(setConfig('focusedTableId', this.props.event._id))
+	}
+
+	onClick(){
+		let { dispatch } = this.props;
+		if(this.props.config.selectedTableId == this.props.event._id){
+			dispatch(setConfig('selectedTableId', undefined))
+		}
+		else{
+			dispatch(setConfig('selectedTableId', this.props.event._id))	
+		}
 	}
 
 	onMouseOut(){
@@ -37,7 +48,7 @@ class EventItem extends React.Component{
 		let important = task && task.important==true;
 
 		return (
-			<div className='table-item' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} >
+			<div className='table-item' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} onClick={this.onClick.bind(this)}>
 				<If test={important}>
 					<div className='table-item-header border-right property' onClick={this.setImportant.bind(this, false)}>
 						<i className='fa fa-exclamation'></i>
@@ -61,7 +72,9 @@ class EventItem extends React.Component{
 				<div className='table-item-header date date2 mr10'>
 					{end.format("HH:mm")}
 				</div>
-				{event.summary}
+				<div className='content'>
+					{event.summary}
+				</div>
 				<div className='table-item-header border-left float-right task-progress-container'>
 					<TaskProgress count={event.estimation * 3}/>
 				</div>
