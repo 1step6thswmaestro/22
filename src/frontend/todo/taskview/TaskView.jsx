@@ -76,7 +76,14 @@ class TaskView extends React.Component{
 						<div className="task-list">
 							<div className="row">
 								<div className="col-sm-12">
-									<TimeTable global={global} config={config} tasks={tasks} timetable={timetable} dispatch={dispatch}/>
+									<TimeTable 
+										global={global} 
+										config={config} 
+										tasks={tasks} 
+										timetable={timetable} 
+										dispatch={dispatch}
+										tasklog={tasklog}
+									/>
 								</div>
 							</div>
 						</div>

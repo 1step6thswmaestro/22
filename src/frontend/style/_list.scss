@@ -1,11 +1,9 @@
-@mixin mixin-listitem($bgColor){
-  position: relative;
+@mixin mixin-listitem-not-hover($bgColor){
   padding: 10px;
   font-family: sans-serif;
   font-size: 15px;
   color: #777;
-
-  height: 50px;
+  position:relative;
   line-height: 35px;
 
   padding-left: 70px;
@@ -25,7 +23,11 @@
   &:nth-child(2n+1){
     background: rgba($bgColor, 0.1);
   }
+}
 
+@mixin mixin-listitem($bgColor){
+  @include mixin-listitem-not-hover($bgColor);
+  
   &:hover{
     background: rgba($bgColor, 0.3);
   }

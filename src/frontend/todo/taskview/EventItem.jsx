@@ -3,8 +3,12 @@ import _ from 'underscore';
 import { getReadableDate } from '../../utility/date'
 import If from '../../utility/if'
 import TaskProgress from './TaskProgress'
-import { setTaskProperty } from '../actions/tasks'
 import { setConfig } from '../actions/config'
+import TaskItemDetail from './TaskItemDetail'
+import { startItem, pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
+import { setTaskProperty } from '../actions/tasks'
+import classnames from 'classnames'
+
 
 class EventItem extends React.Component{
 	constructor(props){
@@ -40,6 +44,9 @@ class EventItem extends React.Component{
 		dispatch(setConfig('focusedTask', null))
 	}
 
+
+	
+
 	getSimpleView(){
 		var event = this.props.event;
 		var task = this.props.task;
@@ -48,7 +55,7 @@ class EventItem extends React.Component{
 		let important = task && task.important==true;
 
 		return (
-			<div className='table-item' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} onClick={this.onClick.bind(this)}>
+			<div className='table-item-title'>
 				<If test={important}>
 					<div className='table-item-header border-right property' onClick={this.setImportant.bind(this, false)}>
 						<i className='fa fa-exclamation'></i>
@@ -83,7 +90,17 @@ class EventItem extends React.Component{
 	}
 
 	render() {
-		return this.getSimpleView();
+		let selected = this.props.event._id==this.props.config.selectedTableId;
+		return (
+			<div className={classnames({'table-item': true, selected})} onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} onClick={this.onClick.bind(this)}>
+				{this.getSimpleView()}
+				<If test={this.props.task!=null && selected} >
+					<TaskItemDetail task={this.props.task} tasklog={this.props.tasklog} dispatch={this.props.dispatch}
+						global={this.props.global}
+					/>
+				</If>
+			</div>
+		)
 	}
 };
 

@@ -1,19 +1,20 @@
 @import 'list';
 
+$bgColor: rgb(160, 140, 140);
+
 .table-item{
-	@include mixin-listitem(rgb(160, 140, 140));
+	@include mixin-listitem-not-hover($bgColor);
 	padding: 0px;
-	height: 50px;
 	line-height: 50px;
+
+	&.property:hover{
+		background: rgba(123, 68, 68, 0.35);
+	}
 
 	.table-item-header{
 		display: inline-block;
 		width: 40px;
 		text-align: center;
-
-		&.property:hover{
-			background: rgba(123, 68, 68, 0.35);
-		}
 	}
 
 	.content{
@@ -53,11 +54,25 @@
 	}
 
 	&:first-child .task-progress-container{
+		border-top-left-radius: 10px;
 		border-top-right-radius: 10px;
 	}
 
 	&:last-child .task-progress-container{
 		border-bottom-right-radius: 10px;
+	}
+
+	&.selected{
+		.table-item-title{
+			background: rgba($bgColor, 0.3);
+		}
+	}
+}
+
+.table-item-title{
+	height: 50px;
+	&:hover{
+		background: rgba($bgColor, 0.3);
 	}
 }
 

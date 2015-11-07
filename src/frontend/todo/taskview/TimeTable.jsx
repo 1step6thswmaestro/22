@@ -13,6 +13,7 @@ export default class TimeTable extends React.Component{
 		const { global, config, dispatch } = this.props;
     	var timetable = this.props.timetable;
 		var tasks = this.props.tasks;
+		var tasklog = this.props.tasklog;
 		var contents = [];
 
 		let latestDay = undefined;
@@ -26,7 +27,12 @@ export default class TimeTable extends React.Component{
 			}
 			
 			latestDay = day;
-			contents.push(<EventItem key={item._id} event={item} task={tasks.tasks[item.taskId]} dispatch={dispatch} global={global} config={config}/>);
+			contents.push((
+				<EventItem key={item._id} event={item} task={tasks.tasks[item.taskId]} dispatch={dispatch} global={global} 
+					config={config}
+					tasklog={tasklog.groupBy[item.taskId]}
+				/>
+			));
 		});
 
 		return contents;
