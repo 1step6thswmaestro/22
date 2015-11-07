@@ -30,6 +30,12 @@ function init(app){
 		.fail(err=>logger.error(err))
 	}
 
+	TimetableHelper.prototype.reset = function(userId) {
+		Timetable.remove({userId: userId}, function(err){
+			if (err) return err;
+		});
+	}
+
 	app.helper.timetable = new TimetableHelper();
 }
 
