@@ -35,8 +35,7 @@ def decompose_and_cluster(tasks, word2vec, output_file, method='KMeans', option=
     if PCA_OPTION:
         print 'Down dimension...'
         pca = PCA(5)
-
-    d_vector = pca.fit_transform(whole_vector)
+        whole_vector = pca.fit_transform(whole_vector)
 #    print 'PCA Log Likelihood Score : ' + str(pca.score())
 
     if method=='KMeans':
@@ -46,7 +45,7 @@ def decompose_and_cluster(tasks, word2vec, output_file, method='KMeans', option=
         print 'Training DBSCAN ... '
         cluster = DBSCAN(eps=option)
 
-    labels = cluster.fit_predict(d_vector)
+    labels = cluster.fit_predict(whole_vector)
 
     if PCA_OPTION:
         cluster_clf = Pipeline(steps=[
