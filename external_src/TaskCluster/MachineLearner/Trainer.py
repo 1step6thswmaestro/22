@@ -37,7 +37,7 @@ def decompose_and_cluster(tasks, word2vec, output_file, method='KMeans', option=
     if method=='KMeans':
         print 'Training K-means...'
         cluster = KMeans(n_clusters=option, n_jobs=3)
-    else:
+    elif method=='DBSCAN':
         print 'Training DBSCAN ... '
         cluster = DBSCAN(eps=option)
 

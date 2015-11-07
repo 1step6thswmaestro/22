@@ -5,4 +5,4 @@ PIPE_DUMPING = FILE_DIR + 'pipe_dump.sv'
 
 # Clustering Configurations
 CLUSTERING_METHOD = 'KMeans'
-SECTION_NUMBER = 31
+OPTION = 31
