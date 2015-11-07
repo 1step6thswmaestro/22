@@ -3,7 +3,6 @@
 //https://gist.github.com/d3m3vilurr/5904029
 
 var Feedly = require('feedly').Feedly;
-var fs = require('fs');
 var Q = require('q');
 var mongoose = require('mongoose');
 var Account = mongoose.model('Account');
@@ -132,10 +131,10 @@ class FeedlyHelper{
 			return Q.all(promises);
 		})
 		.then(function(results){
-			let findByIdAndUpdate = Q.nbind(Account.findByIdAndUpdate, Account);	
+			let findByIdAndUpdate = Q.nbind(Account.findByIdAndUpdate, Account);
 			return findByIdAndUpdate(user._id, {$set: {'feedly.date': Date.now()}})
 			.then(function(result){
-				
+
 			})
 			.fail(err=>console.error(err))
 		})

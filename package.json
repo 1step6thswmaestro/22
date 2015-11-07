@@ -13,6 +13,7 @@
     "d3": "^3.5.6",
     "d3-tip": "^0.6.7",
     "es6-promise": "^3.0.2",
+    "evernote": "^1.25.82",
     "express": "^4.10.2",
     "express-session": "^1.11.3",
     "feedly": "file:3rdparty/node-feedly",
