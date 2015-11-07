@@ -25,7 +25,8 @@ module.exports = function(app){
 		// and, so on ...
 		relatedLocation: {type: Number, default: 0},
 		lastProcessed: {type: Date, default: Date.now},
-		created: {type: Date, default: Date.now}
+		created: {type: Date, default: Date.now},
+		important: {type: Boolean, default: true}
 	});
 
 	taskSchema.index({

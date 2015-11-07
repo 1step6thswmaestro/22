@@ -78,6 +78,20 @@ export function makeNewItem(item){
 	}
 }
 
+export function setTaskProperty(item, body){
+	return function(dispatch){
+		$.ajax({
+			url: `v1/tasks/${item._id}/set`
+			, type: 'put'
+			, data: body
+		})
+		.then(function(result){
+			console.log({result});
+			dispatch({type: type.TASK_RECV_ITEM, item: result.task});
+		})
+	}
+}
+
 export function modifyItem(task){
 	return function(dispatch) {
 		dispatch({

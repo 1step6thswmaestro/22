@@ -44,7 +44,7 @@ function build_assets(){
 
 function onWatch(){
 	gulp.watch([base_dir('**/*.html'), base_dir("**/*.jsx"), base_dir("**/*.js")], build_html);
-	gulp.watch([base_dir('**/*.scss')], build_sass);
+	gulp.watch([base_dir('**/[^_]?*.scss')], build_sass);
 	gulp.watch([base_dir('**/*')], build_assets);
 }
 
@@ -67,7 +67,7 @@ function copy_files(root, src_files, dest_file){
 
 function compile_sass_concat(root, src_files, dest_file){
 	return gulp.src(src_files)
-		.pipe(sass({includePaths: [__base_dir]}))
+		.pipe(sass({includePaths: [__base_dir, base_dir('style')]}))
 		.on("error", notify.onError({
 	    	message: "Error: <%= error.message %>",
 	    	title: "Error running something"

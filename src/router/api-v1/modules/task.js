@@ -136,4 +136,17 @@ module.exports = function(_router, app){
 		})
 		.fail(err=>logger.error(err))
 	})
+
+	router.put('/:id/set', function(req, res){
+		let body = req.body;
+		body = _.pick(body, 'important');
+
+		helper.taskHelper.findByIdAndUpdate(req.user._id, req.params.id, body)
+		.then(function(){
+			return helper.taskHelper.findOne(req.user._id, {_id: req.params.id});
+		})
+		.then(result=>res.send({task: result}))
+		.fail(err=>logger.error(err))
+
+	})
 }

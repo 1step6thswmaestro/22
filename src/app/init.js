@@ -35,6 +35,7 @@ module.exports = function(app){
 	app.use(passport.session());
 	app.use('/', express.static('./public/resources/nativeAssets', {index: false}));
  	app.use('/', express.static('./public/resources/bowerAssets', {index: false}));
+ 	app.use('/', express.static('./public/resources/staticAssets/startbootstrap-landing-page-1.0.4', {index: false}));
  	app.use(function(req, res, next){
 	 	res.render = render.bind(res);
 	 	res.renderIndex = renderIndex.bind(res);

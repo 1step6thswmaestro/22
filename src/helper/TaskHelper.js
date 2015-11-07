@@ -14,6 +14,12 @@ function init(app){
 		return Q.nbind(Task.find, Task)(Object.assign({userId}, query), proj, opt);
 	}
 
+	TaskHelper.prototype.findOne = function(userId, query, proj, opt){
+		opt = opt || {};
+		opt.sort = opt.sort || {created: 1};
+		return Q.nbind(Task.findOne, Task)(Object.assign({userId}, query), proj, opt);
+	}
+
 	TaskHelper.prototype.create = function(userId, body){
 		let task = new Task(_.extend({userId}, body));
 		return Q.nbind(task.save, task)()
@@ -24,6 +30,10 @@ function init(app){
 
 	TaskHelper.prototype.update = function(userId, query, doc){
 		return Q.nbind(Task.update, Task)(Object.assign({userId}, query), {$set: doc});
+	}
+
+	TaskHelper.prototype.findByIdAndUpdate = function(userId, _id, doc){
+		return this.findOneAndUpdate(userId, {_id}, doc);
 	}
 
 	TaskHelper.prototype.findOneAndUpdate = function(userId, query, doc){

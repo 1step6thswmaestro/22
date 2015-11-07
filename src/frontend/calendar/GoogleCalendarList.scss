@@ -1,0 +1,15 @@
+@import 'list';
+
+$bgColor: rgb(160, 140, 140);
+
+.calendarlist-list{
+	@extend .list;
+
+	.listitem{
+		@include mixin-listitem($bgColor);
+
+		&.selected{
+			background-color: rgba(darken($bgColor, 0.5), 0.5);
+		}
+	}
+}

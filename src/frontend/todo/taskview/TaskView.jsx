@@ -1,5 +1,6 @@
 import React from 'react'
 import TaskItem from './TaskItem'
+import EventItem from './EventItem'
 import TaskInputForm from './TaskInputForm'
 import MapImage from '../dialog/MapImage'
 
@@ -7,6 +8,7 @@ import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
 import { fetchList, fetchPrioritizedList, makeNewItem, removeItem } from '../actions/tasks'
+import { fetchTimetable } from '../actions/timetable'
 
 import _ from 'underscore'
 
@@ -20,6 +22,7 @@ class TaskView extends React.Component{
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch(fetchList());
+		dispatch(fetchTimetable());
 		dispatch(fetchPrioritizedList());
 	}
 
@@ -56,11 +59,20 @@ class TaskView extends React.Component{
 		var self = this;
 		var tasks = this.props.tasks;
 		var tasklog = this.props.tasklog;
+
+		var timetable = this.props.timetable;
 		const { global, config, dispatch } = this.props;
 
-	    function createTaskElements(list, logs){
+	    function createTaskElements(list){
 			return _.map(list, task => (
 		        <TaskItem key={task._id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} global={global} onTaskModify={self.showModifyDialog.bind(self, task)} />)
+			);
+	    }
+
+	    function createEventElements(list){
+	    	console.log('createEventElements', list);
+			return _.map(list, item => (
+		        <EventItem key={item._id} event={item} task={tasks.tasks[item.taskId]} dispatch={dispatch} global={global} />)
 			);
 	    }
 
@@ -73,12 +85,8 @@ class TaskView extends React.Component{
 					<div className="task-list-wrapper">
 						<div className="task-list">
 							<div className="row">
-								<div className="col-md-12">
-									{createTaskElements(
-										config.displayActiveListOnly?
-											tasks.activeList
-											:tasks.plist
-										, tasklog)}
+								<div className="col-sm-12">
+									{createEventElements(timetable.list)}
 								</div>
 							</div>
 						</div>
