@@ -6,7 +6,7 @@ import config
 
 class DocumentES():
     def __init__(self, app):
-        self.es = Elasticsearch()
+        self.es = Elasticsearch(hosts=['%s:%d' % (config.ES_HOST, config.ES_PORT)])
         self.index = config.ES_INDEX
         self.app = app
 

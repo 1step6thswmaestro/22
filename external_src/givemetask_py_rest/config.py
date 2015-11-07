@@ -2,6 +2,7 @@ __author__ = 'iljichoi'
 
 ES_INDEX = 'givemetask'
 ES_SEARCH_INDEX = ['_id', 'title', 'summary', 'userId', 'originId']
+ES_HOST, ES_PORT = '128.199.166.149', 9200
 
 # Files
 FILE_DIR = '../temp/'
