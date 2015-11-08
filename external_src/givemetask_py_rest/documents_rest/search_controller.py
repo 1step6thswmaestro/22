@@ -12,7 +12,7 @@ class SearchController():
     def search(self, user_id, query):
         rss_list = self.es.search(query, user_id, NUMBER_DOCS)
         if len(rss_list) < NUMBER_DOCS:
-            cluster_list = self.cluster.get_articles(user_id, query, NUMBER_DOCS-len(rss_list))
+            cluster_list = self.cluster.get_articles(user_id, query, NUMBER_DOCS-len(rss_list['hits']))
         else:
             cluster_list = []
 
