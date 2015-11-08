@@ -48,6 +48,41 @@ class TimeMaker{
 		return _a.tableslotStart-_b.tableslotStart;
 	}
 
+	getProcessTime(logs) {
+		let takenTime = 0;
+
+		let from = 0;
+		var lognum;
+		if(!logs) {
+			lognum = -1;
+		}
+		else {
+			lognum = logs.length;
+		}
+		while (from < lognum) {
+			if (logs[from].type == 200) {
+				let to = from + 1;
+				while (to < lognum) {
+					if (logs[to].type == 300 || logs[to].type == 500) {
+						let timeTo = new Date(logs[to].time);
+						let timeFrom = new Date(logs[from].time);
+						takenTime += (timeTo - timeFrom);
+						from = to;
+						break;
+					}
+					to += 1;
+				}
+			}
+			from += 1;
+		}
+
+		takenTime /= (60 * 60 * 1000);
+
+		if (takenTime < 1) return 1;
+		if (takenTime > 365*24) return 365*24;
+		return takenTime.toFixed(1);
+	}
+
 	makeNewEvent(userId, taskId, _start, _end, _summary, _estimation) {
 		let newVal = {
 			userId,
@@ -62,8 +97,10 @@ class TimeMaker{
 	}
 
 	process(currentTime) {
+		let helper = this.app.helper;
 		let getTimeslot = this.getTimeslot;
 		let getTimeLevel = this.getTimeLevel;
+		let getProcessTime = this.getProcessTime;
 		let isTaken = this.isTaken;
 		let makeNewEvent = this.makeNewEvent;
 		let sortByTime = this.sortByTime;
@@ -85,11 +122,16 @@ class TimeMaker{
 			timetable.push(tableEvent);
 		});
 
-		return Q(this.app.helper.taskHelper.find(this.userId))
-		.then(plist=>plist.map(function(task){
+		return Q(helper.taskHelper.find(this.userId))
+		.then(plist=>Q.all(plist.map(function(task){
+			let taskId = task._id.toString();
 			task.timelevel = getTimeLevel(task);
-			return task;
-		}))
+			return Q(helper.tasklog.find(task.userId, {taskId}))
+			.then(logs=>{
+				task.processedtime = getProcessTime(logs) || 0;
+				return task;
+			})
+		})))
 		.then(tasks=>{
 			tasks.sort(sortByTimelevel.bind(this));
 
@@ -97,7 +139,7 @@ class TimeMaker{
 				let level = task.timelevel;
 				let slot_begin = now%SLOT_NUMBER;
 				let slot_size = SLOT_NUMBER;
-				let timespan = Math.floor(task.estimation*2);
+				let timespan = Math.floor(task.estimation*2 - task.processedtime);
 				let timePreferenceScore = task.timePreferenceScore;
 				let slot_due = getTimeslot(task.duedate);
 				
@@ -105,7 +147,7 @@ class TimeMaker{
 					slot_size = slot_due-now;
 				}
 
-				// console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
+				console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
 
 				if (task.adjustable || (0 <= level && level < (24*7/TIMELEVEL_SIZE))) {
 					// Calculate time prefer score for each slot term
