@@ -21,7 +21,7 @@ def train_and_save_vector(input_file, output_file):
 
     return model
 
-def decompose_and_cluster(tasks, word2vec, output_file, method='DBSCAN', option=0.5):
+def decompose_and_cluster(tasks, word2vec, output_file, method='KMeans', option=10):
     """
         You should pass parameter 'method', 'option' as follows
         method = 'DBSCAN' or 'KMeans'

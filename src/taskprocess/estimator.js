@@ -51,6 +51,7 @@ class TimeEstimator{
 
 		return Q(helper.taskHelper.find(userId))
 		.then(function(results){
+			if (results.length == 0) return null;
 			return Q.all(results.map(function(task){
 				const taskId = task._id.toString();
 				return Q(helper.tasklog.find(userId, {taskId}))

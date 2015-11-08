@@ -9,10 +9,11 @@ let store = configureStore({
 	, _list: []
 	, _plist: []
 	, _tlist: []
-  }
-  , user: {
+  }, 
+  user: {
   	intergration: {}
-  }
+  }, 
+  thirdparty: {}
 });
 
 global.store = store;

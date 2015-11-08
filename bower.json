@@ -16,6 +16,10 @@
   ],
   "dependencies": {
     "eonasdan-bootstrap-datetimepicker": "~4.17.37",
+    "jquery": "~2.1.4",
+    "moment": "~2.10.6",
+    "moment-timezone": "~0.4.1",
+    "react": "~0.14.2",
     "underscore": "~1.8.3"
   },
   "install": {
@@ -28,6 +32,6 @@
       "eof": "fonts",
       "ttf": "fonts",
       "svg": "images"
-    }
+    },
   }
 }

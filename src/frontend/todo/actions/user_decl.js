@@ -4,12 +4,12 @@ import _ from 'underscore'
 let group = new ActionGroup();
 let DECL = group.declare();
 
-DECL('SET_USER_STATUS', (state, action)=>{
+DECL('DUMP_USER_STATUS', (state, action)=>{
 	return Object.assign({}, state, action.status);
 });
 
-DECL('SET_FEEDLY_SYNC', (state, action)=>{
-	return Object.assign({}, state, {feedlyLoading: action.loading})
+DECL('SET_USER_CONFIG', (state, action)=>{
+	return Object.assign({}, state, {[action.key]: action.value})
 })
 
 export const reducer = group.getReducer({

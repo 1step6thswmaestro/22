@@ -6,6 +6,15 @@ __database
 mongodb
 run.sh
 
+# -- ignore Python Compiled Module
+*.pyc
+
+# -- git ignore for pycharm
+external_src/givemetask_py_rest/.idea/
+
+# ignore trained models
+external_src/temp/*
+
 # --- GIT IGNORE FOR OSX ----
 .DS_Store
 .AppleDouble

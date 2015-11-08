@@ -1,0 +1,349 @@
+/* Form layouts
+--------------------------------------------------
+*/
+@media only screen and (min-width: 768px) {
+  form .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  form .row [class*='col-']:not(:first-child),
+  form .row [class*='col-']:not(:last-child) {
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+  form .row [class*='col-']:first-child {
+    padding-left: 0;
+  }
+  form .row [class*='col-']:last-child {
+    padding-right: 0;
+  }
+}
+/* Form layouts  : Horizontal
+--------------------------------------------------
+*/
+.form-horizontal .form-group {
+  border-bottom: 1px solid #e6e6e6;
+  padding-top: 19px;
+  padding-bottom: 19px;
+  margin-bottom: 0;
+}
+.form-horizontal .form-group:last-child {
+  border-bottom: none;
+}
+.form-horizontal .form-group:hover .control-label {
+  opacity: .6;
+}
+.form-horizontal .form-group.focused .control-label {
+  opacity: 1;
+}
+.form-horizontal .form-group .control-label {
+  text-align: left;
+  opacity: .42;
+  -webkit-transition: opacity ease 0.3s;
+  transition: opacity ease 0.3s;
+}
+/* Form layouts  : Attached
+--------------------------------------------------
+*/
+.form-group-attached .form-group.form-group-default {
+  border-radius: 0;
+  margin-bottom: 0;
+}
+.form-group-attached > div {
+  margin: 0;
+}
+.form-group-attached > div:first-child.row > [class*='col-']:first-child .form-group-default {
+  border-top-left-radius: 2px;
+}
+.form-group-attached > div:first-child.row > [class*='col-']:last-child .form-group-default {
+  border-top-right-radius: 2px;
+}
+.form-group-attached > div:first-child.form-group-default {
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+.form-group-attached > div:last-child.row > [class*='col-']:first-child .form-group-default {
+  border-bottom-left-radius: 2px;
+}
+.form-group-attached > div:last-child.row > [class*='col-']:last-child .form-group-default {
+  border-bottom-right-radius: 2px;
+}
+.form-group-attached > div:last-child.form-group-default {
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+.form-group-attached > div.row > [class*='col-'] {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+.form-group-attached > div.row > [class*='col-'] > .form-group-default {
+  display: table;
+  width: 100%;
+}
+.form-group-attached > div.row > [class*='col-']:not(:only-child):not(:last-child) > .form-group-default {
+  border-right-color: transparent;
+}
+.form-group-attached > div:not(:last-child) .form-group-default,
+.form-group-attached > div:not(:last-child).form-group-default {
+  border-bottom-color: transparent;
+}
+/* Form layouts  : Responsive Handlers
+--------------------------------------------------
+*/
+@media (max-width: 767px) {
+  .form-group-attached .form-group-default {
+    border-right-color: rgba(0, 0, 0, 0.07) !important;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .form-group-attached > div.row {
+    display: table;
+    width: 100%;
+  }
+  .form-group-attached > div.row > [class*='col-'] {
+    display: table-cell;
+    height: 100%;
+    float: none;
+    vertical-align: top;
+  }
+  .form-group-attached > div.row > [class*='col-'] .form-group {
+    height: 100%;
+    width: 100%;
+  }
+}
+/* Form Groups 
+--------------------------------------------------
+*/
+.form-group {
+  margin-bottom: 10px;
+}
+.form-group label:not(.error) {
+  font-family: 'Montserrat';
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.form-group label .help {
+  margin-left: 8px;
+}
+.form-group .help {
+  font-size: 12px;
+  color: rgba(98, 98, 98, 0.55);
+}
+.form-group-default {
+  background-color: #fff;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 2px;
+  padding-top: 7px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: 4px;
+  overflow: hidden;
+  -webkit-transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease;
+}
+.form-group-default.required:after {
+  color: #f55753;
+  content: "*";
+  font-family: arial;
+  font-size: 20px;
+  position: absolute;
+  right: 15px;
+  top: 9px;
+}
+.form-group-default.disabled {
+  background: #f8f8f8;
+  color: rgba(98, 98, 98, 0.23);
+}
+.form-group-default.disabled input {
+  opacity: .6;
+}
+.form-group-default.disabled.focused {
+  background: #f8f8f8;
+}
+.form-group-default.disabled.focused label {
+  opacity: 1;
+}
+.form-group-default.focused {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  background-color: #f0f0f0;
+}
+.form-group-default.focused label {
+  opacity: .4;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.form-group-default.has-error {
+  background-color: rgba(245, 87, 83, 0.1);
+}
+.form-group-default.has-success .form-control-feedback,
+.form-group-default.has-error .form-control-feedback {
+  display: none !important;
+}
+.form-group-default.has-success .form-control,
+.form-group-default.has-success .form-control:focus,
+.form-group-default.has-error .form-control,
+.form-group-default.has-error .form-control:focus {
+  border: none;
+  box-shadow: none;
+}
+.form-group-default.input-group {
+  padding: 0;
+}
+.form-group-default.input-group > label {
+  margin-top: 6px;
+  padding-left: 12px;
+}
+.form-group-default.input-group > .form-control {
+  margin-top: -2px;
+  margin-bottom: 3px;
+  padding-left: 12px;
+}
+.form-group-default.input-group .input-group-addon {
+  height: calc(50px);
+  min-width: calc(50px);
+  border-radius: 0;
+  border: none;
+}
+.form-group-default.input-group.focused .input-group-addon {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+.form-group-default .form-control {
+  border: none;
+  height: 25px;
+  min-height: 25px;
+  padding: 0;
+  margin-top: -4px;
+  background: none;
+}
+.form-group-default .form-control.error {
+  color: #2c2c2c;
+}
+.form-group-default .form-control:focus {
+  background: none;
+}
+.form-group-default label {
+  margin: 0;
+  display: block;
+  opacity: 1;
+  -webkit-transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease;
+}
+.form-group-default label.label-lg {
+  font-size: 13px;
+  left: 13px;
+  top: 9px;
+}
+.form-group-default label.label-sm {
+  font-size: 11px;
+  left: 11px;
+  top: 6px;
+}
+.form-group-default label.highlight {
+  opacity: 1;
+}
+.form-group-default label.fade {
+  opacity: .5;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.form-group-default > .input-lg {
+  height: 29px;
+  min-height: 29px;
+  padding-left: 1px;
+}
+.form-group-default > .input-sm {
+  min-height: 18px;
+  height: 18px;
+}
+.form-group-default.form-group-default-select2 {
+  padding: 0;
+}
+.form-group-default.form-group-default-select2 > label {
+  position: absolute;
+  z-index: 10;
+  padding: 7px 12px 0 12px;
+}
+.form-group-default.form-group-default-select2 > label.label-lg {
+  left: 0;
+  top: 0;
+}
+.form-group-default.form-group-default-select2 > label.label-sm {
+  left: 0;
+  top: 0;
+}
+.form-group-default.form-group-default-select2 .select2-container .select2-choice {
+  padding-top: 20px;
+  height: 52px;
+}
+.form-group-default.form-group-default-select2 .select2-container .select2-choice .select2-arrow b:before {
+  top: 20px;
+}
+.form-group-default.form-group-default-select2 .select2-container .select2-choice .select2-chosen {
+  padding-left: 3px;
+  padding-top: 1px;
+}
+.form-group-default.form-group-default-select2 .select2-container .select2-choices {
+  padding-top: 20px;
+  height: 52px;
+  border: 0px;
+}
+.form-group-default.form-group-default-select2 > .input-lg {
+  height: auto;
+  padding: 0;
+}
+.form-group-default.form-group-default-select2 > .input-lg .select2-choice {
+  padding-top: 20px;
+  height: 56px;
+}
+.form-group-default.form-group-default-select2 > .input-sm {
+  height: auto;
+  padding: 0;
+}
+.form-group-default.form-group-default-select2 > .input-sm .select2-choice {
+  padding-top: 20px;
+  height: 46px;
+}
+.form-group-default.form-group-default-selectFx {
+  padding: 0;
+}
+.form-group-default.form-group-default-selectFx > label {
+  position: absolute;
+  z-index: 10;
+  padding: 7px 12px 0 12px;
+}
+.form-group-default.form-group-default-selectFx > label.label-lg {
+  left: 0;
+  top: 0;
+}
+.form-group-default.form-group-default-selectFx > label.label-sm {
+  left: 0;
+  top: 0;
+}
+.form-group-default.form-group-default-selectFx .cs-wrapper .cs-placeholder {
+  padding-top: 28px;
+  height: 52px;
+  padding-left: 12px;
+}
+.form-group-default.form-group-default-selectFx .cs-wrapper .cs-select {
+  height: auto;
+}
+.form-group-default.form-group-default-selectFx .cs-wrapper .cs-select > span:after,
+.form-group-default.form-group-default-selectFx .cs-wrapper .cs-select .cs-selected span:after {
+  top: 39px;
+}
+.form-group-default.form-group-default-selectFx .cs-wrapper .cs-select.input-lg .cs-placeholder {
+  height: 60px;
+}
+.form-group-default.form-group-default-selectFx .cs-wrapper .cs-select.input-sm .cs-placeholder {
+  height: 50px;
+}
+.form-group-default.form-group-default-selectFx .cs-wrapper .dropdown-placeholder {
+  vertical-align: top;
+}
+/* Form validation
+--------------------------------------------------
+*/

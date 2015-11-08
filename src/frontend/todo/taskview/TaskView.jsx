@@ -2,11 +2,14 @@ import React from 'react'
 import TaskItem from './TaskItem'
 import TaskInputForm from './TaskInputForm'
 import MapImage from '../dialog/MapImage'
+import If from '../../utility/if'
 
 import { createStore } from 'redux'
 import { connect } from 'react-redux';
 
 import { fetchList, fetchPrioritizedList, makeNewItem, removeItem } from '../actions/tasks'
+import { fetchTimetable } from '../actions/timetable'
+import TimeTable from './TimeTable'
 
 import _ from 'underscore'
 
@@ -20,6 +23,7 @@ class TaskView extends React.Component{
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch(fetchList());
+		dispatch(fetchTimetable());
 		dispatch(fetchPrioritizedList());
 	}
 
@@ -52,13 +56,29 @@ class TaskView extends React.Component{
 		});
 	}
 
+	addSleepTask(){
+		let time = new Date(this.props.global.time || Date.now());
+		let hour = time.getHours();
+		if(hour > 12){
+			time = new Date(time.getTime() + 24 * 60 * 60 * 1000);
+		}
+		time.setHours(12);
+		time.setMinutes(0);
+
+		let created = this.props.global.time || Date.now();
+		let duedate = time;
+
+		let data = {name: 'sleep', description: 'sleep', duedate, created, estimation: 8, adjustable: true};
+		const { dispatch } = this.props;
+		dispatch(makeNewItem(data));
+	}
+
 	render() {
 		var self = this;
-		var tasks = this.props.tasks;
 		var tasklog = this.props.tasklog;
-		const { global, config, dispatch } = this.props;
+		const { global, config, dispatch, tasks, timetable } = this.props;
 
-	    function createTaskElements(list, logs){
+	    function createTaskElements(list){
 			return _.map(list, task => (
 		        <TaskItem key={task._id} task={task} tasklog={tasklog[task._id]} dispatch={dispatch} global={global} onTaskModify={self.showModifyDialog.bind(self, task)} />)
 			);
@@ -70,15 +90,28 @@ class TaskView extends React.Component{
 					<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.showInputDialog.bind(this)}>
 						Add New Task
 					</button>
+					<button type="button" id="taskAddBtn" className="btn btn-primary btn-lg" onClick={this.addSleepTask.bind(this)}>
+						Add Sleep Task
+					</button>
 					<div className="task-list-wrapper">
 						<div className="task-list">
 							<div className="row">
-								<div className="col-md-12">
-									{createTaskElements(
-										config.displayActiveListOnly?
-											tasks.activeList
-											:tasks.plist
-										, tasklog)}
+								<div className="col-sm-12">
+									<If test={this.props.config.showEvent!=false}>
+										<TimeTable 
+											global={global} 
+											config={config} 
+											tasks={tasks} 
+											timetable={timetable} 
+											dispatch={dispatch}
+											tasklog={tasklog}
+										/>
+									</If>
+									<If test={this.props.config.showEvent==false}>
+										<div>
+											{createTaskElements(tasks.plist)}
+										</div>
+									</If>
 								</div>
 							</div>
 						</div>

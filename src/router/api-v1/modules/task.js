@@ -55,14 +55,15 @@ module.exports = function(_router, app){
 	router.post('/', function(req, res){
 		// This request create new task for the current user.
 		let userId = req.user._id;
-		let task = _.pick(req.body, 'name', 'description', 'created', 'importance', 'duedate');
+		let task = _.pick(req.body, 'name', 'description', 'created', 'important', 'duedate', 'adjustable', 'estimation');
 		task.lastProcessed = task.created;
 		let created = req.body.created;
 		let loc = req.body.loc;
 
-		timeEstimator.estimate(userId, task.name)
+		Q(task.estimation || timeEstimator.estimate(userId, task.name))
 		.then(result=>{
 			task.estimation = result;
+			console.log(task);
 			app.helper.taskHelper.create(userId, task)
 			.then(function(obj){
 				return app.helper.tasklog.create(obj.userId, obj._id, TaskStateType.named.create, {loc, time: created})
@@ -135,5 +136,18 @@ module.exports = function(_router, app){
 			res.send(result);
 		})
 		.fail(err=>logger.error(err))
+	})
+
+	router.put('/:id/set', function(req, res){
+		let body = req.body;
+		body = _.pick(body, 'important');
+
+		helper.taskHelper.findByIdAndUpdate(req.user._id, req.params.id, body)
+		.then(function(){
+			return helper.taskHelper.findOne(req.user._id, {_id: req.params.id});
+		})
+		.then(result=>res.send({task: result}))
+		.fail(err=>logger.error(err))
+
 	})
 }

@@ -34,7 +34,11 @@ def extractor(content):
         # log(result, 4)
 
         if result[0] in mytags:
-            words.append(node.surface)
+            if result[0]=='SL' and len(node.surface) == 1:
+                # Drop one length enligsh char because it does not have useful info.
+                pass
+            else:
+                words.append(node.surface)
         else:
             if result[0].find('+') is not -1:
                 # Use regex to extract key words

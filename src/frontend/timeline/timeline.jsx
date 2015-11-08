@@ -2,10 +2,13 @@
 
 import React from 'react'
 import d3 from 'd3'
+import d3tip from 'd3-tip';
 import { Chart, XAxis, YAxis } from '../d3/common';
 import { ViewBoxMixin } from '../d3/mixins';
 import _ from 'underscore';
+import classnames from 'classnames'
 var TaskStateType = require('../../constants/TaskStateType');
+
 
 export default class Timeline extends React.Component{
 	constructor(props){
@@ -13,7 +16,9 @@ export default class Timeline extends React.Component{
 		Object.assign(this, ViewBoxMixin);
 
 		this.state = {
-			tickInterval: {unit: 'hour', interval: 6}
+			tickInterval: {unit: 'hour', interval: 3}
+			, tickInterval2: {unit: 'hour', interval: 1}
+			, tickInterval3: {unit: 'minute', interval: 30}
 			, domainSize: 24
 			, leftOffset: 0
 		}
@@ -66,17 +71,32 @@ export default class Timeline extends React.Component{
 	} 
 
 	clickLog(log){
+		console.log('clickLog', log, log.begin, new Date(log.begin * (30*60*1000)));
 		this.setState({
-			leftCursor: new Date(log._time.begin)
+			leftCursor: new Date(log.begin)
 		});
 	}
 
+	getTip(){
+		if(this.tip){
+			return this.tip;
+		}
+
+		if(this.props.svg){
+			this.tip = d3tip(d3)().attr('class', 'd3-tip').html(function(d) { return d.content; });
+			this.props.svg.call(this.tip);
+			return this.tip;
+		}
+		else{
+			return null;
+		}
+	}
+
 	renderLogs(){
-		let logs = this.state.logs;
-		logs = _.filter(this.state.logs, log=>log._time.begin!=undefined)
-		let items = _.map(logs, log=>{
-			let begin = new Date(log._time.begin);
-			let end = new Date(log._time.end);
+		let elements = this.state.elements;
+		let items = _.map(elements, log=>{
+			let begin = new Date(log.begin);
+			let end = new Date(log.end);
 			let x0 = this.state.xScale(begin);
 			let x1 = this.state.xScale(end);
 			let width = x1-x0;
@@ -100,9 +120,16 @@ export default class Timeline extends React.Component{
 				width = 7;
 			}
 
+			
+			
+
 			return (
 				<g>
-					<rect className='task-log-elem' x={x0} width={width} y='0' height='40' onClick={this.clickLog.bind(this, log)}>
+					<rect className={classnames({'task-log-elem': true, 'focused': log.focused})} x={x0} width={width+1} y='0' height='40' 
+						onClick={this.clickLog.bind(this, log)}
+						onMouseOver={this.onMouseOver.bind(this, this.getTip(), log)}
+						onMouseOut={this.onMouseOut.bind(this, this.getTip(), log)}
+					>
 					</rect>
 					<rect className='task-log-elem-bottom' x={x0} width={width} y='37' height='3' onClick={this.clickLog.bind(this, log)}>
 					</rect>
@@ -113,6 +140,16 @@ export default class Timeline extends React.Component{
 		return (
 			{items}
 		)
+	}
+
+	onMouseOver(tip, element, e){
+		if(tip)
+			tip.show.apply(this, [element, e.target]);
+	}
+
+	onMouseOut(tip, element, e){
+		if(tip)
+			tip.hide.apply(this, [element, e.target]);
 	}
 
 	renderNow(){
@@ -134,44 +171,10 @@ export default class Timeline extends React.Component{
 	render() {
 		var props = this.props;
 
-		if(!this.props.logs || !this.props.logs.length){
-			return (<g>
-				<rect ref='background' width='100%' height='100%' fill='#fff'>
-				</rect>
-			</g>)
-		}
-
 		var interpolationType = props.interpolationType || (props.interpolate ? 'cardinal' : 'linear');
 
-		let logs = [];
-		let last;
-		for(var i in this.props.logs){
-			iterateLogs(this.props.logs[i]);
-		}
-		if(last){
-			last._time.end = Date.now();
-			logs.push(last);
-			last = undefined;
-		}
-
-		function iterateLogs(log){
-			last = last || log;
-			last._time = last._time || {};
-
-			let type = log.type;
-			if(type == TaskStateType.named.start.id){
-				last._time.begin = last._time.begin || log.time;
-			}
-			else if(type == TaskStateType.named.pause.id 
-				|| type == TaskStateType.named.pause.id){
-				last._time.end = log.time;
-				logs.push(last);
-				last = undefined;
-			}
-
-		}
-		this.state.logs = logs;
-		// Calculate inner chart dimensions
+		let elements = this.props.elements || [];
+		this.state.elements = elements;
 
 		var width = this.props.width;
 		var height = this.props.height;		
@@ -183,12 +186,13 @@ export default class Timeline extends React.Component{
 			.range([innerHeight, 0]);
 
 		//var xValues = [new Date('2014-03-08T12:00:00.000Z'), new Date('2014-03-10T00:00:00.000Z')];
-		var xValues = _.map(this.props.logs, log=>new Date(log.time));
+		var xValues = _.map(this.props.elements, log=>new Date(log.time));
 		var domainWindow = d3.extent(xValues);
 		var domainSize = this.state.domainSize*60*60*1000;
 		var leftDomainWindow = [domainWindow[0], domainWindow[1]-domainSize];
 		// var leftCursor = this.state.leftCursor || leftDomainWindow[0];
-		var leftCursor = this.state.leftCursor || new Date(Date.now() - 4*60*60*1000);
+		var leftCursor = this.props.leftCursor || this.state.leftCursor || new Date(Date.now() - 4*60*60*1000);
+		props.leftCursor = undefined;
 		this.state.leftCursor = leftCursor;
 		var domain = [new Date(leftCursor), new Date(leftCursor.getTime() + domainSize)];
 		var yMaxValues = [10];
@@ -226,6 +230,8 @@ export default class Timeline extends React.Component{
 					xScale={xScale}
 					xAxisTickValues={props.xAxisTickValues}
 					xAxisTickInterval={this.state.tickInterval}
+					xAxisTickInterval2={this.state.tickInterval2}
+					xAxisTickInterval3={this.state.tickInterval3}
 					xAxisTickCount={props.xAxisTickCount}
 					xAxisLabel={props.xAxisLabel}
 					xAxisLabelOffset={props.xAxisLabelOffset}
@@ -242,6 +248,7 @@ export default class Timeline extends React.Component{
 					stroke='#ddd'
 					tickStroke='#ddd'
 					fontSize={10}
+					tickSize={8}
 				/>
 	  		</g>
 		);
