@@ -3,7 +3,6 @@ from elasticsearch import Elasticsearch
 import json
 import config
 
-
 class DocumentES():
     def __init__(self, app):
         self.es = Elasticsearch(hosts=['%s:%d' % (config.ES_HOST, config.ES_PORT)])
@@ -17,7 +16,7 @@ class DocumentES():
         except Exception, e:
             self.app.logger.info(e.message)
         finally:
-            return_object = self.res_to_json(es_res, top_n)
+            return_object = self.res_to_json(es_res, top_n, config.ES_SCORE)
             if return_object is None:
                 return_object = {}
             return return_object

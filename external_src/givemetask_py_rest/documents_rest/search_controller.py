@@ -21,9 +21,12 @@ class SearchController():
         elif user_article_count < 500:
             rss_number = number / 3
             cluster_number = number / 3 * 2
-        else:
+        elif user_article_count < 1000:
             rss_number = number / 3 * 2
             cluster_number = number / 3
+        else:
+            rss_number = 3
+            cluster_number = 0
 
         return rss_number, cluster_number
 
