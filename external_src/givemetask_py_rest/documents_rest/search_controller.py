@@ -15,18 +15,19 @@ class SearchController():
 
         number = NUMBER_DOCS
 
-        if user_article_count < 100:
-            rss_number = 0
-            cluster_number = number
-        elif user_article_count < 500:
-            rss_number = number / 3
-            cluster_number = number / 3 * 2
-        elif user_article_count < 1000:
-            rss_number = number / 3 * 2
-            cluster_number = number / 3
-        else:
-            rss_number = 3
-            cluster_number = 0
+        # if user_article_count < 100:
+        #     rss_number = 0
+        #     cluster_number = number
+        # elif user_article_count < 500:
+        #     rss_number = number / 3
+        #     cluster_number = number / 3 * 2
+        # elif user_article_count < 1000:
+        #     rss_number = number / 3 * 2
+        #     cluster_number = number / 3
+        # else:
+        #     rss_number = 3
+        #     cluster_number = 0
+        rss_number, cluster_number = 2, 1
 
         return rss_number, cluster_number
 
