@@ -59,10 +59,10 @@ class TaskView extends React.Component{
 	addSleepTask(){
 		let time = new Date(this.props.global.time || Date.now());
 		let hour = time.getHours();
-		if(hour > 12){
+		if(hour > 14){
 			time = new Date(time.getTime() + 24 * 60 * 60 * 1000);
 		}
-		time.setHours(12);
+		time.setHours(14);
 		time.setMinutes(0);
 
 		let created = this.props.global.time || Date.now();
