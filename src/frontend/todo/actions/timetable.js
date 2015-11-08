@@ -9,6 +9,9 @@ export function fetchTimetable(){
 		return $.ajax({
 			url: '/v1/timetable/make',
 			type: 'put'
+			, data:{
+				time: getState().global.time
+			}
 		})
 		.then(function(){
 			return $.ajax({

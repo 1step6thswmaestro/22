@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var Q = require('q');
+var SlotAllocator = require('./SlotAllocator');
 
 const SLOT_SIZE = 1000*60*30;
 const SLOT_NUMBER = 48*7;
@@ -60,25 +61,31 @@ class TimeMaker{
 		return newVal;
 	}
 
-	process() {
+	process(currentTime) {
 		let getTimeslot = this.getTimeslot;
 		let getTimeLevel = this.getTimeLevel;
 		let isTaken = this.isTaken;
 		let makeNewEvent = this.makeNewEvent;
 		let sortByTime = this.sortByTime;
 		let sortByTimelevel = this.sortByTimelevel;
-
-		let now = getTimeslot(Date.now());
+		let now = getTimeslot(currentTime||Date.now());
+		let slotAllocator = new SlotAllocator(now, SLOT_NUMBER);
 		let timetable = [];
+
+		console.log(this.events);
 
 		_.each(this.events, event=>{
 			let start = getTimeslot(event.start);
 			let end = getTimeslot(event.end);
 
-			let tableEvent = makeNewEvent(this.userId, undefined, start, end, event.summary, 0);
+			let allocation = slotAllocator.alloc(start, end, false);
+			if(allocation == 0){
+				console.log('cannot alloc event.');
+			}
 
-			if (!isTaken(timetable, tableEvent))
-				timetable.push(tableEvent);
+			console.log(event.summary, {start, end, allocation});
+			let tableEvent = makeNewEvent(this.userId, undefined, start, end, event.summary, 0);
+			timetable.push(tableEvent);
 		});
 
 		return Q(this.app.helper.taskHelper.find(this.userId))
@@ -95,61 +102,58 @@ class TimeMaker{
 				let slot_size = SLOT_NUMBER;
 				let timespan = Math.floor(task.estimation*2);
 				let timePreferenceScore = task.timePreferenceScore;
+				let slot_due = getTimeslot(task.duedate);
 				
-				if(getTimeslot(task.duedate)-now<SLOT_NUMBER){
-					slot_size = getTimeslot(task.duedate)-now;
-
-					
-					if(slot_size < timespan)	//only possible when 'adjustable' set
-						timespan = slot_size;
-
-					console.log({timespan, slot_size});
+				if(slot_due-now<SLOT_NUMBER){
+					slot_size = slot_due-now;
 				}
 
-				console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size});
+				console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
 
 				if (task.adjustable || (0 <= level && level < (24*7/TIMELEVEL_SIZE))) {
-					let score = [];
-
 					// Calculate time prefer score for each slot term
-					for (let i = 0; i <= slot_size-timespan; ++i) {
-						let slot = (now+i)%SLOT_NUMBER;
-						let _score = 0;
-						for (let j = 0; j < timespan; j++) {
-							_score += timePreferenceScore[(slot+j)%SLOT_NUMBER] || 0;
+
+					let scores = [];
+					for (let i = 0; i <= slot_size-(task.adjustable?1:timespan); ++i) {
+						let slot = now+i;
+
+						let start = slot;
+						let _timespan = timespan;
+
+						if(slot_due - start < _timespan)	//only possible when 'adjustable' set
+							_timespan = slot_due-start;
+						
+						let end = slot + _timespan;
+						let allocation = slotAllocator.test(start, end, task.adjustable);
+
+						if(allocation>0){
+							let score = 0;
+							for (let j = 0; j < allocation; j++) {
+								score += timePreferenceScore[(start+j)%SLOT_NUMBER] || 0;
+							}
+							scores.push({start, end, score});
 						}
-						score.push({slot: now+i, score: _score});
 					}
 
-
-					score.sort(function(a, b){
+					scores.sort(function(a, b){
 						return a.score - b.score;
 					});
 
 					// Checkout if the task's prefer slot is taken by the other
-					let tableTask = null;
-					for (let i = 0; i < score.length; i++) {
-						let slot = score[i].slot;
+					for (let i = 0; i < scores.length; i++) {
+						let scoreObj = scores[i];
+						let start = scoreObj.start;
+						let end = scoreObj.end;
+						let score = scoreObj.score;
 
-						let start = slot;
-						let end = slot + timespan;
-
-						tableTask = makeNewEvent(this.userId, task._id, start, end, task.name, task.estimation);
-
-						if(!isTaken(timetable, tableTask)) {
-							console.log({now, score: score[i]});
-							console.log(tableTask);
-							console.log({start, end});
-							break;
+						if(slotAllocator._alloc(start, end)>0){
+							let tableTask = makeNewEvent(this.userId, task._id, start, end, task.name, task.estimation);
+							if (tableTask) {
+								timetable.push(tableTask);
+								break;
+							}
 						}
-					}
-
-					if (tableTask) {
-						timetable.push(tableTask);
-					}
-					
-					let start = getTimeslot(task.duedate)-Math.floor((task.estimation*2))-1;
-					let end = getTimeslot(task.duedate);
+					}					
 				}
 			})
 		})
@@ -159,14 +163,14 @@ class TimeMaker{
 		});
 	}
 
-	make(userId, events) {
+	make(userId, events, currentTime) {
 		let helper = this.app.helper;
 		this.events = events;
 		this.userId = userId;
 
 		// Now tablemaker remove all timetable for every requests.
 		return Q(helper.timetable.reset(userId))
-		.then(function(){ return this.process() }.bind(this));
+		.then(function(){ return this.process(currentTime) }.bind(this));
 	}
 
 	testData(user){
