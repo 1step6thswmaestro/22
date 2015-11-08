@@ -34,11 +34,7 @@ module.exports = function(_router, app){
 				oauthAccessToken: oauthAccessToken
 			};
 
-			// console.log(req.session.evernote);
-
-			// Use below commented redirection after implementing '/pushtodb'.
-			res.redirect('/');
-			// res.redirect('/v1/evernote/pushtodb')
+			res.redirect('/v1/evernote/pushtodb')
 		})
 		.fail((err)=>res.send(err.data));
 	})
@@ -46,14 +42,11 @@ module.exports = function(_router, app){
 	router.get('/pushtodb', function(req, res){
 		// Push every notes in the evernote account into Article DB.
 		// This function will be automatically callled during OAuth.
-		app.helper.evernote.getNotebookList(req.session.evernote.oauthAccessToken)
-		.then(notelist=>{
-			// LOOP OVER NOTEBOOK
-				// GET NOTES FROM NOTEBOOK
-				// LOOP OVER NOTES
-					// PUSH TO Article DB
-				// END LOOP
-			// END LOOP
+
+		app.helper.evernote.getNoteList(req.session.evernote.oauthAccessToken)
+		.then(noteList=>{
+			app.helper.evernote.makeNoteList2Article(req.session.evernote.oauthAccessToken, req.user, noteList);
+			res.redirect('/');
 		})
 		.fail(err=>res.send(err));
 	})
@@ -61,10 +54,17 @@ module.exports = function(_router, app){
 	router.get('/unauth', function(req, res){
 		// Drop session data for Evernote.
 		req.session.evernote = {};
+		res.redirect('/');
 	})
 
 	router.get('/notebooklist/list', function(req, res){
 		app.helper.evernote.getNotebookList(req.session.evernote.oauthAccessToken)
+		.then(results=>res.send(results))
+		.fail(err=>res.send(err));
+	})
+
+	router.get('/note/list', function(req, res){
+		app.helper.evernote.getNoteList(req.session.evernote.oauthAccessToken)
 		.then(results=>res.send(results))
 		.fail(err=>res.send(err));
 	})

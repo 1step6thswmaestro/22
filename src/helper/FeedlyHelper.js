@@ -123,6 +123,8 @@ class FeedlyHelper{
 					articleRaw.content = articleRaw.content.content;
 				if(articleRaw.summary && articleRaw.summary.content)
 					articleRaw.summary = articleRaw.summary.content;
+				articleRaw = _.extend(articleRaw, {type: 0}); // This id differentiates RSS articles from Evernote note.
+				
 				var article = new Article(articleRaw);
 				return Q.nbind(article.save, article)()
 				.fail(err=>undefined);
