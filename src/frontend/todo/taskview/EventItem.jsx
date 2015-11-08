@@ -3,8 +3,12 @@ import _ from 'underscore';
 import { getReadableDate } from '../../utility/date'
 import If from '../../utility/if'
 import TaskProgress from './TaskProgress'
-import { setTaskProperty } from '../actions/tasks'
 import { setConfig } from '../actions/config'
+import TaskItemDetail from './TaskItemDetail'
+import { startItem, pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
+import { setTaskProperty } from '../actions/tasks'
+import classnames from 'classnames'
+
 
 class EventItem extends React.Component{
 	constructor(props){
@@ -12,22 +16,36 @@ class EventItem extends React.Component{
 		this.state = {};
 	}
 
-	setImportant(value){
+	setImportant(value, e){
 		let { dispatch } = this.props;
 		if(this.props.task)
 			dispatch(setTaskProperty(this.props.task, {important: value}));
+
+		e.stopPropagation();
 	}
 
 	onMouseOver(){
 		let { dispatch } = this.props;
-		console.log('focusedTask', this.props.event);
-		dispatch(setConfig('focusedTask', this.props.event.taskId))
+		dispatch(setConfig('focusedTableId', this.props.event._id))
+	}
+
+	onClick(){
+		let { dispatch } = this.props;
+		if(this.props.config.selectedTableId == this.props.event._id){
+			dispatch(setConfig('selectedTableId', undefined))
+		}
+		else{
+			dispatch(setConfig('selectedTableId', this.props.event._id))	
+		}
 	}
 
 	onMouseOut(){
 		let { dispatch } = this.props;
-		dispatch(setConfig('focusedTask', null))
+		dispatch(setConfig('focusedTableId', null))
 	}
+
+
+	
 
 	getSimpleView(){
 		var event = this.props.event;
@@ -37,7 +55,7 @@ class EventItem extends React.Component{
 		let important = task && task.important==true;
 
 		return (
-			<div className='table-item' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} >
+			<div className='table-item-title' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} onClick={this.onClick.bind(this)}>
 				<If test={important}>
 					<div className='table-item-header border-right property' onClick={this.setImportant.bind(this, false)}>
 						<i className='fa fa-exclamation'></i>
@@ -61,16 +79,29 @@ class EventItem extends React.Component{
 				<div className='table-item-header date date2 mr10'>
 					{end.format("HH:mm")}
 				</div>
-				{event.summary}
+				<div className='content'>
+					{event.summary}
+				</div>
 				<div className='table-item-header border-left float-right task-progress-container'>
-					<TaskProgress count={event.estimation * 3}/>
+					<TaskProgress count={event.estimation}/>
 				</div>
 			</div>
 		);
 	}
 
 	render() {
-		return this.getSimpleView();
+		let selected = this.props.event._id==this.props.config.selectedTableId;
+		return (
+			<div className={classnames({'table-item': true, selected})}>
+				{this.getSimpleView()}
+				<If test={this.props.task!=null && selected} >
+					<TaskItemDetail task={this.props.task} tasklog={this.props.tasklog} dispatch={this.props.dispatch}
+						global={this.props.global}
+						setImportant={this.setImportant.bind(this)}
+					/>
+				</If>
+			</div>
+		)
 	}
 };
 

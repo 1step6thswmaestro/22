@@ -77,6 +77,7 @@ class TaskInputForm extends React.Component{
 			relatedLocation: 0,
 			modifyMode: false,
 			task: null,
+			strInfoUntilDue: ''
 		};
 	}
 
@@ -179,9 +180,38 @@ class TaskInputForm extends React.Component{
 		this.refs.duedate.setDate(task.duedate);
 	}
 
+	getTimeDiffInfo(dateFrom, dateTo){
+		// dateFrom must be old than dateTo.
+		// If time difference is more than one day, it returns 'n일'.
+		// Or, it returns 'n시간'.
+
+		var strInfo = '';
+
+		var hourDiff = Math.floor( (dateTo - dateFrom) / (1000*60*60));
+		if (hourDiff > 24){
+			strInfo = Math.floor(hourDiff/24)+'일'
+		}
+		else{
+			strInfo = hourDiff+'시간'
+		}
+		return strInfo;
+	}
+
 	setDate(date){
 		this.refs.created.setDate(date);
-		this.refs.duedate.setDate(this.refs.created.getValue() + (24*60*60*1000));
+
+		var dueDate = new Date(this.refs.created.getDate());
+		dueDate.setDate(dueDate.getDate() + 1);
+		this.refs.duedate.setDate(dueDate);
+
+		this.setState({strInfoUntilDue: this.getTimeDiffInfo(Date.now(), dueDate)});
+	}
+	onDueDateExtendButtonClick(deltaDay, deltaWeek, deltaMonth){
+		var newDate = this.refs.duedate.getDate(); // Init
+		newDate.setDate(newDate.getDate() + deltaDay + deltaWeek * 7 + deltaMonth * 30);
+		this.refs.duedate.setDate(newDate)
+
+		this.setState({strInfoUntilDue: this.getTimeDiffInfo(Date.now(), newDate)});
 	}
 
 
@@ -241,6 +271,10 @@ class TaskInputForm extends React.Component{
 											</div>
 											<div className="col-md-6">
 												<DateTimePicker ref="duedate" default={this.props.global.time+(24*60*1000)} label='due date'/>
+												{this.state.strInfoUntilDue} 후 마감
+												<button type="button" className="btn btn-default" onClick={this.onDueDateExtendButtonClick.bind(this, 1, 0, 0)}> +하루</button>
+												<button type="button" className="btn btn-default" onClick={this.onDueDateExtendButtonClick.bind(this, 0, 1, 0)}>+일주일</button>
+												<button type="button" className="btn btn-default" onClick={this.onDueDateExtendButtonClick.bind(this, 0, 0, 1)}>+한달</button>
 											</div>
 										</div>
 										<div className="row">

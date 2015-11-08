@@ -1,0 +1,191 @@
+/*
+[4. Panels]
+*/
+.panel {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 1px;
+  -webkit-border-radius: 1px;
+  -moz-border-radius: 1px;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.panel .panel-heading {
+  background: transparent;
+  border-radius: 0px;
+  border-bottom: 0px;
+  padding: 20px 20px 7px 20px;
+  position: relative;
+  z-index: 3;
+  min-height: 48px;
+}
+.panel .panel-heading.separator:after {
+  content: "";
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  left: 16px;
+  right: 16px;
+  position: absolute;
+  bottom: 0;
+}
+.panel .panel-heading + .panel-body {
+  padding-top: 0;
+  height: calc(100% - 50px);
+}
+.panel .panel-heading .panel-title {
+  font-family: 'Montserrat';
+  text-transform: uppercase;
+  display: inline-block;
+  letter-spacing: 0.02em;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-text-stroke: 0px;
+  filter: alpha(opacity=40);
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+}
+.panel .panel-heading .panel-controls {
+  float: right;
+  margin-top: -3px;
+}
+.panel .panel-heading .panel-controls ul {
+  margin: 0;
+  padding: 0;
+}
+.panel .panel-heading .panel-controls ul li {
+  display: inline-block;
+  list-style: none;
+  line-height: 0;
+}
+.panel .panel-heading .panel-controls:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.panel .panel-heading.panel-heading-hover .panel-title {
+  opacity: .4;
+}
+.panel .panel-heading.panel-heading-hover:hover .panel-title {
+  opacity: 1;
+}
+.panel.panel-default {
+  border: 1px solid rgba(0, 0, 0, 0.07);
+}
+.panel.panel-bordered {
+  border: 1px solid rgba(230, 230, 230, 0.7);
+}
+.panel.panel-condensed .panel-heading {
+  padding: 13px 13px 0 13px;
+  min-height: 30px;
+}
+.panel.panel-condensed .panel-heading .panel-title {
+  opacity: .4;
+}
+.panel.panel-condensed .panel-body {
+  padding: 13px;
+}
+.panel.panel-hover .panel-heading .panel-title {
+  opacity: .4;
+}
+.panel.panel-hover:hover .panel-heading .panel-title {
+  opacity: 1;
+}
+.panel.panel-transparent {
+  background: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.panel.panel-transparent .panel-body {
+  background: transparent;
+}
+.panel.full-height {
+  height: calc(100%);
+}
+.panel.full-height .panel-body {
+  height: auto;
+  width: 100%;
+  height: 100%;
+}
+.panel.panel-featured {
+  -webkit-box-shadow: -1px 1px 3px 0px rgba(121, 129, 135, 0.14);
+  box-shadow: -1px 1px 3px 0px rgba(121, 129, 135, 0.14);
+  width: calc(100% - 50px);
+  float: right;
+}
+.panel.panel-featured .panel-title h4 {
+  font-family: 'Montserrat';
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #f0f0f0;
+}
+.panel.panel-featured .panel-body h3 {
+  line-height: 34px;
+  font-size: 26px;
+}
+.panel.panel-featured .footer .username {
+  line-height: 8px;
+  padding-top: 10px;
+  font-size: 16px;
+}
+.panel.panel-featured .footer .buttons li {
+  display: inline;
+  list-style: none;
+  font-weight: bold;
+  margin-left: 20px;
+}
+.panel.panel-featured .footer .buttons li:first-child {
+  margin-left: 0;
+}
+.panel.panel-featured .footer .buttons .heart {
+  color: #f55753;
+}
+.panel.panel-featured .footer .buttons .comment {
+  color: #626262;
+}
+.panel.panel-featured .ribbon {
+  width: 38px;
+  height: 38px;
+  margin-left: -39px;
+  float: left;
+  -webkit-box-shadow: inset -3px 0px 3px 0px rgba(0, 0, 0, 0.14);
+  box-shadow: inset -3px 0px 3px 0px rgba(0, 0, 0, 0.14);
+}
+.panel.panel-featured .ribbon.green {
+  background: #48b0f7;
+}
+.panel.panel-featured .ribbon.blue {
+  background: #10cfbd;
+}
+.panel.hover-fill:hover {
+  background: #f0f0f0;
+}
+.panel.hover-stroke:hover {
+  border: 1px solid #e6e6e6;
+}
+.panel .panel-body {
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+}
+.panel .panel-body.no-padding .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+.panel .panel-body.no-bottom-padding {
+  padding-bottom: 0;
+}
+.panel .panel-body.no-top-padding {
+  padding-top: 0;
+}
+.panel .panel-body .title {
+  margin-top: 0px;
+}
+.panel .panel-body.scrollable {
+  margin-bottom: 20px;
+}

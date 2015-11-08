@@ -3,8 +3,8 @@
 
 
 # Please change below DB Address only when you schedule regular job with cron.
-# CONST_DB_ADDR='128.199.166.149'
-CONST_DB_ADDR='localhost'
+CONST_DB_ADDR='128.199.166.149'
+# CONST_DB_ADDR='localhost'
 CONST_DB_PORT=27340
 
 CONST_NUM_TIMESLOT = 48*7
@@ -38,9 +38,10 @@ def smoother(numtype_arr):
         result_arr[idx] = weighted_sum;
     return result_arr
 
-def getTimePrefScore(token_collection, tokens):
+def getTimePrefScore(user_id, token_collection, tokens):
     """
     return total tf-idf score from given tokens.
+	During calculation, it use only tokens belong to given user_id.
     """
 
     # Init tf-idf score for every timeslot per each token.
@@ -54,7 +55,9 @@ def getTimePrefScore(token_collection, tokens):
 
         # num_tok_timeslot[i]: number of tokens appeared in timeslot i.
         num_tok_timeslot = [0] * CONST_NUM_TIMESLOT
-        for pred_token in token_collection.find({"text": token, "type": 200}): # type:200 only retrive tokens for task-ongoing event.
+
+        # type:200, 9999 only retrive tokens for task-ongoing event or Google Calander event.
+        for pred_token in token_collection.find({"userId": user_id, "text": token, "$or": [{"type": 200}, {"type": 9999}]}):
             index_timeslot = pred_token["timeslotIndex"]
             num_tok_timeslot[index_timeslot] = num_tok_timeslot[index_timeslot] + 1
 
@@ -134,8 +137,7 @@ def batchCalcTimePrefScore():
         # get score for all time slots.
         content = c['name'] + ' ' + c['description']
         tokens = tokenizer.extractor(content);
-
-        score = getTimePrefScore(token_collection, tokens)
+        score = getTimePrefScore(c['userId'], token_collection, tokens)
         task_collection.update_one({'_id': c['_id']}, {'$set': {'timePreferenceScore': score}});
 
 

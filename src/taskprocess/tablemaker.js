@@ -27,7 +27,7 @@ class TimeMaker{
 	}
 
 	getTimeslot(time) {
-		return Math.floor(time.getTime()/SLOT_SIZE);
+		return Math.floor((time.getTime?time.getTime():time)/SLOT_SIZE);
 	}
 
 	getTimeLevel(task) {
@@ -47,9 +47,10 @@ class TimeMaker{
 		return _a.tableslotStart-_b.tableslotStart;
 	}
 
-	makeNewEvent(_id, _start, _end, _summary, _estimation) {
+	makeNewEvent(userId, taskId, _start, _end, _summary, _estimation) {
 		let newVal = {
-			userId: _id,
+			userId,
+			taskId,
 			tableslotStart: _start, 
 			tableslotEnd: _end,
 			summary: _summary,
@@ -67,14 +68,14 @@ class TimeMaker{
 		let sortByTime = this.sortByTime;
 		let sortByTimelevel = this.sortByTimelevel;
 
-		let now = Math.floor(Date.now()/SLOT_SIZE);
+		let now = getTimeslot(Date.now());
 		let timetable = [];
 
 		_.each(this.events, event=>{
 			let start = getTimeslot(event.start);
 			let end = getTimeslot(event.end);
 
-			let tableEvent = makeNewEvent(this.userId, start, end, event.summary, 0);
+			let tableEvent = makeNewEvent(this.userId, undefined, start, end, event.summary, 0);
 
 			if (!isTaken(timetable, tableEvent))
 				timetable.push(tableEvent);
@@ -90,21 +91,36 @@ class TimeMaker{
 
 			_.each(tasks, task=>{
 				let level = task.timelevel;
+				let slot_begin = now%SLOT_NUMBER;
+				let slot_size = SLOT_NUMBER;
+				let timespan = Math.floor(task.estimation*2);
+				let timePreferenceScore = task.timePreferenceScore;
+				
+				if(getTimeslot(task.duedate)-now<SLOT_NUMBER){
+					slot_size = getTimeslot(task.duedate)-now;
 
-				if (0 <= level && level < (24*7/(TIMELEVEL_SIZE))) {
-					let timePreferenceScore = task.timePreferenceScore;
-					let timespan = Math.floor(task.estimation*2);
+					
+					if(slot_size < timespan)	//only possible when 'adjustable' set
+						timespan = slot_size;
 
+					console.log({timespan, slot_size});
+				}
+
+				console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size});
+
+				if (task.adjustable || (0 <= level && level < (24*7/TIMELEVEL_SIZE))) {
 					let score = [];
 
 					// Calculate time prefer score for each slot term
-					for (let i = 0; i < SLOT_NUMBER; i++) {
+					for (let i = 0; i <= slot_size-timespan; ++i) {
+						let slot = (now+i)%SLOT_NUMBER;
 						let _score = 0;
 						for (let j = 0; j < timespan; j++) {
-							_score += timePreferenceScore[(i+j)%SLOT_NUMBER];
+							_score += timePreferenceScore[(slot+j)%SLOT_NUMBER] || 0;
 						}
-						score.push({idx: i, score: _score});
+						score.push({slot: now+i, score: _score});
 					}
+
 
 					score.sort(function(a, b){
 						return a.score - b.score;
@@ -112,26 +128,20 @@ class TimeMaker{
 
 					// Checkout if the task's prefer slot is taken by the other
 					let tableTask = null;
-					for (let i = 0; i < SLOT_NUMBER; i++) {
-						let idx = score[i].idx;
+					for (let i = 0; i < score.length; i++) {
+						let slot = score[i].slot;
 
-						let _now = new Date(Date.now());
-						let weekday = _now.getDay();
-						let h = _now.getHours();
-						let m = _now.getMinutes();
+						let start = slot;
+						let end = slot + timespan;
 
-						let idx_now = weekday * 48 + h * 2 + Math.floor(m / 30);
-						let offset = idx_now - idx;
-						if(offset < 0){
-							offset += 48*7;
+						tableTask = makeNewEvent(this.userId, task._id, start, end, task.name, task.estimation);
+
+						if(!isTaken(timetable, tableTask)) {
+							console.log({now, score: score[i]});
+							console.log(tableTask);
+							console.log({start, end});
+							break;
 						}
-
-						let start = now + offset;
-						let end = now + offset + timespan;
-
-						tableTask = makeNewEvent(this.userId, start, end, task.name, task.estimation);
-
-						if(!isTaken(timetable, tableTask)) break;
 					}
 
 					if (tableTask) {

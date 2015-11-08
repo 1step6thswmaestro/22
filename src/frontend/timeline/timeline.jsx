@@ -71,9 +71,25 @@ export default class Timeline extends React.Component{
 	} 
 
 	clickLog(log){
+		console.log('clickLog', log, log.begin, new Date(log.begin * (30*60*1000)));
 		this.setState({
-			leftCursor: new Date(log._time.begin)
+			leftCursor: new Date(log.begin)
 		});
+	}
+
+	getTip(){
+		if(this.tip){
+			return this.tip;
+		}
+
+		if(this.props.svg){
+			this.tip = d3tip(d3)().attr('class', 'd3-tip').html(function(d) { return d.content; });
+			this.props.svg.call(this.tip);
+			return this.tip;
+		}
+		else{
+			return null;
+		}
 	}
 
 	renderLogs(){
@@ -104,20 +120,15 @@ export default class Timeline extends React.Component{
 				width = 7;
 			}
 
-			console.log({begin, end, x0, x1, width});
-
-			var tip = d3tip(d3)().attr('class', 'd3-tip').html(function(d) { return d.content; });
-			if(this.props.svg){
-				console.log('d3-tip', this.props.svg, tip);
-				this.props.svg.call(tip);
-			}
+			
+			
 
 			return (
 				<g>
 					<rect className={classnames({'task-log-elem': true, 'focused': log.focused})} x={x0} width={width+1} y='0' height='40' 
 						onClick={this.clickLog.bind(this, log)}
-						onMouseOver={this.onMouseOver.bind(this, tip, log)}
-						onMouseOut={this.onMouseOut.bind(this, tip, log)}
+						onMouseOver={this.onMouseOver.bind(this, this.getTip(), log)}
+						onMouseOut={this.onMouseOut.bind(this, this.getTip(), log)}
 					>
 					</rect>
 					<rect className='task-log-elem-bottom' x={x0} width={width} y='37' height='3' onClick={this.clickLog.bind(this, log)}>
@@ -132,11 +143,13 @@ export default class Timeline extends React.Component{
 	}
 
 	onMouseOver(tip, element, e){
-		tip.show.apply(this, [element, e.target]);
+		if(tip)
+			tip.show.apply(this, [element, e.target]);
 	}
 
 	onMouseOut(tip, element, e){
-		tip.hide.apply(this, [element, e.target]);
+		if(tip)
+			tip.hide.apply(this, [element, e.target]);
 	}
 
 	renderNow(){
@@ -178,7 +191,8 @@ export default class Timeline extends React.Component{
 		var domainSize = this.state.domainSize*60*60*1000;
 		var leftDomainWindow = [domainWindow[0], domainWindow[1]-domainSize];
 		// var leftCursor = this.state.leftCursor || leftDomainWindow[0];
-		var leftCursor = this.state.leftCursor || new Date(Date.now() - 4*60*60*1000);
+		var leftCursor = this.props.leftCursor || this.state.leftCursor || new Date(Date.now() - 4*60*60*1000);
+		props.leftCursor = undefined;
 		this.state.leftCursor = leftCursor;
 		var domain = [new Date(leftCursor), new Date(leftCursor.getTime() + domainSize)];
 		var yMaxValues = [10];
