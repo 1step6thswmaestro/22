@@ -10,7 +10,7 @@
     right: 0;
     z-index: -1;
     display: block;
-    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url("main/background.jpg");
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.6)), url("main/background.jpg");
     background-size: cover;
     background-attachment: fixed;
     background-position: 50% 50%;
@@ -205,7 +205,7 @@ html {
     right: 0;
     z-index: -1;
     display: block;
-    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url("main/background.jpg");
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.6)), url("main/background.jpg");
     background-size: cover;
     background-attachment: fixed;
     background-position: 50% 50%;
@@ -274,7 +274,7 @@ html {
     right: 0;
     z-index: -1;
     display: block;
-    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url("main/background.jpg");
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.6)), url("main/background.jpg");
     background-size: cover;
     background-attachment: fixed;
     background-position: 50% 50%;
@@ -330,7 +330,8 @@ html {
   fill: rgba(118, 118, 118, 0.7); }
 
 .task-log-elem {
-  fill: #FEE7DF; }
+  fill: #FEE7DF;
+  transition: 0.3s; }
   .task-log-elem:hover {
     fill: #FEB4B9; }
   .task-log-elem:hover + .task-log-elem-bottom {
@@ -338,6 +339,8 @@ html {
     height: 40px;
     delay: 0.2s;
     transition: 0.3s; }
+  .task-log-elem.focused {
+    fill: #a3dbbd; }
 
 .task-log-elem-bottom {
   fill: #95bca7;
@@ -585,7 +588,6 @@ ul {
 .card-control .toolbar .button.discard {
   background-image: url(/todo/trash.svg); }
 
-
 textarea:focus, input:focus {
   outline: 0; }
 
@@ -615,7 +617,7 @@ textarea:focus, input:focus {
     right: 0;
     z-index: -1;
     display: block;
-    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url("main/background.jpg");
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.6)), url("main/background.jpg");
     background-size: cover;
     background-attachment: fixed;
     background-position: 50% 50%;
@@ -676,22 +678,37 @@ textarea:focus, input:focus {
     background: rgba(160, 140, 140, 0.3); }
   .table-item .table-item-header {
     display: inline-block;
-    width: 40px; }
+    width: 40px;
+    text-align: center; }
+    .table-item .table-item-header.property:hover {
+      background: rgba(123, 68, 68, 0.35); }
   .table-item .date {
     width: 55px;
-    text-align: center;
     background: rgba(123, 68, 49, 0.15);
     font-family: 'Kelly Slab', cursive;
     font-size: 11pt; }
   .table-item .date2 {
     background: rgba(123, 68, 49, 0.25); }
+  .table-item .border-left {
+    border-left: 1px solid #ccc; }
+  .table-item .border-right {
+    border-right: 1px solid #ccc; }
+  .table-item .float-right {
+    float: right; }
+  .table-item .task-progress-container {
+    width: 80px;
+    background: rgba(123, 68, 49, 0.1);
+    height: 100%;
+    text-align: left;
+    padding-left: 10px; }
+  .table-item:first-child .task-progress-container {
+    border-top-right-radius: 10px; }
+  .table-item:last-child .task-progress-container {
+    border-bottom-right-radius: 10px; }
 
 .task-progress {
-  position: absolute;
-  top: 15px;
-  right: 25px;
   height: 100%; }
   .task-progress .progress-elem {
-    fill: #ac5f46;
+    fill: rgba(172, 95, 70, 0.45);
     width: 5px;
-    height: 20px; }
+    height: 30px; }

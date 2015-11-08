@@ -7,7 +7,8 @@ module.exports = function(app){
 		originId: String,
 		title: String,
 		content: String,
-		summary: String
+		summary: String,
+		type: Number // 0 for RSS Article, 1 for Evernote		
 	});
 
 	articleSchema.index({ userId: 1, originId: 1 }, {unique: true});

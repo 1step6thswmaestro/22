@@ -1,0 +1,12 @@
+{
+  "default": "develop",
+  "develop": {
+	"client": {
+		"consumerKey": "insikk-8982",
+		"consumerSecret": "1ee8f4b63d243b57",
+		"sandbox": true
+	},
+	"redirectUrl": "http://localhost:8080/",
+	"callbackUrl": "http://localhost:8080/v1/evernote/oauthcallback"
+  }
+}

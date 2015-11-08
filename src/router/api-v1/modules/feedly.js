@@ -12,6 +12,7 @@ module.exports = function(_router, app){
 	_router.use('/feedly', router);
 
 	router.get('/auth', function(req, res){
+		// Redirect to Feedly to login into Feedly service. 
 		let redirectTo = app.helper.feedly.getAuthURL();
 		res.redirect(redirectTo)
 	})
