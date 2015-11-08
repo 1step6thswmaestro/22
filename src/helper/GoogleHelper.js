@@ -141,8 +141,12 @@ class GoogleHelper{
 	}
 
 	getCalendarEventsWeek(user, opt){
-		let now = null;
+		opt = opt || {};
+		opt.sort = opt.sort || {created: 1};
+
+		let now = opt.time || Date.now();
 		let events = null;
+		now = now - now%(1000*60*30);
 
 		function getTodayEvent(events) {
 			var _events = [];
@@ -156,11 +160,6 @@ class GoogleHelper{
 			return _events;
 		}
 
-		now = Date.now();
-		now = now - now%(1000*60*30);
-
-		opt = opt || {};
-		opt.sort = opt.sort || {created: 1};
 
 		let update = opt.update == 'true'; //default false
 		let reset = opt.reset != 'false'; //default true

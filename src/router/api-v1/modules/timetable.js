@@ -33,7 +33,7 @@ module.exports = function(_router, app){
 		let time = req.body.time?parseInt(req.body.time):Date.now();
 		console.log(new Date(time));
 
-		helper.google.getCalendarEventsWeek(req.user, {update: true, reset: false})
+		helper.google.getCalendarEventsWeek(req.user, {update: true, reset: false, time: time})
 		.then(events=>tableMaker.make(req.user._id, events, time))
 		.then(list=>{helper.timetable.createItems(req.user._id, list)})
 		.then(obj=>res.send(obj))

@@ -72,8 +72,6 @@ class TimeMaker{
 		let slotAllocator = new SlotAllocator(now, SLOT_NUMBER);
 		let timetable = [];
 
-		console.log(this.events);
-
 		_.each(this.events, event=>{
 			let start = getTimeslot(event.start);
 			let end = getTimeslot(event.end);
@@ -83,7 +81,6 @@ class TimeMaker{
 				console.log('cannot alloc event.');
 			}
 
-			console.log(event.summary, {start, end, allocation});
 			let tableEvent = makeNewEvent(this.userId, undefined, start, end, event.summary, 0);
 			timetable.push(tableEvent);
 		});
@@ -108,7 +105,7 @@ class TimeMaker{
 					slot_size = slot_due-now;
 				}
 
-				console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
+				// console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
 
 				if (task.adjustable || (0 <= level && level < (24*7/TIMELEVEL_SIZE))) {
 					// Calculate time prefer score for each slot term
@@ -125,18 +122,22 @@ class TimeMaker{
 						
 						let end = slot + _timespan;
 						let allocation = slotAllocator.test(start, end, task.adjustable);
+						end = start + allocation;
 
 						if(allocation>0){
 							let score = 0;
 							for (let j = 0; j < allocation; j++) {
 								score += timePreferenceScore[(start+j)%SLOT_NUMBER] || 0;
 							}
-							scores.push({start, end, score});
+							scores.push({start, end, score, length: allocation});
 						}
 					}
 
 					scores.sort(function(a, b){
-						return a.score - b.score;
+						if(a.length==b.length)
+							return b.score - a.score;
+						else
+							return b.length - a.length;
 					});
 
 					// Checkout if the task's prefer slot is taken by the other
