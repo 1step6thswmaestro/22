@@ -119,7 +119,7 @@ class TaskItem extends React.Component{
 
 	getRemainTime() {
 		let time = Math.floor(getRemainTime(this.props.task, this.props.tasklog));
-		
+
 		let result = "여유시간: ";
 		if(time <= 0) {
 			result = "여유시간 부족!";
@@ -268,6 +268,11 @@ class TaskItem extends React.Component{
 							<button className="btn btn-warning" label="Discard this task" onClick={this.reset.bind(this)}>
 								<span className="glyphicon glyphicon-trash"></span> reset
 							</button>
+							<a href={`/v1/tasktoken/timeprefscore/${task._id}/`}>
+								<button className="btn btn-warning" label="Discard this task">
+									<span className="glyphicon glyphicon-trash"></span> timeprefscore
+								</button>
+							</a>
 							<a href={`/v1/tasktoken/task/${task._id}/`}>
 								<button className="btn btn-warning" label="Discard this task">
 									<span className="glyphicon glyphicon-trash"></span> tokens

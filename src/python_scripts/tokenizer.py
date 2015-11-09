@@ -52,3 +52,19 @@ def extractor(content):
                 pass
         node = node.next
     return words
+
+def permute(tokens, n=3):
+    """
+    Create combinations of tokens using upto n tokens
+    """
+    import itertools
+    items = []
+    for L in range(1, n+1):
+        for subset in itertools.combinations(tokens, L):
+            items.append('+'.join(subset))
+
+    return items
+
+	
+def get(content):
+    return permute(extractor(content));
