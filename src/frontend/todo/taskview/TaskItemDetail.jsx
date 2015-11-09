@@ -13,7 +13,7 @@ class TaskItemDetail extends React.Component {
     constructor(props) {
         super(props);
         this.displayName = 'TaskItemDetail';
-		
+
 		const { dispatch } = this.props;
 		dispatch(fetchTaskLog(this.props.task));
     }
@@ -116,7 +116,7 @@ class TaskItemDetail extends React.Component {
 
 	getRemainTime() {
 		let time = Math.floor(getRemainTime(this.props.task, this.props.tasklog));
-		
+
 		let result = "여유시간: ";
 		if(time <= 0) {
 			result = "여유시간 부족!";
@@ -153,7 +153,7 @@ class TaskItemDetail extends React.Component {
 					</button>
 				))
 			}
-			
+
 			if(task.state != TaskStateType.named.complete.id){
 				actionButtons.push((
 					<button className="btn btn-default" onClick={this.complete.bind(this)}>
@@ -307,6 +307,9 @@ class TaskItemDetail extends React.Component {
 				                	<div className='col-md-12'>
 				                		<div className="form-group form-group-default">
 				                			<div className='btn-group'>
+												<a href={`/v1/tasktoken/timeprefscore/${task._id}/`} target='_blank' className="btn btn-default">
+													<span className="fa fa-search"></span> timeprefscore
+												</a>
 												<a href={`/v1/tasktoken/task/${task._id}/`} target='_blank' className="btn btn-default">
 													<span className="fa fa-search"></span> tokens
 												</a>
