@@ -4,7 +4,9 @@ import { setConfig } from '../actions/config'
 import _ from 'underscore';
 import If from '../../utility/if'
 import TaskStateType from '../../../constants/TaskStateType';
-import { startItem, pauseItem } from '../actions/tasks';
+import { pauseItem } from '../actions/tasks';
+import { startItemDialog } from '../actions/timetable';
+
 
 
 export default class TaskBanner extends React.Component{
@@ -44,7 +46,7 @@ export default class TaskBanner extends React.Component{
 
 	start(task) {
 		const { dispatch } = this.props;
-		dispatch(startItem(task));
+		dispatch(startItemDialog(task));
 	}
 
 	pause(task) {

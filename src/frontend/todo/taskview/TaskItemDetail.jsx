@@ -4,7 +4,7 @@ import MapImage from '../dialog/MapImage';
 import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
 import { getReadableDate } from '../../utility/date'
-import { pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
+import { pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
 import { startItemDialog } from '../actions/timetable';
 import If from '../../utility/if'
 var TaskStateType = require('../../../constants/TaskStateType');
@@ -22,6 +22,11 @@ class TaskItemDetail extends React.Component {
 	complete(){
 		const { dispatch } = this.props;
 		dispatch(completeItem(this.props.task));
+	}
+
+	uncompleteItem(){
+		const { dispatch } = this.props;
+		dispatch(uncompleteItem(this.props.task));	
 	}
 
 	start() {
@@ -165,8 +170,8 @@ class TaskItemDetail extends React.Component {
 		}
 		if(task.state == TaskStateType.named.complete.id){
 			actionButtons.push((
-				<button className="btn btn-check">
-					<span className="glyphicon glyphicon-check"></span> 완료
+				<button className="btn btn-check" onClick={this.uncompleteItem.bind(this)}>
+					<span className="glyphicon glyphicon-check"></span> 완료 취소
 				</button>
 			))
 		}

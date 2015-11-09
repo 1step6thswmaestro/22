@@ -132,6 +132,10 @@ export function completeItem(task){
 	return updateState(task, TaskStateType.named.complete);
 }
 
+export function uncompleteItem(task){
+	return updateState(task, TaskStateType.named.pause);
+}
+
 function updateState(task, actionType, opt){
 	opt = opt || {}
 	return function(dispatch, getState){

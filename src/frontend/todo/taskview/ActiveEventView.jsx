@@ -2,6 +2,7 @@ import React from 'react';
 import TaskStateType from '../../../constants/TaskStateType';
 import _ from 'underscore';
 import { dismissTimetableItem, restoreTimetableItem } from '../actions/timetable'
+import { uncompleteItem, completeItem } from '../actions/tasks'
 import If from '../../utility/if'
 
 
@@ -42,6 +43,13 @@ class ActiveEventView extends React.Component {
     }
 
     check(prevProps, prevState, props, state){
+        let zipped = _.zip(prevProps.events, props.events);
+
+        for(var i in zipped){
+            if(zipped[i][0] == zipped[i][1])
+                return false;
+        }
+
     	if(props.events.length == 0)
             return false;
 
@@ -68,12 +76,22 @@ class ActiveEventView extends React.Component {
         dispatch(dismissTimetableItem(event));
     }
 
+    complete(event, task){
+        let { dispatch } = this.props;
+        dispatch(completeItem(task));
+    }
+
+    uncomplete(event, task){
+        let { dispatch } = this.props;
+        dispatch(uncompleteItem(task));
+    }
+
     restore(event){
         let { dispatch } = this.props;
         dispatch(restoreTimetableItem(event));
     }
 
-    renderItem(event){
+    renderItem(event, task){
         var hours = 0;
         var minutes = 0;
         var timeDifference = (new Date(event.tableslotStart*30*60*1000)).getTime()-Date.now();
@@ -83,18 +101,64 @@ class ActiveEventView extends React.Component {
             minutes = Math.floor(timeDifference/1000/60)%60;
         }
 
+        let buttons = [];
+
+        if(task && task.state == TaskStateType.named.complete.id){
+            buttons.push((
+                <button className='btn btn-checked' onClick={this.uncomplete.bind(this, event, task)}>
+                    완료 취소
+                </button>
+            ));
+        }
+        else if(event){
+            if(event.dismissed!=true){
+                buttons.push((
+                    <button className='btn btn-default' onClick={this.complete.bind(this, event, task)}>
+                        완료
+                    </button>
+                ));
+                buttons.push((
+                    <button className='btn btn-default' onClick={this.dismiss.bind(this, event, task)}>
+                        취소
+                    </button>
+                ))
+            }
+            else{
+                buttons.push((
+                    <button className='btn btn-default' onClick={this.restore.bind(this, event, task)}>
+                        복구
+                    </button>
+                ))
+            }
+        }
+
+        let title;
+        if(task && task.state == TaskStateType.named.complete.id){
+            title = (
+                <div>
+                    <h4 className='mr10 modal-title'><i className='fa fa-circoe-o'></i><strike>{event.summary}</strike></h4> 
+                    <small className='word-wrap'>완료됨</small>
+                </div>
+            )
+        }
+        else if(event.dismissed){
+            title = (
+                <div>
+                    <h4 className='mr10 modal-title'><i className='fa fa-circoe-o'></i><strike>{event.summary}</strike></h4> 
+                    <small className='word-wrap'>취소됨</small>
+                </div>
+            )
+        }
+        else{
+            title = (
+                <h4 className="modal-title"><i className='fa fa-circoe-o'></i>{event.summary}</h4> 
+            )
+        }
+
         return (
             <div className='mb10'>
                 <div className="modal-header">
-                    <If test={event.dismissed!=true}>
-                        <h4 className="modal-title"><i className='fa fa-circoe-o'></i>{event.summary}</h4> 
-                    </If>
-                    <If test={event.dismissed==true}>
-                        <div>
-                            <h4 className='mr10 modal-title'><i className='fa fa-circoe-o'></i><strike>{event.summary}</strike></h4> 
-                            <small className='word-wrap'>취소됨</small>
-                        </div>
-                    </If>
+                    {title}
                 </div>
                 <If test={timeDifference>0}>
                     <div>
@@ -104,16 +168,7 @@ class ActiveEventView extends React.Component {
                 </If>
                 <div>
                     <div className='btn-group'>
-                        <If test={event.dismissed!=true}>
-                            <button className='btn btn-default' onClick={this.dismiss.bind(this, event)}>
-                                취소
-                            </button>
-                        </If>
-                        <If test={event.dismissed==true}>
-                            <button className='btn btn-default' onClick={this.restore.bind(this, event)}>
-                                복구
-                            </button>
-                        </If>
+                        {buttons}
                     </div>
                 </div>
             </div>
@@ -128,13 +183,26 @@ class ActiveEventView extends React.Component {
 		return (
 			<div className="modal-contents">
 				<div className="modal-header">
-					<h4 className="modal-title">
-						현재 진행중인 일정/할 일
-					</h4>
+					<h4 className="modal-title">현재 진행중인 일정/할 일</h4>
 				</div>
 				<div className="modal-body">
 					<div id='activeview-contents'>
-						{_.map(this.state.cachedEvents, event=>this.renderItem(event))}
+                        <If test={this.state.cachedEvents.length>0}>
+                            <div>
+                                {_.map(this.state.cachedEvents, event=>this.renderItem(event, this.props.tasks.tasks[event.taskId]))}
+                                <div className="modal-header">
+                                    <label className="modal-title"></label>
+                                </div>
+                                <div className="modal-body" style={{'text-align':'center'}}>
+                                    다음 일을 하려면 먼저 현재 수행중인 일을 완료(혹은 취소)하세요.
+                                </div>
+                            </div>
+                        </If>
+                        <If test={this.state.cachedEvents.length==0}>
+                            <div style={{'text-align':'center'}}>
+                                현재 진행중인 작업이 없습니다.
+                            </div>
+                        </If>
 					</div>
 				</div>
 				<div className="modal-footer">

@@ -29,7 +29,8 @@ class TimeTableActionView extends React.Component {
                 if(refs.activeEventView!=null)
                     refs.activeEventView.state.needToShow = false;
                 
-                this.props.timetable.toStartEvent = undefined;
+                if(this.props)
+                    this.props.timetable.toStartEvent = undefined;
             })
 
         }
@@ -85,7 +86,7 @@ class TimeTableActionView extends React.Component {
             <div className="modal" tabIndex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
-                        <div className="modal-contents">
+                        <div className="modal-contents form-group-attached">
                             <div className="modal-header">
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 className="modal-title" id="gridSystemModalLabel">
@@ -94,7 +95,7 @@ class TimeTableActionView extends React.Component {
                             </div>
                             <div className='row'>
                                 <div className='col-md-6'>
-                                    <div className="modal-body">
+                                    <div className="modal-body modal-actionview">
                                         <ActiveEventView 
                                             ref='activeEventView' 
                                             dispatch={this.props.dispatch}
@@ -105,7 +106,7 @@ class TimeTableActionView extends React.Component {
                                     </div>
                                 </div>
                                 <div className='col-md-6'>
-                                    <div className="modal-body">
+                                    <div className="modal-body modal-actionview">
                                         <TaskActionView 
                                             ref='taskActionView' 
                                             dispatch={this.props.dispatch}

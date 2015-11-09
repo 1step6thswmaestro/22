@@ -1,7 +1,7 @@
 import React from 'react';
 import TaskStateType from '../../../constants/TaskStateType';
 import classnames from 'classnames';
-import { startItem, pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
+import { startItem, pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
 import _ from 'underscore';
 
 class TaskActionView extends React.Component {
@@ -18,7 +18,6 @@ class TaskActionView extends React.Component {
     check(prevProps, prevState, props, state){
         let zipped = _.zip(prevProps.events, props.events);
 
-        console.log('check', zipped, props.events);
         for(var i in zipped){
             if(zipped[i][0] == zipped[i][1])
                 return false;
@@ -34,6 +33,11 @@ class TaskActionView extends React.Component {
     complete(event, task){
         const { dispatch } = this.props;
         dispatch(completeItem(task));
+    }
+
+    uncomplete(event, task){
+        let { dispatch } = this.props;
+        dispatch(uncompleteItem(task));
     }
 
     start(event, task) {
@@ -127,8 +131,8 @@ class TaskActionView extends React.Component {
             }
             if(task.state == TaskStateType.named.complete.id){
                 actionButtons.push((
-                    <button className="btn btn-check">
-                        <span className="glyphicon glyphicon-check"></span> 완료
+                    <button className="btn btn-check" onClick={this.uncomplete.bind(this, event, task)}>
+                        <span className="glyphicon glyphicon-check"></span> 완료 취소
                     </button>
                 ))
             }

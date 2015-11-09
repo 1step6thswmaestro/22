@@ -20,17 +20,16 @@
 			padding-left: 15px;
 		}
 	}
+
 }
 
-#actionview-contents{
-	height: 300px;
-
-	.modal-header{
-		padding-left: 0px;
-	}
+.modal-actionview{
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	margin: 5px;
 }
 
-#activeview-contents{
+#actionview-contents, #activeview-contents{
 	height: 300px;
 
 	.modal-header{
