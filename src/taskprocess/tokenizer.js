@@ -55,7 +55,7 @@ class Tokenizer{
 			let tokens = _.map(textTokens, text => {
 				let NUM_TIMESLOT = 48;
 				let weekdayIndex = self.getWeekDayFromToken(time);
-				let daytime = (time+(9*2))%NUM_TIMESLOT; // (9*2) term offset UTC for Asia/Seoul TimeZone
+				let daytime = time%NUM_TIMESLOT; // (9*2) term offset UTC for Asia/Seoul TimeZone
 				let obj = {
 					userId: task.userId,
 					taskId: task._id,
