@@ -46,7 +46,9 @@ class TimeTableActionView extends React.Component {
                 return false;
 
             console.log(event.tableslotStart, now, task.state, TaskStateType.named.start.id);
-            if(event.tableslotStart <= now && task.state != TaskStateType.named.start.id){
+            if(event.tableslotStart <= now && (
+                task.state != TaskStateType.named.start.id
+                && task.state != TaskStateType.named.complete.id)){
                 return true;
             }
             else{
