@@ -95,7 +95,10 @@ class EventItem extends React.Component{
 			<div className={classnames({'table-item': true, selected})}>
 				{this.getSimpleView()}
 				<If test={this.props.task!=null && selected} >
-					<TaskItemDetail task={this.props.task} tasklog={this.props.tasklog} dispatch={this.props.dispatch}
+					<TaskItemDetail 
+						event={this.props.event}
+						task={this.props.task} tasklog={this.props.tasklog} 
+						dispatch={this.props.dispatch}
 						global={this.props.global}
 						setImportant={this.setImportant.bind(this)}
 						onTaskModify={this.props.onTaskModify.bind(this, this.props.task)}

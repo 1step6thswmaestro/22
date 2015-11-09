@@ -78,3 +78,10 @@ export function restoreTimetableItem(event){
 		})
 	}
 }
+
+export function startItemDialog(event){
+	return {
+		type: type.TIMETABLE_SET_TOSTART
+		, event
+	}	
+}

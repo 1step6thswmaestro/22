@@ -4,7 +4,8 @@ import MapImage from '../dialog/MapImage';
 import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
 import { getReadableDate } from '../../utility/date'
-import { startItem, pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
+import { pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
+import { startItemDialog } from '../actions/timetable';
 import If from '../../utility/if'
 var TaskStateType = require('../../../constants/TaskStateType');
 import { fetchTaskLog } from '../actions/tasklog';
@@ -25,7 +26,7 @@ class TaskItemDetail extends React.Component {
 
 	start() {
 		const { dispatch } = this.props;
-		dispatch(startItem(this.props.task));
+		dispatch(startItemDialog(this.props.event));
 	}
 
 	pause() {

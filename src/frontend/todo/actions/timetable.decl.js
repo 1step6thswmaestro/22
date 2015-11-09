@@ -10,6 +10,10 @@ DECL('FETCH_TIMETABLE', (state, action)=>{
 	return Object.assign({}, state, {list});
 });
 
+DECL('TIMETABLE_SET_TOSTART', (state, action)=>{
+	return Object.assign({}, state, {toStartEvent: action.event})
+})
+
 
 export const reducer = group.getReducer({
 	list: []

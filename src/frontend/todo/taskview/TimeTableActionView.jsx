@@ -17,7 +17,7 @@ class TimeTableActionView extends React.Component {
         let needToShow0 = this.refs.taskActionView!=null && this.refs.taskActionView.state.needToShow;
         let needToShow1 = this.refs.activeEventView!=null && this.refs.activeEventView.state.needToShow;
 
-        if(needToShow0 || needToShow1){
+        if(needToShow0 || needToShow1 || this.props.timetable.toStartEvent){
             var modal = $(React.findDOMNode(this));
             modal.modal({
                 backdrop: true
@@ -28,7 +28,10 @@ class TimeTableActionView extends React.Component {
                     refs.taskActionView.state.needToShow = false;
                 if(refs.activeEventView!=null)
                     refs.activeEventView.state.needToShow = false;
+                
+                this.props.timetable.toStartEvent = undefined;
             })
+
         }
     }
 
@@ -50,12 +53,14 @@ class TimeTableActionView extends React.Component {
             }
         })
 
-        console.log({toStartEvents});
+        if(this.props.timetable.toStartEvent){
+            toStartEvents.push(this.props.timetable.toStartEvent);
+        }
 
         let currentActive = _.filter(this.props.timetable.list, event=>{
             let task = this.props.tasks.tasks[event.taskId];
-            if(task){
-                if(task.state == TaskStateType.named.start.id){
+            if(event.taskId){
+                if(task && task.state == TaskStateType.named.start.id){
                     return true;
                 }
                 else{
@@ -71,6 +76,8 @@ class TimeTableActionView extends React.Component {
                 }
             }  
         })
+
+        console.log('currentActive', currentActive);
 
         let currentActiveWithoutDismissed = _.filter(currentActive, item=>!item.dismissed);
 

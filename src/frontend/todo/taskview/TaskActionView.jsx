@@ -155,6 +155,8 @@ class TaskActionView extends React.Component {
     render(){
         let { events, tasks, global, config } = this.props;
 
+        console.log('events: ', events);
+
         return (
             <div className={classnames({"modal-contents":true, 'disabled':this.props.disabled})}>
                 <div className="modal-header">
