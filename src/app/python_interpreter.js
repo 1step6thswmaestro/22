@@ -9,7 +9,7 @@ var py_absolute_path = path.resolve('./src/python_scripts/');
 // define function path
 var morphem_py_path = 'morphem_call.py'
 var getToken_py_path = 'getToken.py'
-var getTaskScore_py_path = 'getTaskScore.py'
+var getTimePrefScore_py_path = 'getTimePrefScore.py'
 
 var Q = require('q');
 
@@ -19,6 +19,7 @@ var py_function_broker = function(path, input, callback){
 
 	var args = [py_absolute_path + '/' + path].concat(input);
 	var result = '';
+	// console.log('args for python script:', args);
 
 	var pythonProcess = spawn("python",  args);
 	pythonProcess.stdout.on('data', function(data){
@@ -67,13 +68,23 @@ module.exports = {
 		});
 		return defer.promise;
 	},
-	getTaskScore : function(userId, time, task) {
-		var input = ['a', 'b', 'c'];
-		console.log(input);
+	getTimePrefScore : function(userId, tokens) {
+		// userId: userId string. NOT object.
+		// tokens: array of strings
+
+		var input = [userId].concat(tokens);
+		// console.log(input);
 		let defer = Q.defer();
-		py_function_broker(getTaskScore_py_path, input, function(result){
+		py_function_broker(getTimePrefScore_py_path, input, function(output){
 			// Resolve a Deferred object and call any doneCallbacks with the given args
-			defer.resolve(result);
+			var results;
+			if (output == null){
+				results = {tokens: tokens, score: null};
+			}
+			else {
+				results = {tokens: tokens, score: output.score};
+			}
+			defer.resolve(results);
 		});
 		return defer.promise;
 	}

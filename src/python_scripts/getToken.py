@@ -12,7 +12,7 @@ def main():
 
     result = {}
     try:
-        result["tokens"] = tokenizer.extractor(sys.argv[1])
+        result["tokens"] = tokenizer.get(sys.argv[1])
     except:
         with open('errlog.txt', 'w') as f:
             f.write(sys.exc_info()[0])
