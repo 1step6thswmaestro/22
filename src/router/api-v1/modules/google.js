@@ -17,7 +17,7 @@ module.exports = function(_router, app){
 	})
 
 	router.get('/unauth', function(req, res){
-		app.helper.feedly.clearAuth(req.user)
+		app.helper.google.clearAuth(req.user)
 		.then(()=>res.send());
 	})
 

@@ -16,7 +16,7 @@ export default class DevelopView extends React.Component{
 		var momentObj = moment(unixtime).tz('Asia/Seoul');
 
 		dispatch(setGlobalTime(momentObj.toDate().getTime()));
-		dispatch(fetchPrioritizedList());		
+		dispatch(fetchPrioritizedList());
 	}
 
 	toggleDatePicker(){
@@ -191,6 +191,29 @@ export default class DevelopView extends React.Component{
 								<i className={`fa fa-spinner fa-spin mr10`}></i>
 							</If>
 							Feedly/Sync
+						</button>
+					</span>
+				</If>
+
+				<If test={this.props.user.intergration.evernote == false || this.props.user.intergration.evernote == undefined}>
+					<a href='/v1/evernote/auth'>
+						<button className='btn btn-default'>
+							Authorize Evernote
+						</button>
+					</a>
+				</If>
+				<If test={this.props.user.intergration.evernote == true}>
+					<span>
+						<button className='btn btn-checked'>
+							Unauthorize Evernote(Not Implemented)
+						</button>
+						<a href='/v1/evernote/auth'>
+							<button className='btn btn-default'>
+								Evernote/RefreshToken
+							</button>
+						</a>
+						<button className='btn btn-default btn-primary'>
+							Evernote/Sync(Not Implemented)
 						</button>
 					</span>
 				</If>
