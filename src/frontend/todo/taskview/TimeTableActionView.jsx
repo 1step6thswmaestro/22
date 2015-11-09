@@ -57,7 +57,7 @@ class TimeTableActionView extends React.Component {
                 }
             }
             else{
-                if(event.tableslotStart<=now && tableslotStart<=event.tableslotEnd){
+                if(event.tableslotStart<=now && now<=event.tableslotEnd){
                     return true;
                 }
                 else{
