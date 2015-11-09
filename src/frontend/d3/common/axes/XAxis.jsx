@@ -74,8 +74,6 @@ module.exports = React.createClass({
     tickValues3 = _.without(tickValues3, tickValues, tickValues2);
     tickValues2 = _.without(tickValues2, tickValues);
 
-    console.log({tickValues, tickValues2});
-
     return (
       <g
         className={props.xAxisClassName}

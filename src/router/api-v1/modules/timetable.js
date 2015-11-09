@@ -56,4 +56,24 @@ module.exports = function(_router, app){
 			res.send('complete');
 		});
 	})
+
+	router.put('/:_id/dismiss', function(req, res){
+		let userId = req.user._id;
+		let _id = req.params._id;
+		let findOneAndUpdate = Q.nbind(Timetable.findOneAndUpdate, Timetable);
+		findOneAndUpdate({userId, _id}, {$set: {dismissed: true}})
+		.then(()=>res.send())
+		.fail(()=>res.status(400).send())
+		;
+	})
+
+	router.put('/:_id/restore', function(req, res){
+		let userId = req.user._id;
+		let _id = req.params._id;
+		let findOneAndUpdate = Q.nbind(Timetable.findOneAndUpdate, Timetable);
+		findOneAndUpdate({userId, _id}, {$set: {dismissed: false}})
+		.then(()=>res.send())
+		.fail(()=>res.status(400).send())
+		;
+	})
 }

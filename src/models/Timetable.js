@@ -10,7 +10,8 @@ module.exports = function(app){
 		tableslotStart: {type: Number},
 		tableslotEnd: {type: Number},
 
-		estimation: {type: Number}
+		estimation: {type: Number},
+		dismissed: {type: Boolean, defaults: false}
 	});
 
 	timetableSchema.index({ userId: 1 });

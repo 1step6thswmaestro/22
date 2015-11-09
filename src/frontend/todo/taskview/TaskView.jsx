@@ -105,6 +105,7 @@ class TaskView extends React.Component{
 											timetable={timetable} 
 											dispatch={dispatch}
 											tasklog={tasklog}
+											onTaskModify={self.showModifyDialog.bind(self)}
 										/>
 									</If>
 									<If test={this.props.config.showEvent==false}>

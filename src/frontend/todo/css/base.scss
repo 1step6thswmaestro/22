@@ -193,8 +193,16 @@ ul {
   margin: 12px 0 12px 0;
 }
 
+.mr5{
+  margin-right: 5px;
+}
+
 .mr10{
   margin-right: 10px;
+}
+
+.mb10{
+  margin-bottom: 10px;
 }
 
 .authorize-div{
@@ -220,4 +228,8 @@ ul {
   @include no-padding("top");
   @include no-padding("bottom");
   @include no-padding("all");
+}
+
+.word-wrap{
+  word-wrap: normal;
 }

@@ -7,7 +7,7 @@ import { updateFeedly, unauthFeedly } from '../todo/actions/user'
 import { fetchPrioritizedList } from '../todo/actions/tasks'
 import classNames from 'classnames';
 import moment from 'moment-timezone';
-import { fetchTimetable } from '../todo/actions/timetable'
+import { resetTimetable } from '../todo/actions/timetable'
 
 export default class DevelopView extends React.Component{
 	setGlobalTime(time){
@@ -39,9 +39,9 @@ export default class DevelopView extends React.Component{
 		dispatch(setConfig('userview', !this.props.config.userview));
 	}
 
-	fetchTimeTable(){
+	resetTimetable(){
 		const { dispatch } = this.props;
-		dispatch(fetchTimetable());
+		dispatch(resetTimetable());
 	}
 
 	renderTableButton(){
@@ -151,7 +151,7 @@ export default class DevelopView extends React.Component{
 						DatePicker 감추기
 					</button>
 				</If>
-				<button className='btn btn-default' onClick={this.fetchTimeTable.bind(this)}>
+				<button className='btn btn-default' onClick={this.resetTimetable.bind(this)}>
 					Fetch Time Table
 				</button>
 				<i className='mr10'></i>

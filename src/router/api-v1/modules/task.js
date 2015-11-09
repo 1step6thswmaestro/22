@@ -14,7 +14,7 @@ module.exports = function(_router, app){
 	let router = express.Router();
 	_router.use('/tasks', router);
 	var taskTokenizer = new tokenizer(app);
-	var timeEstimator = new TimeEstimator(app);
+	var timeEstimator = new TimeEstimator(app, {defaults: 1});
 
 	router.get('/testcommand_droptasks', function(req, res){
 		// This request removes every tasks related to the current user.
@@ -59,6 +59,10 @@ module.exports = function(_router, app){
 		task.lastProcessed = task.created;
 		let created = req.body.created;
 		let loc = req.body.loc;
+
+		console.log(task);
+
+		console.log(task.estimation || 'estimation');
 
 		Q(task.estimation || timeEstimator.estimate(userId, task.name))
 		.then(result=>{

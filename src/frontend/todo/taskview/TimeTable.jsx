@@ -31,6 +31,7 @@ export default class TimeTable extends React.Component{
 				<EventItem key={item._id} event={item} task={tasks.tasks[item.taskId]} dispatch={dispatch} global={global} 
 					config={config}
 					tasklog={tasklog.groupBy[item.taskId]}
+					onTaskModify={this.props.onTaskModify}
 				/>
 			));
 		});

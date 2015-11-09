@@ -112,8 +112,8 @@ export function modifyItem(task){
 	}
 }
 
-export function startItem(task){
-	return updateState(task, TaskStateType.named.start);
+export function startItem(task, time){
+	return updateState(task, TaskStateType.named.start, {time});
 }
 
 export function pauseItem(task){
@@ -132,7 +132,8 @@ export function completeItem(task){
 	return updateState(task, TaskStateType.named.complete);
 }
 
-function updateState(task, actionType){
+function updateState(task, actionType, opt){
+	opt = opt || {}
 	return function(dispatch, getState){
 		dispatch({
 			type: type.TASK_REQ_UPDATE
@@ -143,7 +144,7 @@ function updateState(task, actionType){
 			url: `/v1/tasks/${task._id}/${actionType.command}`
 			, type: 'put'
 			, data: {
-				time: getState().global.time
+				time: opt.time || getState().global.time
 			}
 		})
 		.then(result => {

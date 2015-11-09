@@ -98,6 +98,7 @@ class EventItem extends React.Component{
 					<TaskItemDetail task={this.props.task} tasklog={this.props.tasklog} dispatch={this.props.dispatch}
 						global={this.props.global}
 						setImportant={this.setImportant.bind(this)}
+						onTaskModify={this.props.onTaskModify.bind(this, this.props.task)}
 					/>
 				</If>
 			</div>

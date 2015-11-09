@@ -7,7 +7,7 @@ import _ from 'underscore'
 export function fetchList(){
 	return (dispatch, getState) => {
 		return $.ajax({
-			url: '/v1/google/events/'
+			url: '/v1/google/event/'
 			, type: 'put'
 		})
 		.then(

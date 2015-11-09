@@ -24,6 +24,7 @@ import Topbar from '../main/Topbar'
 import TaskStateType from '../../constants/TaskStateType';
 import { syncUserStatus } from '../todo/actions/user';
 import $ from 'jquery';
+import TimeTableActionView from './taskview/TimeTableActionView';
 
 class TodoApp extends React.Component{
 	constructor(props){
@@ -106,12 +107,14 @@ class TodoApp extends React.Component{
 			<div className={"task-app-container " + this.state.timelineState}>
 				<Topbar/>
 				<MainTimeline timetable={this.props.timetable} config={this.props.config} />
-				<TaskBanner tasks={this.props.tasks} dispatch={this.props.dispatch} config={this.props.config}/>
+				<TaskBanner tasks={this.props.tasks} timetable={this.props.timetable} dispatch={this.props.dispatch} config={this.props.config}/>
 				<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user}/>
 				<ConfigView dispatch={this.props.dispatch} config={this.props.config}/>
 				<If test={this.props.config.showCalendarList==true}>
 					<GoogleCalendarList dispatch={this.props.dispatch} config={this.props.config} google={this.props.thirdparty.google}/>
 				</If>
+
+				<TimeTableActionView dispatch={this.props.dispatch} timetable={this.props.timetable} tasks={this.props.tasks} config={this.props.config} global={this.props.global} />
 
 				<If test={this.props.config.userview!=true}>
 					<TaskView dispatch={this.props.dispatch} 

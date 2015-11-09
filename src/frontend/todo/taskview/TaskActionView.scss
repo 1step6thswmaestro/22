@@ -1,0 +1,39 @@
+.modal-contents{
+	position: relative;
+
+	&.disabled{
+		&:after{
+			content: "";
+		    position: absolute;
+		    left: 0px;;
+		    top: 0px;
+		    width: 100%;
+		    height: 100%;
+			background-color: rgba(220, 220, 220, 0.5);
+			cursor: not-allowed;
+		}
+	}
+	
+	.modal-contents{
+		.modal-header{
+			padding: 5px;
+			padding-left: 15px;
+		}
+	}
+}
+
+#actionview-contents{
+	height: 300px;
+
+	.modal-header{
+		padding-left: 0px;
+	}
+}
+
+#activeview-contents{
+	height: 300px;
+
+	.modal-header{
+		padding-left: 0px;
+	}
+}

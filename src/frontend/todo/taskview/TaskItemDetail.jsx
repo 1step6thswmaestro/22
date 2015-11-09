@@ -139,25 +139,28 @@ class TaskItemDetail extends React.Component {
 
 		let actionButtons = [];
 		if(task.state != TaskStateType.named.complete.id){
-			actionButtons.push((
-				<button className="btn btn-default" onClick={this.start.bind(this)}>
-					<span className="glyphicon glyphicon-play"></span> 시작
-				</button>
-			))
-		}
-		if(task.state != TaskStateType.named.complete.id){
-			actionButtons.push((
-				<button className="btn btn-check" onClick={this.pause.bind(this)}>
-					<span className="glyphicon glyphicon-play"></span> 일시 정지
-				</button>
-			))
-		}
-		if(task.state != TaskStateType.named.complete.id){
-			actionButtons.push((
-				<button className="btn btn-default" onClick={this.complete.bind(this)}>
-					<span className="glyphicon glyphicon-check"></span> 완료
-				</button>
-			))
+			if(task.state != TaskStateType.named.start.id){
+				actionButtons.push((
+					<button className="btn btn-default" onClick={this.start.bind(this)}>
+						<span className="glyphicon glyphicon-play"></span> 시작
+					</button>
+				))
+			}
+			else{
+				actionButtons.push((
+					<button className="btn btn-check" onClick={this.pause.bind(this)}>
+						<span className="glyphicon glyphicon-play"></span> 일시 정지
+					</button>
+				))
+			}
+			
+			if(task.state != TaskStateType.named.complete.id){
+				actionButtons.push((
+					<button className="btn btn-default" onClick={this.complete.bind(this)}>
+						<span className="glyphicon glyphicon-check"></span> 완료
+					</button>
+				))
+			}
 		}
 		if(task.state == TaskStateType.named.complete.id){
 			actionButtons.push((

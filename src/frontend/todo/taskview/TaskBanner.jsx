@@ -32,40 +32,63 @@ export default class TaskBanner extends React.Component{
 	}
 
 	swipeLeft(){
-		let index = (this.props.config.bannerIndex-1)%this.props.tasks.plist.length;
+		let index = (this.props.config.bannerIndex-1)%this.props.timetable.list.length;
 		this.props.dispatch(setConfig('bannerIndex', index));
 	}
 
 	swipeRight(){
-		let index = (this.props.config.bannerIndex+1)%this.props.tasks.plist.length;
+		let index = (this.props.config.bannerIndex+1)%this.props.timetable.list.length;
 		this.props.dispatch(setConfig('bannerIndex', index));
 	}
 
-	getTask(offset){
-		let index = (this.props.config.bannerIndex+offset+this.props.tasks.plist.length)%this.props.tasks.plist.length;
-		let task = this.props.tasks.plist[index] || {name: 'unnamed'};
+	getEvent(offset){
+		let index = (this.props.config.bannerIndex+offset+this.props.timetable.list.length)%this.props.timetable.list.length;
+		let event = this.props.timetable.list[index] || {summary: '<no schedule>'};
 
-		return task;
+		return event;
+	}
+
+	getTask(event){
+		return this.props.tasks.tasks[event.taskId];
 	}
 
 	render(){
 		let contents = ()=>{
 			let offset = 0;
-			let task = this.getTask(offset);
+			let event = this.getEvent(offset);
+			let task = this.getTask(event);
 
-			let created = moment(task.created);
-			let duedate = moment(task.duedate);
+			let begin = moment(event.tableslotStart * (30*60*1000));
+			let end = moment(event.tableslotEnd * (30*60*1000));
 
 			return (
 				<div className='content'>
 					<div className='name'>
-						{task.name}
+						{event.summary}
+					</div>
+					<If test={task!=null}>
+						<div>
+							<div className='duedate'>
+								<i className='fa fa-clock-o'></i>
+								<span className='date-label'>created</span>
+								{task&&moment(task.created).format("YY/MM/DD, HH:mm")}
+							</div>
+							<div className='duedate'>
+								<i className='fa fa-clock-o'></i>
+								<span className='date-label'>due</span>
+								{task&&moment(task.duedate).format("YY/MM/DD, HH:mm")}
+							</div>
+						</div>
+					</If>
+					<div className='duedate'>
+						<i className='fa fa-clock-o'></i>
+						<span className='date-label'>begin</span>
+						{begin.format("YY/MM/DD, HH:mm")}
 					</div>
 					<div className='duedate'>
-						<i className='fa fa-clock-o'></i> {created.format("YY/MM/DD, HH:mm")}
-					</div>
-					<div className='duedate'>
-						<i className='fa fa-clock-o'></i> {duedate.format("YY/MM/DD, HH:mm")}
+						<i className='fa fa-clock-o'></i>
+						<span className='date-label'>end</span>
+						{end.format("YY/MM/DD, HH:mm")}
 					</div>
 					<div className='buttons'>
 						<div className="btn-group">
@@ -85,8 +108,8 @@ export default class TaskBanner extends React.Component{
 			)
 		}();
 
-		let prevTask = this.getTask(-1);
-		let nextTask = this.getTask(+1);
+		let prevEvent = this.getEvent(-1);
+		let nextEvent = this.getEvent(+1);
 
 		return (
 			<div className='task-banner'>
@@ -96,7 +119,7 @@ export default class TaskBanner extends React.Component{
 				<div className='inner-canvas inner-canvas-left' onClick={this.swipeLeft.bind(this)}>
 					<div className='inner-content'>
 						<div className='name'>
-							{prevTask.name}
+							{prevEvent.summary}
 						</div>
 					</div>
 					<svg>
@@ -108,7 +131,7 @@ export default class TaskBanner extends React.Component{
 				<div className='inner-canvas inner-canvas-right' onClick={this.swipeRight.bind(this)}>
 					<div className='inner-content'>
 						<div className='name'>
-							{nextTask.name}
+							{nextEvent.summary}
 						</div>
 					</div>
 					<svg>

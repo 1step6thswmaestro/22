@@ -48,6 +48,7 @@ class GoogleHelper{
 
 			return this._saveToken(user, results);
 		})
+		.fail(err=>logger.error(err, err.stack));
 	}
 
 	_saveToken(user, token){
@@ -60,7 +61,7 @@ class GoogleHelper{
 
 		}
 
-		token.refresh_token = token.refresh_token || (user_google && user_google.auth.refresh_token);
+		token.refresh_token = token.refresh_token || (user_google.auth && user_google.auth.refresh_token);
 
 		return findByIdAndUpdate(user._id, {$set: {'thirdparty.google.auth': token}})
 		.then(results=>true)
