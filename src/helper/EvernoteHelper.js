@@ -23,7 +23,7 @@ class EvernoteHelper{
 			if(error){
 				oauthToken='';
 				oauthTokenSecret='';
-				console.log('Error during Evernote getAuthURL().'+ error)
+				console.log('Error during Evernote getAuthURL().', error)
 				defer.reject({oauthToken, oauthTokenSecret, redirectUrl});
 			}
 			else{

@@ -21,6 +21,9 @@ module.exports = function(_router, app){
 				};
 			}
 			res.redirect(results.redirectUrl);
+		})
+		.fail((err)=>{
+			res.send(err);
 		});
 	})
 
