@@ -47,9 +47,23 @@
 
 	.svg-middle{
 		position: absolute;
-		right: 0px;
-		top: 10px;
-		width: 100px;
+		right: 20px;
+		top: 35px;
+		width: 76px;
+		height: 76px;
+
+		&:hover{
+			background: #F0B6A4;
+
+			.btn-play{
+				path{
+					stroke: #AB5C42;
+				}
+				rect{
+					fill: #AB5C42;
+				}
+			}
+		}
 	}
 
 	.inner-canvas-left{
@@ -126,11 +140,15 @@
 	}
 
 	.btn-play{
-		transform: translate(20px, 25px);
 		path{
 			stroke: #EB8F71;
 			stroke-width: 5;
 			fill: none;
 		}
+		rect{
+			fill: #EB8F71;
+		}
 	}
+
+
 }

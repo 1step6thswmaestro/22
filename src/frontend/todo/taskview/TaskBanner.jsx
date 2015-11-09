@@ -3,6 +3,9 @@ import moment from 'moment';
 import { setConfig } from '../actions/config'
 import _ from 'underscore';
 import If from '../../utility/if'
+import TaskStateType from '../../../constants/TaskStateType';
+import { startItem, pauseItem } from '../actions/tasks';
+
 
 export default class TaskBanner extends React.Component{
 	constructor(props){
@@ -29,7 +32,26 @@ export default class TaskBanner extends React.Component{
 	            <path d="M57.4951172,63 L20,38.5 L57.4951172,14 L57.4951172,63 Z" transform="translate(38.747559, 38.500000) scale(-1, 1) translate(-38.747559, -38.500000) "></path>
 	        </g>
 	    )
+
+	    this.btnPause = (
+	    	<g>
+	    		<rect x="22" y="10.8945312" width="10" height="54.2109375"></rect>
+            	<rect x="44.5" y="10.8945312" width="10" height="54.2109375"></rect>
+	    	</g>
+	    )
 	}
+
+
+	start(task) {
+		const { dispatch } = this.props;
+		dispatch(startItem(task));
+	}
+
+	pause(task) {
+		const { dispatch } = this.props;
+		dispatch(pauseItem(task));
+	}
+
 
 	swipeLeft(){
 		let index = (this.props.config.bannerIndex-1)%this.props.timetable.list.length;
@@ -98,11 +120,22 @@ export default class TaskBanner extends React.Component{
 						</div>
 					</div>
 					<If test={offset==0}>
-						<svg className='svg-middle'>
-							<g className='btn-play'>
-								{this.btnPlay}
-							</g>
-						</svg>
+						<div>
+							<If test={!task || task.state != TaskStateType.named.start.id}>
+								<svg className='svg-middle' onClick={this.start.bind(this, task)}>
+									<g className='btn-play'>
+										{this.btnPlay}
+									</g>
+								</svg>
+							</If>
+							<If test={task && task.state == TaskStateType.named.start.id}>
+								<svg className='svg-middle' onClick={this.pause.bind(this, task)}>
+									<g className='btn-play'>
+										{this.btnPause}
+									</g>
+								</svg>
+							</If>
+						</div>
 					</If>
 				</div>
 			)
