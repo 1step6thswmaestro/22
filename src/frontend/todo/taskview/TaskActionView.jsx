@@ -11,20 +11,20 @@ class TaskActionView extends React.Component {
         this.state = {}
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        this.state.needToShow = this.check(prevProps, prevState);
+    componentWillUpdate(nextProps, nextState) {
+        this.state.needToShow = this.check(this.props, this.state, nextProps, nextState);
     }
 
-    check(prevProps, prevState){
-        let zipped = _.zip(prevProps.events, this.props.events);
+    check(prevProps, prevState, props, state){
+        let zipped = _.zip(prevProps.events, props.events);
 
-        console.log('check', zipped, this.props.events);
+        console.log('check', zipped, props.events);
         for(var i in zipped){
             if(zipped[i][0] == zipped[i][1])
                 return false;
         }
 
-        if(this.props.events.length <= 0){
+        if(props.events.length <= 0){
             return false
         }
 

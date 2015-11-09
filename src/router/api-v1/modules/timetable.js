@@ -60,20 +60,19 @@ module.exports = function(_router, app){
 	router.put('/:_id/dismiss', function(req, res){
 		let userId = req.user._id;
 		let _id = req.params._id;
-		let findOneAndUpdate = Q.nbind(Timetable.findOneAndUpdate, Timetable);
-		findOneAndUpdate({userId, _id}, {$set: {dismissed: true}})
-		.then(()=>res.send())
-		.fail(()=>res.status(400).send())
+		console.log(req.params, req.body);
+		app.helper.timetable.dismiss(userId, _id, true, req.body)
+		.then(result=>res.send(result))
+		.fail(err=>{logger.error(err, err.stack); res.status(400).send()})
 		;
 	})
 
 	router.put('/:_id/restore', function(req, res){
 		let userId = req.user._id;
 		let _id = req.params._id;
-		let findOneAndUpdate = Q.nbind(Timetable.findOneAndUpdate, Timetable);
-		findOneAndUpdate({userId, _id}, {$set: {dismissed: false}})
-		.then(()=>res.send())
-		.fail(()=>res.status(400).send())
+		app.helper.timetable.dismiss(userId, _id, false, req.body)
+		.then(result=>res.send(result))
+		.fail(err=>{logger.error(err, err.stack); res.status(400).send()})
 		;
 	})
 }

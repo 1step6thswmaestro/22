@@ -3,10 +3,16 @@
 var mongoose = require('mongoose');
 var Task = mongoose.model('Task');
 var Q = require('q');
+var tokenizer = require('../taskprocess/tokenizer');
+var TaskStateType = require('../constants/TaskStateType');
+
+
 
 function init(app){
 	function TaskHelper(){
 	}
+
+	var taskTokenizer = new tokenizer(app);
 
 	TaskHelper.prototype.find = function(userId, query, proj, opt){
 		opt = opt || {};
@@ -38,6 +44,37 @@ function init(app){
 
 	TaskHelper.prototype.findOneAndUpdate = function(userId, query, doc){
 		return Q.nbind(Task.findOneAndUpdate, Task)(Object.assign({userId}, query), {$set: doc});
+	}
+
+	TaskHelper.prototype.setState = function(userId, taskId, state, opt){
+		opt = opt || {}
+		var type = TaskStateType.named[state];
+		var taskType = type;
+		if(type.state){
+			taskType = TaskStateType.named[type.state];
+		}
+		let self = this;
+
+		var p0 = this.update(userId, {_id: taskId}, {state: taskType.id});
+		var p1 = app.helper.tasklog.create(userId, taskId, TaskStateType.named[state], {
+			loc: opt.loc
+			, time: opt.time
+		});
+
+		return Q.all([p0, p1])
+		.then(function(results){
+			return self.find(userId, {_id: taskId})
+			.then(function(tasks){
+				return {
+					task: tasks[0]
+					, log: results[1][0]
+				}
+			})
+		})
+		.then(function(result){
+			taskTokenizer.processTask(userId, result.task, opt.time)
+			return result;
+		})
 	}
 
 	app.helper.taskHelper = new TaskHelper();

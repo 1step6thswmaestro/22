@@ -1,8 +1,8 @@
 'use strict'
 
 import { type } from './tasks_decl';
-import { getLocation } from '../../utility/location'
 import _ from 'underscore'
+import { request } from './common'
 
 var TaskStateType = require('../../../constants/TaskStateType');
 
@@ -179,13 +179,4 @@ export function removeItem(task){
 			, err => dispatch({type: type.TASK_ERROR, err})
 		);
 	}
-}
-
-function request(requestArg){
-	return getLocation()
-	.then(loc => {
-		requestArg.data = requestArg.data || {};
-		_.extend(requestArg.data, {loc: loc})
-		return $.ajax(requestArg);
-	})
 }

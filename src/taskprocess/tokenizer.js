@@ -80,24 +80,24 @@ class Tokenizer{
 		})
 	}
 
-	processTaskById(user, taskId){
+	processTaskById(userId, taskId){
 		let self = this;
 
-		return app.helper.taskHelper.find(user._id, {_id: taskId})
+		return app.helper.taskHelper.find(userId, {_id: taskId})
 		.then(function(tasks){
 			var task = tasks[0];
 			if(task){
-				return self.processTask(req.user, task);
+				return self.processTask(userId, task);
 			}
 		})
 		.fail(err=>logger.error(err, err.stack));
 	}
 
-	processTask(user, task){
+	processTask(userId, task, time){
 		let self = this;
 		let app = this.app;
 
-		let currentTime = new Date(Date.now());
+		let currentTime = new Date(time || Date.now());
 		let _time = currentTime;
 		let lastTime = new Date(task.lastProcessed);
 
@@ -151,35 +151,35 @@ class Tokenizer{
 			return Q.all(promises);
 		})
 		.then(function(){
-			return app.helper.taskHelper.update(user._id, {_id: task._id}, {lastProcessed: currentTime})
+			return app.helper.taskHelper.update(userId, {_id: task._id}, {lastProcessed: currentTime})
 		})
 		.fail(logger.error)
 	}
 
-	resetTaskById(user, taskId){
+	resetTaskById(userId, taskId){
 		let self = this;
 		let app = this.app;
 
-		return app.helper.taskHelper.find(user._id, {_id: taskId})
+		return app.helper.taskHelper.find(userId, {_id: taskId})
 		.then(function(tasks){
 			var task = tasks[0];
 			if(task){
-				return self.resetTask(user, task);
+				return self.resetTask(userId, task);
 			}
 		})
 		.fail(err=>logger.error(err, err.stack));
 	}
 
-	resetTask(user, task){
+	resetTask(userId, task){
 		let self = this;
 		let app = this.app;
 
-		let p0 = app.helper.predictToken.remove(user._id, {taskId: task._id});
-		let p1 = app.helper.taskHelper.findOneAndUpdate(user._id, {_id: task._id}, {lastProcessed: task.created});
+		let p0 = app.helper.predictToken.remove(userId, {taskId: task._id});
+		let p1 = app.helper.taskHelper.findOneAndUpdate(userId, {_id: task._id}, {lastProcessed: task.created});
 
 		return Q.spread([p0, p1], function(result0, task){
 			task.lastProcessed = task.created;
-			self.processTask(user, task);
+			self.processTask(userId, task);
 		})
 	}
 }

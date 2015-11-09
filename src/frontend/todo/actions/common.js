@@ -1,4 +1,6 @@
 import _ from 'underscore'
+import { getLocation } from '../../utility/location'
+
 
 export class ActionGroup{
 	constructor(){
@@ -30,3 +32,12 @@ export class ActionGroup{
 		return _.mapObject(this.handlers, (v,k)=>k);
 	}
 };
+
+export function request(requestArg){
+	return getLocation()
+	.then(loc => {
+		requestArg.data = requestArg.data || {};
+		_.extend(requestArg.data, {loc: loc})
+		return $.ajax(requestArg);
+	})
+}

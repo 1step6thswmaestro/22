@@ -36,6 +36,22 @@ function init(app){
 		});
 	}
 
+	TimetableHelper.prototype.dismiss = function(userId, _id, dismissed, opt){
+		let findOneAndUpdate = Q.nbind(Timetable.findOneAndUpdate, Timetable);
+		return findOneAndUpdate({userId, _id}, {$set: {dismissed}})
+		.then(function(timetable){
+			timetable.dismissed = dismissed;
+			let result = {timetable}
+			if(timetable.taskId!=null)
+				return app.helper.taskHelper.setState(userId, timetable.taskId, dismissed?'pause':'resume', opt)
+				.then(_result=>_.extend(result, _result));
+			else
+				return result;
+		})
+
+		;
+	}
+
 	app.helper.timetable = new TimetableHelper();
 }
 

@@ -39,7 +39,7 @@ module.exports = function(router, app){
 	})
 
 	router.get('/tasktoken/task/:_id/reset', function(req, res){
-		taskTokenizer.resetTaskById(req.user, req.params._id);
+		taskTokenizer.resetTaskById(req.user._id, req.params._id);
 
 		res.send();
 	})

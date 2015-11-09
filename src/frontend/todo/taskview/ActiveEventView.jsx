@@ -10,18 +10,43 @@ class ActiveEventView extends React.Component {
         super(props);
         this.displayName = 'ActiveEventView';
         this.state = {};
+        this.state.cachedEvents = [];
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        this.state.needToShow = this.check();  
+    componentWillUpdate(nextProps, nextState) {
+        let needToShow = this.check(this.props, this.state, nextProps, nextState);     
+        
+        if(!this.state.needToShow && needToShow){
+            this.resetCache();
+        }
+        this.addEventsToCache(nextProps.events);
+        this.state.needToShow = needToShow;
     }
 
-    check(){
-    	if(this.props.events.length == 0)
+    addEventsToCache(events){
+        console.log('addEventsToCache', events);
+        _.each(events, event=>{
+            let index = _.findIndex(this.state.cachedEvents, {_id: event._id});
+            console.log(event, index);
+            if(index>=0){
+                this.state.cachedEvents.splice(index, 1, event);
+            }
+            else{
+                this.state.cachedEvents.push(event);
+            }
+        })
+    }
+
+    resetCache(){
+        this.state.cachedEvents = [];
+    }
+
+    check(prevProps, prevState, props, state){
+    	if(props.events.length == 0)
             return false;
 
         let now = Math.floor(Date.now()/(30*60*1000));
-        let endedEvents = _.filter(this.props.events, event=>{
+        let endedEvents = _.filter(props.events, event=>{
             if(event.tableslotEnd < now){
                 return true;
             }
@@ -98,6 +123,8 @@ class ActiveEventView extends React.Component {
     render() {
     	let { events, tasks, global, config } = this.props;
 
+        console.log('cachedEvents', this.state.cachedEvents);
+
 		return (
 			<div className="modal-contents">
 				<div className="modal-header">
@@ -107,7 +134,7 @@ class ActiveEventView extends React.Component {
 				</div>
 				<div className="modal-body">
 					<div id='activeview-contents'>
-						{_.map(events, event=>this.renderItem(event))}
+						{_.map(this.state.cachedEvents, event=>this.renderItem(event))}
 					</div>
 				</div>
 				<div className="modal-footer">

@@ -13,6 +13,7 @@ class TimeTableActionView extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         console.log('TimeTableActionView', 'componentDidUpdate', this.refs)
 
+        let refs = this.refs;
         let needToShow0 = this.refs.taskActionView!=null && this.refs.taskActionView.state.needToShow;
         let needToShow1 = this.refs.activeEventView!=null && this.refs.activeEventView.state.needToShow;
 
@@ -22,7 +23,12 @@ class TimeTableActionView extends React.Component {
                 backdrop: true
                 , keyboard: true
                 , show: true
-            });  
+            }).on('hidden.bs.modal', function (e) {
+                if(refs.taskActionView!=null)
+                    refs.taskActionView.state.needToShow = false;
+                if(refs.activeEventView!=null)
+                    refs.activeEventView.state.needToShow = false;
+            })
         }
     }
 

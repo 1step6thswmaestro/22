@@ -3,6 +3,9 @@
 import { type } from './timetable.decl';
 import { getLocation } from '../../utility/location'
 import _ from 'underscore'
+import { request } from './common'
+import { type as TaskActionType } from './tasks_decl';
+
 
 export function fetchTimetable(){
 	return (dispatch, getState) => {
@@ -46,20 +49,32 @@ export function resetTimetable(){
 
 export function dismissTimetableItem(event){
 	return (dispatch, getState) => {
-		return $.ajax({
+		return request({
 			url: `/v1/timetable/${event._id}/dismiss`
 			, type: 'put'
 		})
-		.then(()=>dispatch(fetchTimetable()))
+		.then(result=>{
+			return fetchTimetable()(dispatch, getState)
+			.then(function(){
+				dispatch({type: TaskActionType.TASK_RECV_ITEM, item: result.task});
+				dispatch({type: TaskActionType.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
+			})
+		})
 	}
 }
 
 export function restoreTimetableItem(event){
 	return (dispatch, getState) => {
-		return $.ajax({
+		return request({
 			url: `/v1/timetable/${event._id}/restore`
 			, type: 'put'
 		})
-		.then(()=>dispatch(fetchTimetable()))
+		.then(result=>{
+			return fetchTimetable()(dispatch, getState)
+			.then(function(){
+				dispatch({type: TaskActionType.TASK_RECV_ITEM, item: result.task});
+				dispatch({type: TaskActionType.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
+			})
+		})
 	}
 }
