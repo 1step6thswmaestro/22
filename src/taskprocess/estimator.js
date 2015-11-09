@@ -5,8 +5,10 @@ var Schema = mongoose.Schema;
 var Q = require('q');
 
 class TimeEstimator{
-	constructor(app){
+	constructor(app, opt){
 		this.app = app;
+		this.opt = opt || {};
+		this.opt.defaults = this.opt.defaults||1;
 	}
 
 	calculateTakenTime(logs) {
@@ -48,10 +50,11 @@ class TimeEstimator{
 		let calculator = this.calculateTakenTime;
 		let helper = this.app.helper;
 		let splits = taskName.split(" ");
+		let self = this;
 
 		return Q(helper.taskHelper.find(userId))
 		.then(function(results){
-			if (results.length == 0) return null;
+			if (results.length == 0) return self.opt.defaults;
 			return Q.all(results.map(function(task){
 				const taskId = task._id.toString();
 				return Q(helper.tasklog.find(userId, {taskId}))
