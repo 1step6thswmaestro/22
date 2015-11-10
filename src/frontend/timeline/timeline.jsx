@@ -102,7 +102,7 @@ export default class Timeline extends React.Component{
 			let width = x1-x0;
 
 			if(x0 < -7){
-				width += x0;
+				width += x0+7;
 				x0 = -7;
 			}
 
