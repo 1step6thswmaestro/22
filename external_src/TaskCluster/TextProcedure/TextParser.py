@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 import re
 import os
-from konlpy.tag import Mecab
+from konlpy.tag import Mecab, Twitter
+from base_config import MORPHEM_OPTION
 
 def law_contents_to_file(content_list, file_path): #do all processes
     content_list = list(filter_html_text(content_list))
@@ -19,11 +20,18 @@ def mk_training_file(content_list, file_path):
             a.write(content)
 
 def analyzing_morphem(content_list):
-    mecab = Mecab()
+    if MORPHEM_OPTION=='Mecab':
+        analyzer = Mecab()
+        mytags = ['NNG', 'NNP', 'VV', 'VA', 'MM', 'SL', 'XR']
+    elif MORPHEM_OPTION=='Twitter':
+        analyzer = Twitter()
+        mytags = ['Noun', 'Verb', 'Adjective', 'Determiner', 'Alpha']
+
     for idx, doc in enumerate(content_list):
         if idx % 5000 == 0 :
             print 'Morphem Analysis on %d' % idx
-        yield ' '.join([part for part, pos in mecab.pos(doc.decode('utf-8'))]).encode('utf-8')
+        yield ' '.join([part for part, pos in analyzer.pos(doc.decode('utf-8')) if pos in mytags]).encode('utf-8')
+        #yield ' '.join(mecab.nouns(doc.decode('utf-8'))).encode('utf-8')
 
 def split_line(content_list):
     for content in content_list:

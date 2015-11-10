@@ -5,4 +5,10 @@ PIPE_DUMPING = FILE_DIR + 'pipe_dump.sv'
 
 # Clustering Configurations
 CLUSTERING_METHOD = 'KMeans'
-SECTION_NUMBER = 31
+OPTION = 1000
+
+# Do pca or not
+PCA_OPTION = False
+
+# morphem option
+MORPHEM_OPTION = 'Twitter' #'Mecab'
