@@ -8,7 +8,7 @@ var SlotAllocator = require('./SlotAllocator');
 const SLOT_SIZE = 1000*60*30;
 const HOUR_MILLISEC = 1000*60*60;
 const SLOT_NUMBER = 48*7;
-const TIMELEVEL_SIZE = 3; //hours
+const TIMELEVEL_SIZE = 4; //hours
 
 class TimeMaker{
 
@@ -69,8 +69,6 @@ class TimeMaker{
 				processed = true;
 			}
 			else if ((logType == 200 || logType == 350) && processed) {
-				console.log(logs[to]);
-				console.log(logs[lognum]);
 				let timeTo = new Date(logs[to].time);
 				let timeFrom = new Date(logs[lognum].time);
 				takenTime += timeTo - timeFrom;
@@ -137,75 +135,81 @@ class TimeMaker{
 		.then(tasks=>{
 			tasks.sort(sortByTimelevel.bind(this));
 
-			_.each(tasks, task=>{
-				let level = task.timelevel;
-				let slot_begin = now%SLOT_NUMBER;
-				let slot_size = SLOT_NUMBER;
-				let timespan = Math.max(Math.floor(task.estimation*2 - task.processedtime),0);
-				let timePreferenceScore = task.timePreferenceScore;
-				let slot_due = getTimeslot(task.duedate);
-				
-				if(slot_due-now<SLOT_NUMBER){
-					slot_size = slot_due-now;
-				}
+			console.log('make table...');
 
-				console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
-				// console.log(timePreferenceScore.length);
-
-				if (task.adjustable || (0 <= level && level < (24*7/TIMELEVEL_SIZE))) {
-					// Calculate time prefer score for each slot term
-
-					let scores = [];
-					for (let i = 0; i <= slot_size-(task.adjustable?1:timespan); ++i) {
-						let slot = now+i;
-
-						let start = slot;
-						let _timespan = timespan;
-
-						if(slot_due - start < _timespan)	//only possible when 'adjustable' set
-							_timespan = slot_due-start;
-						
-						let end = slot + _timespan;
-						let allocation = slotAllocator.test(start, end, task.adjustable);
-						end = start + allocation;
-
-						if(allocation>0 || timespan==0){
-							let score = 0;
-							for (let j = 0; j < allocation; j++) {
-								score += timePreferenceScore[(start+j)%SLOT_NUMBER] || 0;
-							}
-							scores.push({start, end, score, length: allocation});
-						}
+			_.chain(tasks)
+			.groupBy('timelevel')
+			.map(function(tasks, level) {
+				_.each(tasks, task=>{
+					let level = task.timelevel;
+					let slot_begin = now%SLOT_NUMBER;
+					let slot_size = SLOT_NUMBER;
+					let timespan = Math.max(Math.floor(task.estimation*2 - task.processedtime),0);
+					let timePreferenceScore = task.timePreferenceScore;
+					let slot_due = getTimeslot(task.duedate);
+					
+					if(slot_due-now<SLOT_NUMBER){
+						slot_size = slot_due-now;
 					}
 
-					scores.sort(function(a, b){
-						if(a.start != b.start)
-							return a.start - b.start;
-						
-						if(a.length != b.length)
-							return b.length - a.length;
+					console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
+					// console.log(timePreferenceScore.length);
 
-						return b.score - a.score;
-					});
+					if (task.adjustable || (0 <= level && level < (24*7/TIMELEVEL_SIZE))) {
+						// Calculate time prefer score for each slot term
 
-					// Checkout if the task's prefer slot is taken by the other
-					for (let i = 0; i < scores.length; i++) {
-						let scoreObj = scores[i];
-						let start = scoreObj.start;
-						let end = scoreObj.end;
-						let score = scoreObj.score;
-						let allocation = slotAllocator._alloc(start, end);
+						let scores = [];
+						for (let i = 0; i <= slot_size-(task.adjustable?1:timespan); ++i) {
+							let slot = now+i;
 
-						if(allocation>0 || timespan==0){
-							let tableTask = makeNewEvent(this.userId, task._id, start, end, task.name, task.estimation);
-							if (tableTask) {
-								timetable.push(tableTask);
-								break;
+							let start = slot;
+							let _timespan = timespan;
+
+							if(slot_due - start < _timespan)	//only possible when 'adjustable' set
+								_timespan = slot_due-start;
+							
+							let end = slot + _timespan;
+							let allocation = slotAllocator.test(start, end, task.adjustable);
+							end = start + allocation;
+
+							if(allocation>0 || timespan==0){
+								let score = 0;
+								for (let j = 0; j < allocation; j++) {
+									score += timePreferenceScore[(start+j)%SLOT_NUMBER] || 0;
+								}
+								scores.push({start, end, score, length: allocation});
 							}
 						}
-					}					
-				}
-			})
+
+						scores.sort(function(a, b){
+							if(a.start != b.start)
+								return a.start - b.start;
+							
+							if(a.length != b.length)
+								return b.length - a.length;
+
+							return b.score - a.score;
+						});
+
+						// Checkout if the task's prefer slot is taken by the other
+						for (let i = 0; i < scores.length; i++) {
+							let scoreObj = scores[i];
+							let start = scoreObj.start;
+							let end = scoreObj.end;
+							let score = scoreObj.score;
+							let allocation = slotAllocator._alloc(start, end);
+
+							if(allocation>0 || timespan==0){
+								let tableTask = makeNewEvent(this.userId, task._id, start, end, task.name, task.estimation);
+								if (tableTask) {
+									timetable.push(tableTask);
+									break;
+								}
+							}
+						}					
+					}
+				})
+			}.bind(this));
 		})
 		.then(function(){
 			timetable.sort(sortByTime);
