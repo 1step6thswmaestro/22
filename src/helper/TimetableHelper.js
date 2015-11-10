@@ -36,7 +36,7 @@ function init(app){
 		});
 	}
 
-	TimetableHelper.prototype.dismiss = function(userId, _id, dismissed, opt){
+	TimetableHelper.prototype.dismiss = function(userId, _id, dismissed, state, opt){
 		let findOneAndUpdate = Q.nbind(Timetable.findOneAndUpdate, Timetable);
 		return findOneAndUpdate({userId, _id}, {$set: {dismissed}})
 		.then(function(timetable){

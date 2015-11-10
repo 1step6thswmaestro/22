@@ -2,6 +2,8 @@ import React from 'react';
 import TaskStateType from '../../../constants/TaskStateType';
 import classnames from 'classnames';
 import { startItem, pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
+import { dismissTimetableItem, restoreTimetableItem } from '../actions/timetable'
+
 import _ from 'underscore';
 
 class TaskActionView extends React.Component {
@@ -42,12 +44,12 @@ class TaskActionView extends React.Component {
 
     start(event, task) {
         const { dispatch } = this.props;
-        dispatch(startItem(task));
+        dispatch(restoreTimetableItem(event, undefined, 'start'));
     }
 
     startOnSchedule(event, task){
         const { dispatch } = this.props;
-        dispatch(startItem(task, event.tableslotStart*(30*60*1000)));   
+        dispatch(restoreTimetableItem(event, {time: event.tableslotStart*(30*60*1000)}, 'start'));
     }
 
     pause(event, task) {
@@ -71,9 +73,10 @@ class TaskActionView extends React.Component {
 
     	var hours = 0;
     	var minutes = 0;
+        let now = global.time || Date.now();
 
     	if(event){
-	    	var timeDifference = Date.now() - (new Date(event.tableslotStart*30*60*1000)).getTime();
+	    	var timeDifference = now - (new Date(event.tableslotStart*30*60*1000)).getTime();
 	    	hours = Math.floor(timeDifference/1000/60/60);
 	    	minutes = Math.floor(timeDifference/1000/60)%60;
     	}

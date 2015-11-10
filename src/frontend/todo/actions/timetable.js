@@ -47,11 +47,12 @@ export function resetTimetable(){
 }
 
 
-export function dismissTimetableItem(event){
+export function dismissTimetableItem(event, data, state){
 	return (dispatch, getState) => {
 		return request({
-			url: `/v1/timetable/${event._id}/dismiss`
+			url: `/v1/timetable/${event._id}/dismiss/${state?state:''}`
 			, type: 'put'
+			, data: data
 		})
 		.then(result=>{
 			return fetchTimetable()(dispatch, getState)
@@ -63,11 +64,12 @@ export function dismissTimetableItem(event){
 	}
 }
 
-export function restoreTimetableItem(event){
+export function restoreTimetableItem(event, data, state){
 	return (dispatch, getState) => {
 		return request({
-			url: `/v1/timetable/${event._id}/restore`
+			url: `/v1/timetable/${event._id}/restore/${state?state:''}`
 			, type: 'put'
+			, data: data
 		})
 		.then(result=>{
 			return fetchTimetable()(dispatch, getState)

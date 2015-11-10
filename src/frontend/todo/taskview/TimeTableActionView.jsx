@@ -57,7 +57,13 @@ class TimeTableActionView extends React.Component {
         })
 
         if(this.props.timetable.toStartEvent){
-            toStartEvents.push(this.props.timetable.toStartEvent);
+            let index = _.findWhere(toStartEvents, {_id: this.props.timetable.toStartEvent._id});
+            if(index>=0){
+                toStartEvents.splice(index, 1, this.props.timetable.toStartEvent);
+            }
+            else{
+                toStartEvents.push(this.props.timetable.toStartEvent);
+            }
         }
 
         let currentActive = _.filter(this.props.timetable.list, event=>{
@@ -114,6 +120,7 @@ class TimeTableActionView extends React.Component {
                                             dispatch={this.props.dispatch}
                                             events={toStartEvents}
                                             tasks={this.props.tasks}
+                                            global={this.props.global}
                                             disabled={currentActiveWithoutDismissed.length>0}/>
                                     </div>
                                 </div>

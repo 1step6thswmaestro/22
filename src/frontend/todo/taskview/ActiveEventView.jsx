@@ -20,6 +20,13 @@ class ActiveEventView extends React.Component {
         if(!this.state.needToShow && needToShow){
             this.resetCache();
         }
+
+        //취소된 것은 event만 남김. (not task)
+        this.state.cachedEvents = _.filter(this.state.cachedEvents, event=>{
+            let task = this.props.tasks.tasks[event.taskId];
+            return !task || task.start == TaskStateType.named.start.id; 
+        });
+
         this.addEventsToCache(nextProps.events);
         this.state.needToShow = needToShow;
     }
@@ -112,21 +119,30 @@ class ActiveEventView extends React.Component {
         }
         else if(event){
             if(event.dismissed!=true){
-                buttons.push((
-                    <button className='btn btn-default' onClick={this.complete.bind(this, event, task)}>
-                        완료
-                    </button>
-                ));
-                buttons.push((
-                    <button className='btn btn-default' onClick={this.dismiss.bind(this, event, task)}>
-                        취소
-                    </button>
-                ))
+                if(task){
+                    buttons.push((
+                        <button className='btn btn-default' onClick={this.complete.bind(this, event, task)}>
+                            완료
+                        </button>
+                    ));
+                    buttons.push((
+                        <button className='btn btn-default' onClick={this.dismiss.bind(this, event, task)}>
+                            일시정지
+                        </button>
+                    ))
+                }
+                else{
+                    buttons.push((
+                        <button className='btn btn-default' onClick={this.dismiss.bind(this, event, task)}>
+                            취소
+                        </button>
+                    ))
+                }
             }
             else{
                 buttons.push((
                     <button className='btn btn-default' onClick={this.restore.bind(this, event, task)}>
-                        복구
+                        재개
                     </button>
                 ))
             }
