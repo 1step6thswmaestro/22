@@ -3,7 +3,7 @@ import DocView from './DocView';
 import MapImage from '../dialog/MapImage';
 import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
-import { getReadableDate } from '../../utility/date'
+import { getReadableDate, tokenToReadableTime } from '../../utility/date'
 import { pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
 import { startItemDialog } from '../actions/timetable';
 import If from '../../utility/if'
@@ -262,31 +262,51 @@ class TaskItemDetail extends React.Component {
 						                </div>
 				                	</div>
 				                </div>
-				                <div className='row'>
-				                	<div className='col-md-3'>
-						                <div className="form-group form-group-default">
-											<label>생성일</label>
-											{getReadableDate(task.created)}
-						                </div>
-				                	</div>
-				                	<div className='col-md-3'>
-						                <div className="form-group form-group-default">
-											<label>마감일</label>
-											{getReadableDate(task.duedate)}
-						                </div>
-				                	</div>
-				                	<div className='col-md-3'>
-						                <div className="form-group form-group-default">
-											<label>소요시간</label>
-											{ task.estimation } 시간
-						                </div>
-				                	</div>
-				                	<div className='col-md-3'>
-						                <div className="form-group form-group-default">
-											<label>여유시간</label>
-											{this.getRemainTime()}
-						                </div>
-				                	</div>
+				                <div className='form-group-attached'>
+					                <div className='row'>
+					                	<div className='col-md-4'>
+					                		<div className='col-xs-6'>
+					                			<div className="form-group form-group-default">
+													<label>생성일</label>
+													{getReadableDate(task.created)}
+								                </div>
+					                		</div>
+					                		<div className='col-xs-6'>
+					                			<div className="form-group form-group-default">
+													<label>마감일</label>
+												{getReadableDate(task.duedate)}
+								                </div>
+					                		</div>
+					                	</div>
+					                	<div className='col-md-4'>
+					                		<div className='col-xs-6'>
+					                			<div className="form-group form-group-default">
+					                				<label>소요시간</label>
+													{ task.estimation } 시간
+								                </div>
+					                		</div>
+					                		<div className='col-xs-6'>
+					                			<div className="form-group form-group-default">
+					                				<label>여유시간</label>
+													{this.getRemainTime()}
+								                </div>
+					                		</div>
+					                	</div>
+					                	<div className='col-md-4'>
+					                		<div className='col-xs-6'>
+					                			<div className="form-group form-group-default">
+						                			<label>사전 준비시간</label>
+													{tokenToReadableTime(task.marginBefore)}
+								                </div>
+					                		</div>
+					                		<div className='col-xs-6'>
+					                			<div className="form-group form-group-default">
+						                			<label>사후 준비시간</label>
+													{tokenToReadableTime(task.marginAfter)}
+								                </div>
+					                		</div>
+					                	</div>
+					                </div>
 				                </div>
 				                <div className='row'>
 				                	<div className='col-md-12'>

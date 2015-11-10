@@ -143,6 +143,8 @@ class TimeMaker{
 					let slot_begin = now%SLOT_NUMBER;
 					let slot_size = SLOT_NUMBER;
 					let timespan = Math.max(Math.floor(task.estimation*2 - task.processedtime),0);
+					timespan += (task.marginBefore||0) + (task.marginAfter||0);
+
 					let timePreferenceScore = task.timePreferenceScore;
 					let slot_due = getTimeslot(task.duedate);
 					
@@ -198,7 +200,7 @@ class TimeMaker{
 							let allocation = slotAllocator._alloc(start, end);
 
 							if(allocation>0 || timespan==0){
-								let tableTask = makeNewEvent(this.userId, task._id, start, end, task.name, task.estimation);
+								let tableTask = makeNewEvent(this.userId, task._id, start+task.marginBefore||0, end-task.marginAfter||0, task.name, task.estimation);
 								if (tableTask) {
 									timetable.push(tableTask);
 									break;

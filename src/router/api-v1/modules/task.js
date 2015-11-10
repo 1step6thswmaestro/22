@@ -53,7 +53,7 @@ module.exports = function(_router, app){
 	router.post('/', function(req, res){
 		// This request create new task for the current user.
 		let userId = req.user._id;
-		let task = _.pick(req.body, 'name', 'description', 'created', 'important', 'duedate', 'adjustable', 'estimation');
+		let task = _.pick(req.body, 'name', 'description', 'created', 'important', 'duedate', 'adjustable', 'estimation', 'marginBefore', 'marginAfter');
 		task.lastProcessed = task.created;
 		let created = req.body.created;
 		let loc = req.body.loc;

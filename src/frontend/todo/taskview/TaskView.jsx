@@ -68,7 +68,7 @@ class TaskView extends React.Component{
 		let created = this.props.global.time || Date.now();
 		let duedate = time;
 
-		let data = {name: 'sleep', description: 'sleep', duedate, created, estimation: 8, adjustable: true};
+		let data = {name: 'sleep', description: 'sleep', duedate, created, estimation: 8, adjustable: true, marginAfter: 1};
 		const { dispatch } = this.props;
 		dispatch(makeNewItem(data));
 	}

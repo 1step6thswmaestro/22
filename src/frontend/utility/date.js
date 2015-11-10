@@ -16,3 +16,9 @@ export function getReadableDate(unixTimestamp){
 	}
 	return readableData;
 }
+
+export function tokenToReadableTime(token){
+	var hours = Math.floor(token/2);
+    var minutes = token%2 * 30;
+	return (hours>0?`${hours}시간 `:'') + `${minutes}분`;
+}
