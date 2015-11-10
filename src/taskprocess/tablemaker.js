@@ -6,6 +6,7 @@ var Q = require('q');
 var SlotAllocator = require('./SlotAllocator');
 
 const SLOT_SIZE = 1000*60*30;
+const HOUR_MILLISEC = 1000*60*60;
 const SLOT_NUMBER = 48*7;
 const TIMELEVEL_SIZE = 3; //hours
 
@@ -32,7 +33,7 @@ class TimeMaker{
 	}
 
 	getTimeLevel(task) {
-		let remainTime = ((new Date(task.duedate) - Date.now()) / (1000*60*60)).toFixed(1);
+		let remainTime = ((new Date(task.duedate) - Date.now()) / HOUR_MILLISEC).toFixed(1);
 		let estimationTime = task.estimation;
 
 		let level = Math.floor((remainTime - estimationTime)/TIMELEVEL_SIZE);
@@ -48,35 +49,36 @@ class TimeMaker{
 		return _a.tableslotStart-_b.tableslotStart;
 	}
 
-	getProcessTime(logs) {
+	getProcessedTime(logs) {
 		let takenTime = 0;
 
-		let from = 0;
-		var lognum;
+		let lognum;
 		if(!logs) {
 			lognum = -1;
 		}
 		else {
 			lognum = logs.length;
 		}
-		while (from < lognum) {
-			if (logs[from].type == 200) {
-				let to = from + 1;
-				while (to < lognum) {
-					if (logs[to].type == 300 || logs[to].type == 500) {
-						let timeTo = new Date(logs[to].time);
-						let timeFrom = new Date(logs[from].time);
-						takenTime += (timeTo - timeFrom);
-						from = to;
-						break;
-					}
-					to += 1;
-				}
+
+		let to = -1;
+		let processed = false;
+		while (--lognum > 0) {
+			let logType = logs[lognum].type;
+			if(logType == 300 || logType == 400) {
+				to = lognum;
+				processed = true;
 			}
-			from += 1;
+			else if ((logType == 200 || logType == 350) && processed) {
+				console.log(logs[to]);
+				console.log(logs[lognum]);
+				let timeTo = new Date(logs[to].time);
+				let timeFrom = new Date(logs[lognum].time);
+				takenTime += timeTo - timeFrom;
+				processed = false;
+			}
 		}
 
-		takenTime /= (60 * 60 * 1000);
+		takenTime /= HOUR_MILLISEC;
 
 		if (takenTime < 1) return 1;
 		if (takenTime > 365*24) return 365*24;
@@ -100,7 +102,7 @@ class TimeMaker{
 		let helper = this.app.helper;
 		let getTimeslot = this.getTimeslot;
 		let getTimeLevel = this.getTimeLevel;
-		let getProcessTime = this.getProcessTime;
+		let getProcessedTime = this.getProcessedTime;
 		let isTaken = this.isTaken;
 		let makeNewEvent = this.makeNewEvent;
 		let sortByTime = this.sortByTime;
@@ -128,7 +130,7 @@ class TimeMaker{
 			task.timelevel = getTimeLevel(task);
 			return Q(helper.tasklog.find(task.userId, {taskId}))
 			.then(logs=>{
-				task.processedtime = getProcessTime(logs) || 0;
+				task.processedtime = getProcessedTime(logs) || 0;
 				return task;
 			})
 		})))
