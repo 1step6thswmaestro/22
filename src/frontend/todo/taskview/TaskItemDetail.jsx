@@ -4,11 +4,12 @@ import MapImage from '../dialog/MapImage';
 import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
 import { getReadableDate, tokenToReadableTime } from '../../utility/date'
-import { pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
+import { pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime, incrementPropertyValue } from '../actions/tasks';
 import { startItemDialog } from '../actions/timetable';
 import If from '../../utility/if'
 var TaskStateType = require('../../../constants/TaskStateType');
 import { fetchTaskLog } from '../actions/tasklog';
+import classnames from 'classnames';
 
 class TaskItemDetail extends React.Component {
     constructor(props) {
@@ -47,6 +48,11 @@ class TaskItemDetail extends React.Component {
 	postpone(){
 		const { dispatch } = this.props;
 		dispatch(postponeItem(this.props.task));
+	}
+
+	incrementPropertyValue(propertyName, value){
+		const { dispatch } = this.props;
+		dispatch(incrementPropertyValue(this.props.task, propertyName, value));
 	}
 
 	reset(){
@@ -194,6 +200,16 @@ class TaskItemDetail extends React.Component {
 		);
 
 		let important = this.props.task.important;
+		let self = this;
+		let incrementPropertyValue = this.incrementPropertyValue;
+
+		function propertyButton(propertyName, value){
+			return (
+				<span onClick={incrementPropertyValue.bind(self, propertyName, value)}>
+					<i className={classnames({'fa':true, 'fa-minus-square':value<0, 'fa-plus-square':value>0, 'm5': true})}></i>
+				</span>
+			)
+		}
 
 		return (
 			<div className="task-item-detail-container">
@@ -282,7 +298,9 @@ class TaskItemDetail extends React.Component {
 					                		<div className='col-xs-6'>
 					                			<div className="form-group form-group-default">
 					                				<label>소요시간</label>
+					                				<i className='fa fa-minus-square mr5'></i>
 													{ task.estimation } 시간
+													<i className='fa fa-plus-square ml5'></i>
 								                </div>
 					                		</div>
 					                		<div className='col-xs-6'>
@@ -296,13 +314,17 @@ class TaskItemDetail extends React.Component {
 					                		<div className='col-xs-6'>
 					                			<div className="form-group form-group-default">
 						                			<label>사전 준비시간</label>
+						                			{propertyButton('marginBefore', -1)}
 													{tokenToReadableTime(task.marginBefore)}
+													{propertyButton('marginBefore', +1)}
 								                </div>
 					                		</div>
 					                		<div className='col-xs-6'>
 					                			<div className="form-group form-group-default">
 						                			<label>사후 준비시간</label>
+					                				{propertyButton('marginAfter', -1)}
 													{tokenToReadableTime(task.marginAfter)}
+													{propertyButton('marginAfter', +1)}
 								                </div>
 					                		</div>
 					                	</div>

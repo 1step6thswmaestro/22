@@ -46,6 +46,11 @@ function init(app){
 		return Q.nbind(Task.findOneAndUpdate, Task)(Object.assign({userId}, query), {$set: doc});
 	}
 
+	//TODO $set을 지우고 findOneAndUpdate와 합쳐져야 함.
+	TaskHelper.prototype.__findOneAndUpdate = function(userId, query, doc){
+		return Q.nbind(Task.findOneAndUpdate, Task)(Object.assign({userId}, query), doc);
+	}
+
 	TaskHelper.prototype.setState = function(userId, taskId, state, opt){
 		opt = opt || {}
 		var type = TaskStateType.named[state];

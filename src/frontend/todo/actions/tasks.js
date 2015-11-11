@@ -162,6 +162,20 @@ function updateState(task, actionType, opt){
 	}
 }
 
+export function incrementPropertyValue(task, propertyName, value){
+	return function(dispatch, getState){
+		return $.ajax({
+			url: `/v1/tasks/${task._id}/increment/${propertyName}`
+			, type: 'put'
+			, data: {value}
+		})
+		.then(result => {
+			console.log('incrementPropertyValue : ', result);
+			dispatch({type: type.TASK_RECV_ITEM, item: result.task});
+		})
+	}
+}
+
 export function getRemainTime(task) {
 	var remainTime = ((new Date(task.duedate) - Date.now()) / 1000 / 60 / 60).toFixed(1);
 	var estimationTime = task.estimation;

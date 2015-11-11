@@ -122,6 +122,26 @@ module.exports = function(_router, app){
 		})
 		.then(result=>res.send({task: result}))
 		.fail(err=>logger.error(err))
+	})
 
+	router.put('/:_id/increment/:propertyName', function(req, res){
+		let body = req.body || {};
+		let value = parseInt(body.value || 0);
+		let _id = req.params._id;
+		let userId = req.user._id;
+		let propertyName = req.params.propertyName;
+		let query = {_id};
+
+		if(value < 0){
+			query[propertyName] = {$lte: -value};
+		}
+
+		console.log({_id, propertyName, value})
+
+		return helper.taskHelper.__findOneAndUpdate(userId, query, {$inc: {[propertyName]: value}})
+		.then(()=>helper.taskHelper.findOne(userId, {_id}))
+		.then(task=>res.send({task}))
+		.fail(err=>logger.error(err, err.stack))
+		;
 	})
 }
