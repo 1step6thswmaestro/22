@@ -35,6 +35,7 @@ class SearchController():
                     result['hits'].append(rss_item)
         else:
             result = rss_list
+            result['hits'] = result['hits'][:NUMBER_DOCS]
 
         return result
         #return self.convert_list_to_json_type(rss_list)#, cluster_list)
