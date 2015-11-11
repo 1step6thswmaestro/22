@@ -8,6 +8,8 @@ var Q = require('q');
 var express = require('express');
 var TimeEstimator = require('../../../taskprocess/estimator');
 
+var allowedTaskProperties = ['name', 'description', 'created', 'important', 'duedate', 'adjustable', 'estimation', 'marginBefore', 'marginAfter'];
+
 module.exports = function(_router, app){
 	let helper = app.helper;
 	let router = express.Router();
@@ -27,6 +29,11 @@ module.exports = function(_router, app){
 
 		helper.taskHelper.find(req.user._id)
 		.then(results=>res.send({list: results}))
+	})
+
+	router.get('/:_id', function(req, res){
+		app.helper.taskHelper.findOne(req.user._id, {_id: req.params._id})
+		.then(task=>res.send(task))
 	})
 
 	router.get('/prioritized/:method?', function(req, res){
@@ -53,7 +60,7 @@ module.exports = function(_router, app){
 	router.post('/', function(req, res){
 		// This request create new task for the current user.
 		let userId = req.user._id;
-		let task = _.pick(req.body, 'name', 'description', 'created', 'important', 'duedate', 'adjustable', 'estimation', 'marginBefore', 'marginAfter');
+		let task = _.pick(req.body, allowedTaskProperties);
 		task.lastProcessed = task.created;
 		let created = req.body.created;
 		let loc = req.body.loc;
@@ -78,13 +85,11 @@ module.exports = function(_router, app){
 
 	router.post('/modify', function(req, res){
 		// This request modifies given task's name and description field.
-		let task = _.pick(req.body, '_id', 'name', 'description', 'created', 'duedate');
-		let modifiedTask = Task(task).toObject();
+		let task = _.pick(req.body, '_id', allowedTaskProperties);
 
-		app.helper.taskHelper.update(req.user._id, {_id: task._id}, modifiedTask)
-		.then(function(){
-			res.send(modifiedTask);
-		})
+		app.helper.taskHelper.update(req.user._id, {_id: task._id}, task)
+		.then(()=>app.helper.taskHelper.findOne(req.user._id, {_id: task._id}))
+		.then(task=>res.send(task))
 		.fail(err=>{
 			if(err) throw err;
 		})
@@ -133,7 +138,7 @@ module.exports = function(_router, app){
 		let query = {_id};
 
 		if(value < 0){
-			query[propertyName] = {$lte: -value};
+			query[propertyName] = {$gte: -value};
 		}
 
 		console.log({_id, propertyName, value})
