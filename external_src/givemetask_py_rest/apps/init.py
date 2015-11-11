@@ -8,7 +8,7 @@ def init_all(app):
     apply_logger(app)
     app.es = init_search_controller(app)
     app.query_pool = init_db("host")
-    app.query_pool2 = init_db("host2")
+    #app.query_pool2 = init_db("host2")
 
 def apply_logger(app):
     app.logger.setLevel(logging.DEBUG)

@@ -33,7 +33,7 @@ class DocumentES():
                       }
                 }
         # if ES connects to remote server, add user_id column
-        if config.ES_HOST.lower() != 'localhost' or config.ES_HOST != '127.0.0.1':
+        if config.ES_HOST.lower() != 'localhost' and config.ES_HOST != '127.0.0.1':
             result['query']['bool']['must'] = [
                               {"term": {"userId" : user_id}}
                             ]

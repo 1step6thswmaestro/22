@@ -19,19 +19,22 @@ class SearchController():
         #     cluster_list = []
 
         # get log count from db and reordering documents by count
-        rss_id_list = [item['_id'] for item in rss_list['hits']]
-        counts = self.app.query_pool.get_log_count_by_article_id(rss_id_list)
+        if len(rss_list) > NUMBER_DOCS:
+            rss_id_list = [item['_id'] for item in rss_list['hits']]
+            counts = self.app.query_pool.get_log_count_by_article_id(rss_id_list)
 
-        topn = NUMBER_DOCS
-        count_list = Series(index=list(counts.keys()), data=list(counts.values()))
-        count_list.sort(ascending=False)
+            topn = NUMBER_DOCS
+            count_list = Series(index=list(counts.keys()), data=list(counts.values()))
+            count_list.sort(ascending=False)
 
-        selected_id_and_count = count_list[:topn]
+            selected_id_and_count = count_list[:topn]
 
-        result = {'hits' : []}
-        for rss_item in rss_list['hits']:
-            if rss_item['_id'] in selected_id_and_count.index:
-                result['hits'].append(rss_item)
+            result = {'hits' : [], 'total' : 0}
+            for rss_item in rss_list['hits']:
+                if rss_item['_id'] in selected_id_and_count.index:
+                    result['hits'].append(rss_item)
+        else:
+            result = rss_list
 
         return result
         #return self.convert_list_to_json_type(rss_list)#, cluster_list)
