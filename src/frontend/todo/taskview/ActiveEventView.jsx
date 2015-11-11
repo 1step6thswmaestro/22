@@ -11,42 +11,11 @@ class ActiveEventView extends React.Component {
         super(props);
         this.displayName = 'ActiveEventView';
         this.state = {};
-        this.state.cachedEvents = [];
     }
 
     componentWillUpdate(nextProps, nextState) {
         let needToShow = this.check(this.props, this.state, nextProps, nextState);     
-        
-        if(!this.state.needToShow && needToShow){
-            this.resetCache();
-        }
-
-        //취소된 것은 event만 남김. (not task)
-        this.state.cachedEvents = _.filter(this.state.cachedEvents, event=>{
-            let task = this.props.tasks.tasks[event.taskId];
-            return !task || task.start == TaskStateType.named.start.id; 
-        });
-
-        this.addEventsToCache(nextProps.events);
         this.state.needToShow = needToShow;
-    }
-
-    addEventsToCache(events){
-        console.log('addEventsToCache', events);
-        _.each(events, event=>{
-            let index = _.findIndex(this.state.cachedEvents, {_id: event._id});
-            console.log(event, index);
-            if(index>=0){
-                this.state.cachedEvents.splice(index, 1, event);
-            }
-            else{
-                this.state.cachedEvents.push(event);
-            }
-        })
-    }
-
-    resetCache(){
-        this.state.cachedEvents = [];
     }
 
     check(prevProps, prevState, props, state){
@@ -149,10 +118,11 @@ class ActiveEventView extends React.Component {
         }
 
         let title;
+        let icon = task?<i className='fa fa-tag mr5'></i>:<i className='fa fa-calendar mr5'></i>
         if(task && task.state == TaskStateType.named.complete.id){
             title = (
                 <div>
-                    <h4 className='mr10 modal-title'><i className='fa fa-circoe-o'></i><strike>{event.summary}</strike></h4> 
+                    <h4 className='mr10 modal-title'>{icon}<strike>{event.summary}</strike></h4> 
                     <small className='word-wrap'>완료됨</small>
                 </div>
             )
@@ -160,20 +130,20 @@ class ActiveEventView extends React.Component {
         else if(event.dismissed){
             title = (
                 <div>
-                    <h4 className='mr10 modal-title'><i className='fa fa-circoe-o'></i><strike>{event.summary}</strike></h4> 
+                    <h4 className='mr10 modal-title'>{icon}<strike>{event.summary}</strike></h4> 
                     <small className='word-wrap'>취소됨</small>
                 </div>
             )
         }
         else{
             title = (
-                <h4 className="modal-title"><i className='fa fa-circoe-o'></i>{event.summary}</h4> 
+                <h4 className="modal-title">{icon}{event.summary}</h4> 
             )
         }
 
         return (
             <div className='mb10'>
-                <div className="modal-header">
+                <div className="modal-header mb10">
                     {title}
                 </div>
                 <If test={timeDifference>0}>
@@ -194,8 +164,6 @@ class ActiveEventView extends React.Component {
     render() {
     	let { events, tasks, global, config } = this.props;
 
-        console.log('cachedEvents', this.state.cachedEvents);
-
 		return (
 			<div className="modal-contents">
 				<div className="modal-header">
@@ -203,9 +171,9 @@ class ActiveEventView extends React.Component {
 				</div>
 				<div className="modal-body">
 					<div id='activeview-contents'>
-                        <If test={this.state.cachedEvents.length>0}>
+                        <If test={this.props.events.length>0}>
                             <div>
-                                {_.map(this.state.cachedEvents, event=>this.renderItem(event, this.props.tasks.tasks[event.taskId]))}
+                                {_.map(this.props.events, event=>this.renderItem(event, this.props.tasks.tasks[event.taskId]))}
                                 <div className="modal-header">
                                     <label className="modal-title"></label>
                                 </div>
@@ -214,7 +182,7 @@ class ActiveEventView extends React.Component {
                                 </div>
                             </div>
                         </If>
-                        <If test={this.state.cachedEvents.length==0}>
+                        <If test={this.props.events.length==0}>
                             <div style={{'text-align':'center'}}>
                                 현재 진행중인 작업이 없습니다.
                             </div>
