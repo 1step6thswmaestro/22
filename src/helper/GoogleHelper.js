@@ -162,8 +162,12 @@ class GoogleHelper{
 		}
 
 
-		let update = opt.update == 'true'; //default false
+		let update = opt.update===true || opt.update == 'true'; //default false
 		let reset = opt.reset != 'false'; //default true
+		if(opt.reset === false){
+			reset = opt.reset;
+		}
+		
 		return Q(this.getCalendarEvents(user, {update, reset}))
 		.then(results=>{
 			events = getTodayEvent(results);
