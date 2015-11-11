@@ -83,7 +83,7 @@ def getTimePrefScore(user_id, token_collection, tokens):
             daytime = index_timeslot%48
             weekday = index_timeslot/48
 
-            score_lookup_table[index_token][index_timeslot] = math.log(num_tok_weekday[weekday] * num_tok_daytime[daytime] + 1)
+            score_lookup_table[index_token][index_timeslot] = math.log(max(num_tok_weekday[weekday], 0.5) * num_tok_daytime[daytime] + 1)
 
         score_lookup_table[index_token] = smoother(score_lookup_table[index_token])
 
