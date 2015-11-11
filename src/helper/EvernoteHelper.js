@@ -12,6 +12,7 @@ var Article = mongoose.model('Article');
 class EvernoteHelper{
 	constructor(app){
 		this.config = getConfig('evernote.json');
+		// console.log("Init Evernote Client with this config.", this.config[this.config.default].client);
 		this.evernote = new Evernote.Client(this.config[this.config.default].client);
 	}
 
@@ -48,8 +49,9 @@ class EvernoteHelper{
 	}
 	getNotebookList(oauthAccessToken){
 		let defer = Q.defer();
+		var config = _.extend(this.config[this.config.default].client, {token: oauthAccessToken});
 
-		var client = new Evernote.Client({token: oauthAccessToken});
+		var client = new Evernote.Client(config);
 		var noteStore = client.getNoteStore();
 		noteStore.listNotebooks(function(err, notebooks) {
 			if(err){
@@ -64,8 +66,8 @@ class EvernoteHelper{
 	}
 	getNoteList(oauthAccessToken){
 		let defer = Q.defer();
-
-		var client = new Evernote.Client({token: oauthAccessToken});
+		var config = _.extend(this.config[this.config.default].client, {token: oauthAccessToken});
+		var client = new Evernote.Client(config);
 		var noteStore = client.getNoteStore();
 
 		var filter = new Evernote.NoteFilter({
@@ -92,7 +94,8 @@ class EvernoteHelper{
 		return defer.promise;
 	}
 	makeNoteList2Article(oauthAccessToken, user, metaNoteList){
-		var client = new Evernote.Client({token: oauthAccessToken});
+		var config = _.extend(this.config[this.config.default].client, {token: oauthAccessToken});
+		var client = new Evernote.Client(config);
 		var userStore = client.getUserStore();
 		var userId = user._id;
 
