@@ -11,8 +11,7 @@ module.exports = class SlotAllocator{
 		let length = end-begin;
 		let idx_begin = begin-this.base;
 
-		let i;
-		for(i=0; i<length; ++i){
+		for(var i=0; i<length; ++i){
 			let slot = idx_begin+i;
 
 			if(this.slots[slot] == true){

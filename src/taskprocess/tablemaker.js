@@ -135,8 +135,6 @@ class TimeMaker{
 		.then(tasks=>{
 			tasks.sort(sortByTimelevel.bind(this));
 
-			console.log('make table...');
-
 			_.chain(tasks)
 			.groupBy('timelevel')
 			.map(function(tasks, level) {
@@ -159,16 +157,16 @@ class TimeMaker{
 						// Calculate time prefer score for each slot term
 
 						let scores = [];
-						for (let i = 0; i <= slot_size-(task.adjustable?1:timespan); ++i) {
+						for (let i = 0; i < (task.adjustable?(slot_size):(slot_due-now-timespan)); ++i) {
 							let slot = now+i;
 
-							let start = slot;
+							let start = slot-1;
 							let _timespan = timespan;
 
 							if(slot_due - start < _timespan)	//only possible when 'adjustable' set
 								_timespan = slot_due-start;
 							
-							let end = slot + _timespan;
+							let end = slot + _timespan + 1;
 							let allocation = slotAllocator.test(start, end, task.adjustable);
 							end = start + allocation;
 
@@ -182,15 +180,15 @@ class TimeMaker{
 						}
 
 						scores.sort(function(a, b){
-							if(a.start != b.start)
-								return a.start - b.start;
+							if(a.end != b.end)
+								return b.end - a.end;
 							
 							if(a.length != b.length)
 								return b.length - a.length;
 
 							return b.score - a.score;
 						});
-
+						
 						// Checkout if the task's prefer slot is taken by the other
 						for (let i = 0; i < scores.length; i++) {
 							let scoreObj = scores[i];
@@ -225,25 +223,6 @@ class TimeMaker{
 		// Now tablemaker remove all timetable for every requests.
 		return Q(helper.timetable.reset(userId))
 		.then(function(){ return this.process(currentTime) }.bind(this));
-	}
-
-	testData(user){
-		let getTimeslot = this.getTimeslot;
-		let now = Math.floor(Date.now()/SLOT_SIZE);
-		return this.app.helper.taskHelper.find(user._id)
-		.then(tasks => _.map(tasks, task=>{
-			let _now = now;
-			now += 2;
-
-			return {
-				taskId: task._id
-				, tableslotStart: _now
-				, tableslotEnd: now
-				, summary: task.name
-				, estimation: task.estimation
-			}
-		}));
-
 	}
 }
 
