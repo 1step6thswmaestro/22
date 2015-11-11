@@ -206,7 +206,7 @@ class TaskItemDetail extends React.Component {
 		function propertyButton(propertyName, value){
 			return (
 				<span onClick={incrementPropertyValue.bind(self, propertyName, value)}>
-					<i className={classnames({'fa':true, 'fa-minus-square':value<0, 'fa-plus-square':value>0, 'm5': true})}></i>
+					<i className={classnames({'fa':true, 'fa-minus-square':value<0, 'fa-plus-square':value>0, 'mr5': value<0, 'ml5':value>0})}></i>
 				</span>
 			)
 		}
