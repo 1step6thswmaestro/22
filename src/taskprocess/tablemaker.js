@@ -78,7 +78,6 @@ class TimeMaker{
 
 		takenTime /= HOUR_MILLISEC;
 
-		if (takenTime < 1) return 1;
 		if (takenTime > 365*24) return 365*24;
 		return takenTime.toFixed(1);
 	}
