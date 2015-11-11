@@ -123,7 +123,7 @@ class TaskItemDetail extends React.Component {
 	getRemainTime() {
 		let time = Math.floor(getRemainTime(this.props.task, this.props.tasklog));
 
-		let result = "여유시간: ";
+		let result = "";
 		if(time <= 0) {
 			result = "여유시간 부족!";
 		}

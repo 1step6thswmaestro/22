@@ -14,12 +14,15 @@ module.exports = function(_router, app){
 		app.helper.evernote.getAuthURL(req.user)
 		.then((results)=>{
 			if (results.oauthToken){
+				// console.log('Oauth Seccess. Now you can get auth link from Evernote.')
 				// store the tokens in the session
 				req.session.evernote = {
 					oauthToken: results.oauthToken,
 					oauthTokenSecret: results.oauthTokenSecret
 				};
 			}
+			// If getting oauthToken was success, redirect to evernote auth url.
+			// Or, redirect to main page.
 			res.redirect(results.redirectUrl);
 		})
 		.fail((err)=>{
@@ -31,6 +34,9 @@ module.exports = function(_router, app){
 		// This function will be automatically callled during OAuth.
 		app.helper.evernote.processAuthCode(req.user, req.session.evernote, req.query.oauth_verifier)
 		.then((oauthAccessToken)=>{
+			// Save oauthAccessToken.
+			// console.log('Oauth Seccess. Now you can get access to the user\'s Evernote.');
+			// console.log('oatuh access token: ', oauthAccessToken);
 			req.session.evernote = {
 				oauthToken: req.session.evernote.oauthToken,
 				oauthTokenSecret: req.session.evernote.oauthTokenSecret,
@@ -45,6 +51,7 @@ module.exports = function(_router, app){
 	router.get('/pushtodb', function(req, res){
 		// Push every notes in the evernote account into Article DB.
 		// This function will be automatically callled during OAuth.
+		// console.log('start Evernote DB push with this info:', req.session.evernote);
 
 		app.helper.evernote.getNoteList(req.session.evernote.oauthAccessToken)
 		.then(noteList=>{
@@ -61,6 +68,7 @@ module.exports = function(_router, app){
 	})
 
 	router.get('/notebooklist/list', function(req, res){
+		// console.log('Evernote Session:', req.session.evernote)
 		app.helper.evernote.getNotebookList(req.session.evernote.oauthAccessToken)
 		.then(results=>res.send(results))
 		.fail(err=>res.send(err));
