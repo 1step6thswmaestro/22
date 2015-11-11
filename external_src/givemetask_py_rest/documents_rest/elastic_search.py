@@ -22,7 +22,7 @@ class DocumentES():
             return return_object
 
     def get_search_body(self, query, user_id):
-        result ={"query":
+        result = {"query":
                      {"bool":
                           {
                           "should": [
@@ -31,7 +31,7 @@ class DocumentES():
                             ]
                           }
                       }
-                }
+                  }
         # if ES connects to remote server, add user_id column
         if config.ES_HOST.lower() != 'localhost' and config.ES_HOST != '127.0.0.1':
             result['query']['bool']['must'] = [
