@@ -159,16 +159,16 @@ class TimeMaker{
 						// Calculate time prefer score for each slot term
 
 						let scores = [];
-						for (let i = 0; i < (task.adjustable?(slot_size):(slot_due-now-timespan)); ++i) {
+						for (let i = 0; i <= slot_size-(task.adjustable?1:timespan); ++i) {
 							let slot = now+i;
 
-							let start = slot-1;
+							let start = slot;
 							let _timespan = timespan;
 
 							if(slot_due - start < _timespan)	//only possible when 'adjustable' set
 								_timespan = slot_due-start;
 							
-							let end = slot + _timespan + 1;
+							let end = slot + _timespan;
 							let allocation = slotAllocator.test(start, end, task.adjustable);
 							end = start + allocation;
 
