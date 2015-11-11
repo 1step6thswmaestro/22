@@ -10,7 +10,7 @@
     right: 0;
     z-index: -1;
     display: block;
-    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.6)), url("main/background.jpg");
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.8)), url("main/background.jpg");
     background-size: cover;
     background-attachment: fixed;
     background-position: 50% 50%;
@@ -27,7 +27,7 @@
     padding: 10px;
     font-family: sans-serif;
     font-size: 15px;
-    color: #777;
+    color: #333;
     position: relative;
     line-height: 35px;
     padding-left: 70px; }
@@ -48,7 +48,7 @@
   padding: 10px;
   font-family: sans-serif;
   font-size: 15px;
-  color: #777;
+  color: #333;
   position: relative;
   line-height: 35px;
   padding-left: 70px; }
@@ -135,14 +135,26 @@ html {
   .task-banner .duedate {
     color: #aaa;
     overflow: hidden;
-    white-space: nowrap; }
+    white-space: nowrap;
+    display: inline-block;
+    width: 200px; }
+    .task-banner .duedate .date-label {
+      display: inline-block;
+      width: 50px; }
   .task-banner .buttons {
     margin-top: 30px; }
   .task-banner .svg-middle {
     position: absolute;
-    right: 0px;
-    top: 10px;
-    width: 100px; }
+    right: 20px;
+    top: 35px;
+    width: 76px;
+    height: 76px; }
+    .task-banner .svg-middle:hover {
+      background: #F0B6A4; }
+      .task-banner .svg-middle:hover .btn-play path {
+        stroke: #AB5C42; }
+      .task-banner .svg-middle:hover .btn-play rect {
+        fill: #AB5C42; }
   .task-banner .inner-canvas-left {
     left: 0px; }
     .task-banner .inner-canvas-left svg {
@@ -184,12 +196,12 @@ html {
     transform: translate(25px, 75px); }
   .task-banner .btn-arrow-right {
     transform: translate(25px, 75px); }
-  .task-banner .btn-play {
-    transform: translate(20px, 25px); }
-    .task-banner .btn-play path {
-      stroke: #EB8F71;
-      stroke-width: 5;
-      fill: none; }
+  .task-banner .btn-play path {
+    stroke: #EB8F71;
+    stroke-width: 5;
+    fill: none; }
+  .task-banner .btn-play rect {
+    fill: #EB8F71; }
 
 .list {
   border-radius: 10px;
@@ -203,7 +215,7 @@ html {
     right: 0;
     z-index: -1;
     display: block;
-    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.6)), url("main/background.jpg");
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.8)), url("main/background.jpg");
     background-size: cover;
     background-attachment: fixed;
     background-position: 50% 50%;
@@ -220,7 +232,7 @@ html {
     padding: 10px;
     font-family: sans-serif;
     font-size: 15px;
-    color: #777;
+    color: #333;
     position: relative;
     line-height: 35px;
     padding-left: 70px; }
@@ -241,7 +253,7 @@ html {
   padding: 10px;
   font-family: sans-serif;
   font-size: 15px;
-  color: #777;
+  color: #333;
   position: relative;
   line-height: 35px;
   padding-left: 70px; }
@@ -270,7 +282,7 @@ html {
     right: 0;
     z-index: -1;
     display: block;
-    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.6)), url("main/background.jpg");
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.8)), url("main/background.jpg");
     background-size: cover;
     background-attachment: fixed;
     background-position: 50% 50%;
@@ -287,7 +299,7 @@ html {
     padding: 10px;
     font-family: sans-serif;
     font-size: 15px;
-    color: #777;
+    color: #333;
     position: relative;
     line-height: 35px;
     padding-left: 70px; }
@@ -525,8 +537,14 @@ ul {
 #taskAddBtn {
   margin: 12px 0 12px 0; }
 
+.mr5 {
+  margin-right: 5px; }
+
 .mr10 {
   margin-right: 10px; }
+
+.mb10 {
+  margin-bottom: 10px; }
 
 .authorize-div {
   display: none; }
@@ -542,6 +560,9 @@ ul {
     padding-bottom: 0 !important; }
   .no-padding {
     padding: 0 !important; } }
+
+.word-wrap {
+  word-wrap: normal; }
 
 .card {
   border-radius: 2px;
@@ -1155,7 +1176,7 @@ textarea:focus, input:focus {
     right: 0;
     z-index: -1;
     display: block;
-    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.6)), url("main/background.jpg");
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.8)), url("main/background.jpg");
     background-size: cover;
     background-attachment: fixed;
     background-position: 50% 50%;
@@ -1172,7 +1193,7 @@ textarea:focus, input:focus {
     padding: 10px;
     font-family: sans-serif;
     font-size: 15px;
-    color: #777;
+    color: #333;
     position: relative;
     line-height: 35px;
     padding-left: 70px; }
@@ -1193,7 +1214,7 @@ textarea:focus, input:focus {
   padding: 10px;
   font-family: sans-serif;
   font-size: 15px;
-  color: #777;
+  color: #333;
   position: relative;
   line-height: 35px;
   padding-left: 70px;
@@ -1256,6 +1277,31 @@ textarea:focus, input:focus {
     fill: rgba(172, 95, 70, 0.45);
     width: 5px;
     height: 30px; }
+
+.modal-contents {
+  position: relative; }
+  .modal-contents.disabled:after {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(220, 220, 220, 0.5);
+    cursor: not-allowed; }
+  .modal-contents .modal-contents .modal-header {
+    padding: 5px;
+    padding-left: 15px; }
+
+.modal-actionview {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin: 5px; }
+
+#actionview-contents, #activeview-contents {
+  height: 300px; }
+  #actionview-contents .modal-header, #activeview-contents .modal-header {
+    padding-left: 0px; }
 
 .task-item-detail .form-group-default {
   background-color: rgba(255, 255, 255, 0.3); }

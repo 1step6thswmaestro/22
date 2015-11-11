@@ -88,6 +88,20 @@ class QueryPool():
         s.sort(ascending=False) # sorting
         return s.keys()[:topn]
 
+    def get_log_count_by_article_id(self, article_ids):
+        log_collection = self.conn.get_collection('article_read_log')
+        ls = log_collection.group(
+            {'article_id': True},
+            {'article_id': {'$in' : article_ids}},
+            {'count' : 0},
+            'function(obj, prev) {prev.count++}'
+        )
+        result = {}
+        for item in ls:
+            result[item['article_id']] = item['count']
+
+        return result
+
     def get_article_count(self, user_id):
         article_collection = self.conn.get_collection('articles')
         return article_collection.find({'userId' : ObjectId(user_id)}).count()

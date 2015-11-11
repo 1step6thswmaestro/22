@@ -3,6 +3,7 @@ from config import WORD2VEC_MODEL, PIPE_DUMPING
 from sklearn.externals import joblib
 import gensim
 import numpy as np
+import os.path
 
 class SearchCluster():
     def __init__(self, app):
@@ -11,8 +12,9 @@ class SearchCluster():
         self.load_models()
 
     def load_models(self):
-        self.word2vec = gensim.models.Word2Vec.load_word2vec_format(WORD2VEC_MODEL, binary=True)
-        self.cluster_pipe = joblib.load(PIPE_DUMPING)
+        if os.path.isfile(WORD2VEC_MODEL) and os.path.isfile(PIPE_DUMPING):
+            self.word2vec = gensim.models.Word2Vec.load_word2vec_format(WORD2VEC_MODEL, binary=True)
+            self.cluster_pipe = joblib.load(PIPE_DUMPING)
 
     def __task_to_vector(self, task):
         words = [key for key, pos in self.mecab.pos(task)]
@@ -23,6 +25,9 @@ class SearchCluster():
     def __predict_label(self, task):
         vector = self.__task_to_vector(task)
         return self.cluster_pipe.predict(vector)[0]
+
+    def chk_load_status(self):
+        return self.word2vec is not None
 
     def get_articles(self, user_id, task, topn=3):
         label = self.__predict_label(task)
