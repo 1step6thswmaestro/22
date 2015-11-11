@@ -3,7 +3,7 @@ import TaskStateType from '../../../constants/TaskStateType';
 import classnames from 'classnames';
 import { startItem, pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
 import { dismissTimetableItem, restoreTimetableItem } from '../actions/timetable'
-
+import If from '../../utility/if'
 import _ from 'underscore';
 
 class TaskActionView extends React.Component {
@@ -143,8 +143,16 @@ class TaskActionView extends React.Component {
 
         return (
             <div className='mb10'>
-                <div className="modal-header">
-                    <h4 className="modal-title"><i className='fa fa-circoe-o'></i>{event.summary}</h4> 
+                <div className="modal-header mb10">
+                    <h4 className="modal-title">
+                        <If test={task!=null}>
+                            <i className='fa fa-tag mr5'></i>
+                        </If>
+                        <If test={task==null}>
+                            <i className='fa fa-calendar mr5'></i>
+                        </If>
+                        {event.summary}
+                    </h4> 
                 </div>
                 <div>
                     <small className='mr10'>예상 시간</small> 

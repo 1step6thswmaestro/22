@@ -23,6 +23,12 @@
 
 }
 
+@media (min-width: 992px){
+	#actionview-contents, #activeview-contents{
+		min-height: 300px;
+	}
+}
+
 .modal-actionview{
 	border: 1px solid #ddd;
 	border-radius: 10px;
@@ -30,8 +36,6 @@
 }
 
 #actionview-contents, #activeview-contents{
-	height: 300px;
-
 	.modal-header{
 		padding-left: 0px;
 	}
