@@ -141,6 +141,7 @@ class TimeMaker{
 					let level = task.timelevel;
 					let slot_begin = now%SLOT_NUMBER;
 					let slot_size = SLOT_NUMBER;
+					task.processedtime = 0;
 					let timespan = Math.max(Math.floor(task.estimation*2 - task.processedtime),0);
 					timespan += (task.marginBefore||0) + (task.marginAfter||0);
 
@@ -151,7 +152,7 @@ class TimeMaker{
 						slot_size = slot_due-now;
 					}
 
-					console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
+					// console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
 					// console.log(timePreferenceScore.length);
 
 					if (task.adjustable || (0 <= level && level < (24*7/TIMELEVEL_SIZE))) {
@@ -181,14 +182,23 @@ class TimeMaker{
 						}
 
 						scores.sort(function(a, b){
-							if(a.end != b.end)
-								return b.end - a.end;
-							
+							if(a.score != b.score)
+								return b.score - a.score;
+
 							if(a.length != b.length)
 								return b.length - a.length;
 
-							return b.score - a.score;
+							if(a.start != b.start)
+								return a.start - b.start;
+							
+							if(a.end != b.end)
+								return b.end - a.end;
+
+							return 0;
 						});
+
+						// console.log('maximum score : ', _.max(scores, item=>item.score))
+						// console.log('minimum score : ', _.min(scores, item=>item.score))
 						
 						// Checkout if the task's prefer slot is taken by the other
 						for (let i = 0; i < scores.length; i++) {
