@@ -81,6 +81,11 @@ export default class DevelopView extends React.Component{
 		})
 	}
 
+	showNextTaskModal(){
+		let { dispatch } = this.props;
+		dispatch(setConfig('forceShowTaskModal', true));
+	}
+
 	render(){
 		let { dispatch, config } = this.props;
 
@@ -160,6 +165,10 @@ export default class DevelopView extends React.Component{
 				{this.renderTableButton()}
 				<i className='mr10'></i>
 				{onlyActiveButton}
+				<i className='mr10'></i>
+				<button className='btn btn-default' onClick={this.showNextTaskModal.bind(this)}>
+					Show Next Task Modal
+				</button>
 				<If test={this.props.config.globalTimePicker==true}>
 					<div>
 						<DateTimePicker type='inline' onChange={this.setGlobalTime.bind(this)}/>
