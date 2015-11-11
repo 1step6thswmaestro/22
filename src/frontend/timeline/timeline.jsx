@@ -217,7 +217,7 @@ export default class Timeline extends React.Component{
 
 		var trans = `translate(${ props.margins.left },${ props.margins.top })`;
 		return (
-			<g transform={trans} className={'timeline ' + props.className}>
+			<g className={'timeline ' + props.className}>
 				<rect className='background' ref='background' width='100%' height='100%' fill='#fff'>
 				</rect>
 				<text className='rep-time' x="0" y="15" fontSize="10">

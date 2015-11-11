@@ -35,7 +35,7 @@ export default class MainTimeline extends React.Component{
 
 		return (
 			<div id='main-timeline-container'>
-				<SvgContainer _id='main-timeline' width='100%' height='60px' ref='svg'>
+				<SvgContainer _id='main-timeline' ref='svg'>
 					<Timeline 
 						svg={d3.select(React.findDOMNode(this.refs.svg))} 
 						elements={elements} 
