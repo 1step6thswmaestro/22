@@ -32,6 +32,8 @@ class TimeTableActionView extends React.Component {
                 
                 if(self.props && self.props.timetable)
                     self.props.timetable.toStartEvent = undefined;
+
+                self.props.config.resetTaskModalState = false;
             })
 
             this.props.config.forceShowTaskModal = false;
@@ -122,6 +124,7 @@ class TimeTableActionView extends React.Component {
                                             dispatch={this.props.dispatch}
                                             events={toStartEvents}
                                             tasks={this.props.tasks}
+                                            config={this.props.config}
                                             global={this.props.global}
                                             disabled={currentActiveWithoutDismissed.length>0}/>
                                     </div>

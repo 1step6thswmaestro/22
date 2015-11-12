@@ -6,6 +6,7 @@ import _ from 'underscore'
 import { request } from './common'
 import { type as TaskActionType } from './tasks_decl';
 import { type as TaskLogActionType } from './tasklog_decl';
+import { type as ConfigType } from './config_decl'
 
 export function fetchTimetable(){
 	return (dispatch, getState) => {
@@ -16,6 +17,11 @@ export function fetchTimetable(){
 		.then(
 			result => {
 				dispatch({type: type.FETCH_TIMETABLE, list: result});
+				dispatch({
+					type: ConfigType.SET_CONFIG
+					, key: 'resetTaskModalState'
+					, value: true
+				});
 			}
 			, err => console.error(err)
 		)

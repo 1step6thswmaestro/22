@@ -20,9 +20,11 @@ class TaskActionView extends React.Component {
     check(prevProps, prevState, props, state){
         let zipped = _.zip(prevProps.events, props.events);
 
-        for(var i in zipped){
-            if(zipped[i][0] == zipped[i][1])
-                return false;
+        if(!props.config.resetTaskModalState){
+            for(var i in zipped){
+                if(zipped[i][0] == zipped[i][1])
+                    return false;
+            }
         }
 
         if(props.events.length <= 0){
