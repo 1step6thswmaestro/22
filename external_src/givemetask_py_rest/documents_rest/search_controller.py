@@ -44,15 +44,28 @@ class SearchController():
         rss_id_list = [item['_id'] for item in doc_list['hits']]
         counts = self.app.query_pool.get_log_count_by_article_id(rss_id_list)
 
-        count_list = Series(index=list(counts.keys()), data=list(counts.values()))
-        count_list.sort(ascending=False)
-
-        selected_id_and_count = count_list[:topn]
-
         result = {'hits' : []}
-        for rss_item in doc_list['hits']:
-            if rss_item['_id'] in selected_id_and_count.index:
-                result['hits'].append(rss_item)
+        if len(counts) >= topn:
+            count_list = Series(index=list(counts.keys()), data=list(counts.values()))
+            count_list.sort(ascending=False)
+
+            selected_id_and_count = count_list[:topn]
+
+            for rss_item in doc_list['hits']:
+                if rss_item['_id'] in selected_id_and_count.index:
+                    result['hits'].append(rss_item)
+        elif len(counts) > 0 and len(counts) < topn:
+            count = 0
+            for item in doc_list['hits']:
+                if item['_id'] in counts:
+                    result['hits'].append(item)
+                else:
+                    if count < (topn - len(counts)):
+                        count += 1
+                        result['hits'].append(item)
+        else:
+            result['hits'] = doc_list['hits'][:topn]
+
         return result
 
     def convert_list_to_json_type(self, rss_list, cluster_list):
