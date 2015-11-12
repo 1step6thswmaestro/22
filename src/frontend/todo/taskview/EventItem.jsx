@@ -8,7 +8,7 @@ import TaskItemDetail from './TaskItemDetail'
 import { startItem, pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
 import { setTaskProperty } from '../actions/tasks'
 import classnames from 'classnames'
-
+import TaskStateType from '../../../constants/TaskStateType';
 
 class EventItem extends React.Component{
 	constructor(props){
@@ -80,6 +80,9 @@ class EventItem extends React.Component{
 					{end.format("HH:mm")}
 				</div>
 				<div className='content'>
+					<If test={task && task.state == TaskStateType.named.start.id}>
+						<i className='fa fa-play'></i>
+					</If>
 					{event.summary}
 				</div>
 				<div className='table-item-header border-left float-right task-progress-container'>

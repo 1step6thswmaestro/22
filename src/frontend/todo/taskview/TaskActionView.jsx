@@ -6,6 +6,7 @@ import { dismissTimetableItem } from '../actions/timetable'
 import { setConfig } from '../actions/config'
 import If from '../../utility/if'
 import _ from 'underscore';
+import { getStringHourMinutes } from '../../utility/date'
 
 class TaskActionView extends React.Component {
     constructor(props) {
@@ -88,8 +89,11 @@ class TaskActionView extends React.Component {
     	var minutes = 0;
         let now = global.time || Date.now();
 
+        let begin = 0;
+
     	if(event){
-	    	var timeDifference = now - (new Date(event.tableslotStart*30*60*1000)).getTime();
+            begin = event.tableslotStart*(30*60*1000);
+	    	var timeDifference = now - begin;
 	    	hours = Math.floor(timeDifference/1000/60/60);
 	    	minutes = Math.floor(timeDifference/1000/60)%60;
     	}
@@ -117,12 +121,14 @@ class TaskActionView extends React.Component {
                             지금 시작
                         </button>
                     ));
-                    actionButtons.push((
-                        <button className='btn btn-default' onClick={this.startOnSchedule.bind(this, event, task)}>
-                            예정대로
-                            ({(hours>0?`${hours}시간 `:'') + `${minutes}분 전`})
-                        </button>
-                    ));
+                    if(begin < now){
+                        actionButtons.push((
+                            <button className='btn btn-default' onClick={this.startOnSchedule.bind(this, event, task)}>
+                                예정대로
+                                ({(hours>0?`${hours}시간 `:'') + `${minutes}분 전`})
+                            </button>
+                        ));
+                    }
                     if(this.state.showPostponeOptions && task && this.state.showPostponeOptionsTargetTaskId==task._id){
                         actionButtons.push((
                             <button className="btn btn-default disabled" label="Remind me later" onClick={this.showPostponeOptions.bind(this, event, task)}>
@@ -201,6 +207,12 @@ class TaskActionView extends React.Component {
                         {event.summary}
                     </h4> 
                 </div>
+                <If test={begin > now}>
+                    <div>
+                        <small className='mr10'>남은 시간</small> 
+                        {getStringHourMinutes(begin-now)}
+                    </div>    
+                </If>
                 <div>
                     <small className='mr10'>예상 시간</small> 
                     {length_hours>0?`${length_hours}시간`:''+ `${length_minuts}분`}
