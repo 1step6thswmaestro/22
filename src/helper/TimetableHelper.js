@@ -10,10 +10,10 @@ function init(app){
 
 	}
 
-	TimetableHelper.prototype.find = function(user, query, proj, opt){
+	TimetableHelper.prototype.find = function(userId, query, proj, opt){
 		opt = opt || {};
 		opt.sort = opt.sort || {tableslotStart: 1};
-		return Q.nbind(Timetable.find, Timetable)(Object.assign(query), proj, opt);
+		return Q.nbind(Timetable.find, Timetable)(Object.assign({userId}, query), proj, opt);
 	}
 
 	TimetableHelper.prototype.createItems = function(userId, list){
