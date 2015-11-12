@@ -21,7 +21,7 @@ class SearchController():
         if len(rss_list['hits']) >= whole_number['own_rss']:
             rss_list = self.get_counts_and_sort_docs(rss_list, whole_number['own_rss'])
 
-        remain_numbers = whole_number['entire'] - (len(ever_list) + len(rss_list))
+        remain_numbers = whole_number['entire'] - (len(ever_list['hits']) + len(rss_list['hits']))
         # find other user's rss docs
         other_rss_list = self.es.search(query, user_id, topn=whole_number['check_topn'], contains_id=False, doc_type=0)
         if len(other_rss_list['hits']) >= remain_numbers:
@@ -66,4 +66,4 @@ class SearchController():
     def fit_to_front_type(self, result, doc_list, type):
         for item in doc_list['hits']:
             item['type'] = type
-            result.append(item)
+            result['hits'].append(item)

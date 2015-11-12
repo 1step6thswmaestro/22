@@ -28,6 +28,9 @@ class DocItem extends React.Component{
 	render() {
 		return (
 			<div className="doc-item" onClick={this.onDocumentClick.bind(this, this.props.doc._id)}>
+				<h5> 
+					{this.props.doc.type} : 
+				</h5>
 				<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
 					{this.props.doc.title}
 				</a>
