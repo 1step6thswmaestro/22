@@ -66,6 +66,4 @@ class SearchController():
     def fit_to_front_type(self, result, doc_list, type):
         for item in doc_list['hits']:
             item['type'] = type
-            item['link'] = item['originId']
-            del item['originId']
             result.append(item)

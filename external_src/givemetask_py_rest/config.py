@@ -1,7 +1,7 @@
 __author__ = 'iljichoi'
 
 ES_INDEX = 'givemetask'
-ES_SEARCH_INDEX = ['_id', 'title', 'summary']
+ES_SEARCH_INDEX = ['_id', 'title', 'summary', 'originId']
 ES_HOST, ES_PORT = '192.168.175.128', 9200
 ES_SCORE = 0.5
 
