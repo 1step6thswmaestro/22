@@ -245,12 +245,12 @@ class TimeMaker{
 
 			if(alreadyStarted){
 				let query = {taskId: task._id};
-				console.log('query', query);
 				let timeTableEvent = _.filter(originalTimeTables, item=>item.taskId&&item.taskId.toString()===query.taskId.toString())[0];
-				console.log('timeTableEvent : ', timeTableEvent);
-				if(timeTableEvent)
-					timetable.push(timeTableEvent);
-
+				if(!timeTableEvent){
+					return true;
+				}
+				
+				timetable.push(timeTableEvent);
 				return false;
 			}
 			else{
