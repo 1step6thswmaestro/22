@@ -28,15 +28,10 @@ class SearchController():
             other_rss_list = self.get_counts_and_sort_docs(other_rss_list, remain_numbers)
 
         result = {'hits':[]}
-        for item in ever_list['hits']:
-            item['type'] = "evernote"
-            result['hits'].append(item)
-        for item in rss_list['hits']:
-            item['type'] = "rss"
-            result['hits'].append(item)
-        for item in other_rss_list['hits']:
-            item['type'] = "others"
-            result['hits'].append(item)
+        self.fit_to_front_type(result, ever_list, 'evernote')
+        self.fit_to_front_type(result, rss_list, 'rss')
+        self.fit_to_front_type(result, other_rss_list, 'others')
+
         return result
         #return self.convert_list_to_json_type(rss_list)#, cluster_list)
 
@@ -68,19 +63,9 @@ class SearchController():
 
         return result
 
-    def convert_list_to_json_type(self, rss_list, cluster_list):
-        result = {'hits':[]}
-
-        result['hits'] = rss_list['hits']
-        for item in cluster_list:
-            conv_item = {'link': item['originId'],
-                         'summary': item['summary'],
-                         'title': item['title'],
-                         '_id': str(item['_id'])}
-            result['hits'].append(conv_item)
-        return result
-        # <div className="doc-item" onClick={this.onDocumentClick.bind(this, this.props.doc._id)}>
-			# 	<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
-			# 		{this.props.doc.title}
-			# 	</a>
-			# </div>
+    def fit_to_front_type(self, result, doc_list, type):
+        for item in doc_list['hits']:
+            item['type'] = type
+            item['link'] = item['originId']
+            del item['originId']
+            result.append(item)
