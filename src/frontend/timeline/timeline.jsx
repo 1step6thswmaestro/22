@@ -153,7 +153,7 @@ export default class Timeline extends React.Component{
 	}
 
 	renderNow(){
-		let x = this.state.xScale(new Date(Date.now()));
+		let x = this.state.xScale(new Date(this.props.global.time || Date.now()));
 		let width = 4;
 
 		if(x<0)

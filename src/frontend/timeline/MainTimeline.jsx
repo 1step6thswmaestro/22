@@ -41,6 +41,7 @@ export default class MainTimeline extends React.Component{
 						elements={elements} 
 						height={60} 
 						leftCursor={leftCursor}
+						global = {this.props.global}
 					/>
 				</SvgContainer>
 			</div>

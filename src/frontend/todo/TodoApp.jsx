@@ -106,7 +106,7 @@ class TodoApp extends React.Component{
 		return (
 			<div className={"task-app-container " + this.state.timelineState}>
 				<Topbar/>
-				<MainTimeline timetable={this.props.timetable} config={this.props.config} />
+				<MainTimeline timetable={this.props.timetable} config={this.props.config} global={this.props.global}/>
 				<TaskBanner tasks={this.props.tasks} timetable={this.props.timetable} dispatch={this.props.dispatch} config={this.props.config}/>
 				<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user}/>
 				<ConfigView dispatch={this.props.dispatch} config={this.props.config}/>
