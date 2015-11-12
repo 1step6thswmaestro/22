@@ -5,7 +5,7 @@ import { getLocation } from '../../utility/location'
 import _ from 'underscore'
 import { request } from './common'
 import { type as TaskActionType } from './tasks_decl';
-
+import { type as TaskLogActionType } from './tasklog_decl';
 
 export function fetchTimetable(){
 	return (dispatch, getState) => {
@@ -49,6 +49,13 @@ export function resetTimetable(){
 
 export function dismissTimetableItem(event, data, state){
 	return (dispatch, getState) => {
+		dispatch({
+			type: type.SET_EVENT_PROPERTY
+			, event: event
+			, property: 'loading'
+			, value: true
+		})
+
 		return request({
 			url: `/v1/timetable/${event._id}/dismiss/${state?state:''}`
 			, type: 'put'
@@ -58,7 +65,22 @@ export function dismissTimetableItem(event, data, state){
 			return fetchTimetable()(dispatch, getState)
 			.then(function(){
 				dispatch({type: TaskActionType.TASK_RECV_ITEM, item: result.task});
-				dispatch({type: TaskActionType.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
+				dispatch({type: TaskLogActionType.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
+
+				dispatch({
+					type: type.SET_EVENT_PROPERTY
+					, event: event
+					, property: 'loading'
+					, value: false
+				})
+			})
+		})
+		.fail(()=>{
+			dispatch({
+				type: type.SET_EVENT_PROPERTY
+				, event: event
+				, property: 'loading'
+				, value: false
 			})
 		})
 	}
@@ -66,6 +88,13 @@ export function dismissTimetableItem(event, data, state){
 
 export function restoreTimetableItem(event, data, state){
 	return (dispatch, getState) => {
+		dispatch({
+			type: type.SET_EVENT_PROPERTY
+			, event: event
+			, property: 'loading'
+			, value: true
+		})
+
 		return request({
 			url: `/v1/timetable/${event._id}/restore/${state?state:''}`
 			, type: 'put'
@@ -75,7 +104,22 @@ export function restoreTimetableItem(event, data, state){
 			return fetchTimetable()(dispatch, getState)
 			.then(function(){
 				dispatch({type: TaskActionType.TASK_RECV_ITEM, item: result.task});
-				dispatch({type: TaskActionType.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
+				dispatch({type: TaskLogActionType.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
+
+				dispatch({
+					type: type.SET_EVENT_PROPERTY
+					, event: event
+					, property: 'loading'
+					, value: false
+				})
+			})
+		})
+		.fail(()=>{
+			dispatch({
+				type: type.SET_EVENT_PROPERTY
+				, event: event
+				, property: 'loading'
+				, value: false
 			})
 		})
 	}

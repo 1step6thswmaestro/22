@@ -1,7 +1,7 @@
 import React from 'react';
 import TaskStateType from '../../../constants/TaskStateType';
 import classnames from 'classnames';
-import { startItem, pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
+import { pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
 import { dismissTimetableItem, restoreTimetableItem } from '../actions/timetable'
 import If from '../../utility/if'
 import _ from 'underscore';
@@ -141,16 +141,19 @@ class TaskActionView extends React.Component {
             }
         }
 
+        let icon;
+        if(event.loading){
+            icon = <i className='fa fa-spinner fa-spin mr5'></i>
+        }
+        else{
+            icon = task?<i className='fa fa-tag mr5'></i>:<i className='fa fa-calendar mr5'></i>
+        }
+        
         return (
-            <div className='mb10'>
+            <div className={classnames({'mb10': true, 'event-item': true, loading: event.loading})}>
                 <div className="modal-header mb10">
                     <h4 className="modal-title">
-                        <If test={task!=null}>
-                            <i className='fa fa-tag mr5'></i>
-                        </If>
-                        <If test={task==null}>
-                            <i className='fa fa-calendar mr5'></i>
-                        </If>
+                        {icon}
                         {event.summary}
                     </h4> 
                 </div>

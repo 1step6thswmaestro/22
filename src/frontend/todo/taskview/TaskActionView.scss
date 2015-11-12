@@ -39,4 +39,9 @@
 	.modal-header{
 		padding-left: 0px;
 	}
+	
+	.event-item.loading{
+		pointer-events: none;
+		opacity: 0.7;
+	}
 }

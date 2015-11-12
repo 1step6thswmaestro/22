@@ -4,6 +4,7 @@ import _ from 'underscore';
 import { dismissTimetableItem, restoreTimetableItem } from '../actions/timetable'
 import { uncompleteItem, completeItem } from '../actions/tasks'
 import If from '../../utility/if'
+import classnames from 'classnames';
 
 
 class ActiveEventView extends React.Component {
@@ -117,8 +118,14 @@ class ActiveEventView extends React.Component {
             }
         }
 
-        let title;
-        let icon = task?<i className='fa fa-tag mr5'></i>:<i className='fa fa-calendar mr5'></i>
+        let icon, title;
+        if(event.loading){
+            icon = <i className='fa fa-spinner fa-spin mr5'></i>
+        }
+        else{
+            icon = task?<i className='fa fa-tag mr5'></i>:<i className='fa fa-calendar mr5'></i>
+        }
+
         if(task && task.state == TaskStateType.named.complete.id){
             title = (
                 <div>
@@ -142,7 +149,7 @@ class ActiveEventView extends React.Component {
         }
 
         return (
-            <div className='mb10'>
+            <div className={classnames({'mb10': true, 'event-item': true, loading: event.loading})}>
                 <div className="modal-header mb10">
                     {title}
                 </div>
