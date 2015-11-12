@@ -59,7 +59,7 @@ class DocumentES():
                                 }
                             },
                             {
-                                {"term": {"type": doc_type}}
+                                "term": {"type": doc_type}
                             }
                         ],
                         "should" : [
