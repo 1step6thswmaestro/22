@@ -13,8 +13,9 @@ module.exports = function(){
 		, salt: String
 		, feedly: {
 			access_token: String
+			, refresh_token: String
 			, id: String
-			, date: Date
+			, expireDate: Date
 		}
 		, thirdparty: {
 			google: {

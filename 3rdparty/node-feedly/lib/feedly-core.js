@@ -62,15 +62,31 @@ Feedly.prototype.getAccessToken = function(code, params, callback) {
 
 	 this.oauth.getOAuthAccessToken(code, params,	
 	 	function(err, access_token, refresh_token, results) {
+	 		console.log('getAccessToken');
+	 		console.log(arguments);
 	 		if(err) callback(err, undefined);
 	 		try {
-	 			console.log(results);
-	 			callback(null, results);
+	 			callback(null, refresh_token, results);
 	 		} catch(e) {
 	 			callback(e);
 	 		}
 	 });
+}
 
+Feedly.prototype.refreshToken = function(code, params, callback) {
+
+	var params= params || {};
+	params.grant_type = 'refresh_token';
+
+	 this.oauth.getOAuthAccessToken(code, params,	
+	 	function(err, access_token, refresh_token, results) {
+	 		if(err) callback(err, undefined);
+	 		try {
+	 			callback(null, refresh_token, results);
+	 		} catch(e) {
+	 			callback(e);
+	 		}
+	 });
 }
 
 

@@ -29,26 +29,59 @@ class FeedlyHelper{
 		.then(function(results){
 			let findByIdAndUpdate = Q.nbind(Account.findByIdAndUpdate, Account);
 
+			console.log('processAuthCode', results);
+
 			let access_token = results.access_token;
+			let refresh_token = results.refresh_token;
 			let id = results.id;
+			let expireDate = Date.now() + results.expires_in*1000;
 
-			console.log({id, access_token});
-
-			return findByIdAndUpdate(user._id, {$set: {feedly: {id, access_token}}})
-			.then(results=>{
-				console.log({results});
-			})
+			return findByIdAndUpdate(user._id, {$set: {feedly: {id, access_token, refresh_token, expireDate}}})
 		})
 	}
 
 	_processAuthCode(code){
 		let defer = Q.defer();
-		this.feedly.getAccessToken(code, {}, (err, access_token)=>{
+		this.feedly.getAccessToken(code, {}, (err, refresh_token, results)=>{
+			console.log('_processAuthCode', err, refresh_token, results);
 			if(err){
 				defer.reject(err);
 			}
 			else{
-				defer.resolve(access_token);
+				defer.resolve(_.extend({refresh_token}, results));
+			}
+		});
+		return defer.promise;
+	}
+
+	validateAccessToken(user){
+		if(user.feedly.expireDate >= Date.now()){
+			// let findByIdAndUpdate = Q.nbind(Account.findByIdAndUpdate, Account);
+
+			return this._refreshToken(user.feedly.refresh_token)
+			.then(results=>{
+				let access_token = results.access_token;
+				let expireDate = Date.now() + results.expires_in*1000;
+				return findByIdAndUpdate(user._id, {$set: {feedly: {access_token, expireDate}}})
+				.then(function(){
+					return access_token;
+				})
+			})
+		}
+		else{
+			return Q(user.feedly.access_token)
+		}
+	}
+
+	_refreshToken(code){
+		let defer = Q.defer();
+		this.feedly.refreshToken(code, {}, (err, refresh_token, results)=>{
+			console.log('_refreshToken', err, refresh_token, results);
+			if(err){
+				defer.reject(err);
+			}
+			else{
+				defer.resolve(results);
 			}
 		});
 		return defer.promise;
@@ -70,32 +103,42 @@ class FeedlyHelper{
 		return this._request(user, 'getStreamContents', params);
 	}
 
+	
+
 	_request(user, method, params){
 		if(!user)
 			return Q([]);
 
-		var defer = Q.defer();
-
 		var feedly = new Feedly(this.config[this.config.default]);
-		feedly.accessToken = user.feedly.access_token;
-		feedly[method](params, err=>defer.reject(err), results=>defer.resolve(results));
 
-		return defer.promise;
+		return this.validateAccessToken(user)
+		.then(access_token=>{
+			console.log('_request', access_token);
+
+			var defer = Q.defer();
+			feedly.accessToken = access_token;
+			feedly[method](params, err=>defer.reject(err), results=>defer.resolve(results));
+			return defer.promise;
+		})
+		.fail(err=>logger.error(err, err.stack))
 	}
 
 	_requestRaw(user, url){
 		if(!user)
 			return Q([]);
-
-		var defer = Q.defer();
-
-
+		
 		var feedly = new Feedly(this.config[this.config.default]);
-		feedly.accessToken = user.feedly.access_token;
-		console.log(feedly.baseUrl + url)
-		feedly.doRequest(feedly.baseUrl + url, err=>defer.reject(err), results=>defer.resolve(results));
 
-		return defer.promise;
+		return this.validateAccessToken(user)
+		.then(access_token=>{
+			console.log('_requestRaw', access_token)
+		
+			var defer = Q.defer();
+			feedly.accessToken = user.feedly.access_token;
+			feedly.doRequest(feedly.baseUrl + url, err=>defer.reject(err), results=>defer.resolve(results));
+			return defer.promise;
+		})
+		.fail(err=>logger.error(err, err.stack))
 	}
 
 	update(user){
