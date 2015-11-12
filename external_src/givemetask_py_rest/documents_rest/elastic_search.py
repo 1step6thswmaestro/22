@@ -1,11 +1,14 @@
 __author__ = 'iljichoi'
 from elasticsearch import Elasticsearch
-import json
 import config
 
 class DocumentES():
-    def __init__(self, app):
-        self.es = Elasticsearch(hosts=['%s:%d' % (config.ES_HOST, config.ES_PORT)])
+    def __init__(self, app, host_option=1):
+        if host_option == 1:
+            self.es = Elasticsearch(hosts=['%s:%d' % (config.ES_HOST, config.ES_PORT)])
+        elif host_option == 2:
+            self.es = Elasticsearch(hosts=['%s:%d' % (config.ES_HOST2, config.ES_PORT2)])
+        self.host_option = host_option
         self.index = config.ES_INDEX
         self.app = app
 
@@ -33,7 +36,7 @@ class DocumentES():
                       }
                   }
         # if ES connects to remote server, add user_id column
-        if config.ES_HOST.lower() != 'localhost' and config.ES_HOST != '127.0.0.1':
+        if self.host_option != 1:
             result['query']['bool']['must'] = [
                               {"term": {"userId" : user_id}}
                             ]
@@ -44,9 +47,6 @@ class DocumentES():
             return {'total':0, 'hits':[]}
         filter_keys = config.ES_SEARCH_INDEX # response keys
         result = {}
-
-        # insert the number of results
-        #result['total'] = len(res['hits']['hits'])
 
         # insert document hits
         hits = []

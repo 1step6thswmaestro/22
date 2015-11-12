@@ -3,6 +3,7 @@ __author__ = 'iljichoi'
 ES_INDEX = 'givemetask'
 ES_SEARCH_INDEX = ['_id', 'title', 'summary']
 ES_HOST, ES_PORT = 'localhost', 9200
+ES_HOST2, ES_PORT2 = 'localhost', 9201
 ES_SCORE = 0.5
 
 # Files
