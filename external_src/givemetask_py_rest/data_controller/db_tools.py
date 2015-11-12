@@ -96,7 +96,7 @@ class QueryPool():
             {'count' : 0},
             'function(obj, prev) {prev.count++}'
         )
-        result = {}
+        result = {item['article_id'] : item['count'] for item in ls}
         for item in ls:
             result[item['article_id']] = item['count']
 
