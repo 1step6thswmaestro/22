@@ -100,6 +100,8 @@ class TimeMaker{
 	process(userId, originalTimeTables, events, tasks, opt) {
 		opt = opt || {};
 
+		console.log('process');
+
 		//methods & properties of this class
 		let helper = this.app.helper;
 		let getTimeslot = this.getTimeslot;
@@ -173,12 +175,21 @@ class TimeMaker{
 			if (task.adjustable || (0 <= level && level < (24*7/TIMELEVEL_SIZE))) {
 				// Calculate time prefer score for each slot term
 
+				let beginAfter = Math.floor((task.beginAfter || 0)/SLOT_SIZE); 
+
 				let scores = [];
 				for (let i = 0; i <= slot_size-(task.adjustable?1:timespan); ++i) {
 					let slot = now+i;
 
 					let start = slot;
 					let _timespan = timespan;
+
+					if(beginAfter>0)
+						console.log(task.name, beginAfter);
+
+					if(start < beginAfter){
+						continue;
+					}
 
 					if(slot_due - start < _timespan)	//only possible when 'adjustable' set
 						_timespan = slot_due-start;
@@ -296,6 +307,7 @@ class TimeMaker{
 			})
 		})
 		.then(list=>helper.timetable.createItems(user._id, list))
+		.fail(err=>logger.error(err, err.stack));
 	}
 }
 

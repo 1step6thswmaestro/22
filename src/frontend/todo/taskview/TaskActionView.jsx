@@ -1,8 +1,9 @@
 import React from 'react';
 import TaskStateType from '../../../constants/TaskStateType';
 import classnames from 'classnames';
-import { pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
-import { dismissTimetableItem, restoreTimetableItem } from '../actions/timetable'
+import { pauseItem, completeItem, uncompleteItem, removeItem, getRemainTime } from '../actions/tasks';
+import { dismissTimetableItem } from '../actions/timetable'
+import { setConfig } from '../actions/config'
 import If from '../../utility/if'
 import _ from 'underscore';
 
@@ -46,12 +47,12 @@ class TaskActionView extends React.Component {
 
     start(event, task) {
         const { dispatch } = this.props;
-        dispatch(restoreTimetableItem(event, undefined, 'start'));
+        dispatch(dismissTimetableItem(event, 'restore', 'start'));
     }
 
     startOnSchedule(event, task){
         const { dispatch } = this.props;
-        dispatch(restoreTimetableItem(event, {time: event.tableslotStart*(30*60*1000)}, 'start'));
+        dispatch(dismissTimetableItem(event, 'restore', 'start', {time: event.tableslotStart*(30*60*1000)}));
     }
 
     pause(event, task) {
@@ -64,9 +65,19 @@ class TaskActionView extends React.Component {
         dispatch(removeItem(task));
     }
 
-    postpone(event, task){
+    postpone(event, task, hours){
         const { dispatch } = this.props;
-        dispatch(postponeItem(task));
+        dispatch(dismissTimetableItem(event, 'dismiss', 'postpone', {scheduleId: event._id, hours}));
+    }
+
+    showPostponeOptions(event, task){
+        const { dispatch } = this.props;
+        if(task){
+            this.setState(Object.assign({}, this.statte, {
+               showPostponeOptions: true
+               ,  showPostponeOptionsTargetTaskId: task._id
+            }))
+        }
     }
 
 
@@ -112,11 +123,42 @@ class TaskActionView extends React.Component {
                             ({(hours>0?`${hours}시간 `:'') + `${minutes}분 전`})
                         </button>
                     ));
-                    actionButtons.push((
-                        <button className="btn btn-default" label="Remind me later" onClick={this.postpone.bind(this, event, task)}>
-                            <span className="glyphicon glyphicon-send"></span> 나중에 알림
-                        </button>
-                    ));
+                    if(this.state.showPostponeOptions && task && this.state.showPostponeOptionsTargetTaskId==task._id){
+                        actionButtons.push((
+                            <button className="btn btn-default disabled" label="Remind me later" onClick={this.showPostponeOptions.bind(this, event, task)}>
+                                    <span className="glyphicon glyphicon-send"></span>
+                            </button>
+                        ))
+
+                        actionButtons.push((
+                            <button className="btn btn-warning" onClick={this.postpone.bind(this, event, task, 1)}>
+                                1시간
+                            </button>
+                        ))
+                        actionButtons.push((
+                            <button className="btn btn-warning" onClick={this.postpone.bind(this, event, task, 2)}>
+                                2시간
+                            </button>
+                        ))
+                        actionButtons.push((
+                            <button className="btn btn-warning" onClick={this.postpone.bind(this, event, task, 3)}>
+                                3시간
+                            </button>
+                        ))
+                        actionButtons.push((
+                            <button className="btn btn-warning" onClick={this.postpone.bind(this, event, task, 6)}>
+                                6시간
+                            </button>
+                        ))
+                    }  
+                    else{
+                        actionButtons.push((
+                            <button className="btn btn-default" label="Remind me later" onClick={this.showPostponeOptions.bind(this, event, task)}>
+                                <span className="glyphicon glyphicon-send"></span> 나중에 알림
+                            </button>
+
+                        ));
+                    }
                 }
                 else{
                     actionButtons.push((

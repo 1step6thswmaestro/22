@@ -54,26 +54,49 @@ function init(app){
 	TaskHelper.prototype.setState = function(userId, taskId, state, opt){
 		opt = opt || {}
 		var type = TaskStateType.named[state];
-		var taskType = type;
+		var stateType = type;
 		if(type.state){
-			taskType = TaskStateType.named[type.state];
+			stateType = TaskStateType.named[type.state];
 		}
 		let self = this;
 
-		var p0 = this.update(userId, {_id: taskId}, {state: taskType.id});
-		var p1 = app.helper.tasklog.create(userId, taskId, TaskStateType.named[state], {
-			loc: opt.loc
-			, time: opt.time
-		});
+		var pSchedule;
+		var doc = {state: stateType.id};
 
-		return Q.all([p0, p1])
-		.then(function(results){
-			return self.find(userId, {_id: taskId})
-			.then(function(tasks){
-				return {
-					task: tasks[0]
-					, log: results[1][0]
-				}
+		if(opt.scheduleId){
+			pSchedule = app.helper.timetable.findOne(userId, {_id: opt.scheduleId});
+		}
+
+		console.log({type});
+		return Q.spread([pSchedule], function(schedule){
+			switch(type.command){
+				case 'postpone':
+					if(schedule){
+						doc.beginAfter = new Date((schedule.tableslotStart + opt.hours*2)*(30*60*1000));
+					}
+					else if(doc.beginAfter){
+						doc.beginAfter = new Date((doc.beginAfter + opt.hours*2)*(30*60*1000));
+					}
+					break;
+			}
+
+			console.log({state, schedule, doc});
+
+			var p0 = app.helper.taskHelper.update(userId, {_id: taskId}, doc);
+			var p1 = app.helper.tasklog.create(userId, taskId, TaskStateType.named[state], {
+				loc: opt.loc
+				, time: opt.time
+			});
+
+			return Q.all([p0, p1])
+			.then(function(results){
+				return self.find(userId, {_id: taskId})
+				.then(function(tasks){
+					return {
+						task: tasks[0]
+						, log: results[1][0]
+					}
+				})
 			})
 		})
 		.then(function(result){

@@ -16,6 +16,11 @@ function init(app){
 		return Q.nbind(Timetable.find, Timetable)(Object.assign({userId}, query), proj, opt);
 	}
 
+	TimetableHelper.prototype.findOne = function(userId, query, proj, opt){
+		opt = opt || {};
+		return Q.nbind(Timetable.findOne, Timetable)(Object.assign({userId}, query), proj, opt);
+	}
+
 	TimetableHelper.prototype.createItems = function(userId, list){
 		return Q.all(_.map(list, item => this.create(userId, item)))
 		.fail(err=>logger.error(err))
@@ -42,8 +47,11 @@ function init(app){
 		.then(function(timetable){
 			timetable.dismissed = dismissed;
 			let result = {timetable}
+			if(state == 'postpone'){
+				result.reset = true;
+			}
 			if(timetable.taskId!=null)
-				return app.helper.taskHelper.setState(userId, timetable.taskId, dismissed?'pause':'resume', opt)
+				return app.helper.taskHelper.setState(userId, timetable.taskId, state, opt)
 				.then(_result=>_.extend(result, _result));
 			else
 				return result;

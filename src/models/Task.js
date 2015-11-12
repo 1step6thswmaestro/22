@@ -30,6 +30,7 @@ module.exports = function(app){
 		adjustable: {type: Boolean, default: false},
 		marginBefore: {type: Number, default: 0},
 		marginAfter: {type: Number, default: 0},
+		beginAfter: {type: Date}
 	});
 
 	taskSchema.index({

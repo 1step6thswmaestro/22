@@ -1,7 +1,7 @@
 import React from 'react';
 import TaskStateType from '../../../constants/TaskStateType';
 import _ from 'underscore';
-import { dismissTimetableItem, restoreTimetableItem } from '../actions/timetable'
+import { dismissTimetableItem } from '../actions/timetable'
 import { uncompleteItem, completeItem } from '../actions/tasks'
 import If from '../../utility/if'
 import classnames from 'classnames';
@@ -52,7 +52,7 @@ class ActiveEventView extends React.Component {
 
     dismiss(event){
         let { dispatch } = this.props;
-        dispatch(dismissTimetableItem(event));
+        dispatch(dismissTimetableItem(event, 'dismiss', 'pause'));
     }
 
     complete(event, task){
@@ -67,7 +67,7 @@ class ActiveEventView extends React.Component {
 
     restore(event){
         let { dispatch } = this.props;
-        dispatch(restoreTimetableItem(event));
+        dispatch(restoreTimetableItem(event, 'restore', 'start'));
     }
 
     renderItem(event, task){

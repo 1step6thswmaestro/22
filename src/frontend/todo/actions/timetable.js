@@ -53,7 +53,7 @@ export function resetTimetable(){
 }
 
 
-export function dismissTimetableItem(event, data, state){
+export function dismissTimetableItem(event, command, state, data){
 	return (dispatch, getState) => {
 		dispatch({
 			type: type.SET_EVENT_PROPERTY
@@ -63,52 +63,16 @@ export function dismissTimetableItem(event, data, state){
 		})
 
 		return request({
-			url: `/v1/timetable/${event._id}/dismiss/${state?state:''}`
+			url: `/v1/timetable/${event._id}/${command}/${state?state:''}`
 			, type: 'put'
 			, data: data
 		})
 		.then(result=>{
-			return fetchTimetable()(dispatch, getState)
+			console.log('dismissTimetableItem', result);
+
+			return (result.reset?resetTimetable:fetchTimetable)()(dispatch, getState)
 			.then(function(){
-				dispatch({type: TaskActionType.TASK_RECV_ITEM, item: result.task});
-				dispatch({type: TaskLogActionType.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
-
-				dispatch({
-					type: type.SET_EVENT_PROPERTY
-					, event: event
-					, property: 'loading'
-					, value: false
-				})
-			})
-		})
-		.fail(()=>{
-			dispatch({
-				type: type.SET_EVENT_PROPERTY
-				, event: event
-				, property: 'loading'
-				, value: false
-			})
-		})
-	}
-}
-
-export function restoreTimetableItem(event, data, state){
-	return (dispatch, getState) => {
-		dispatch({
-			type: type.SET_EVENT_PROPERTY
-			, event: event
-			, property: 'loading'
-			, value: true
-		})
-
-		return request({
-			url: `/v1/timetable/${event._id}/restore/${state?state:''}`
-			, type: 'put'
-			, data: data
-		})
-		.then(result=>{
-			return fetchTimetable()(dispatch, getState)
-			.then(function(){
+				console.log('fetchTimetable complete');
 				dispatch({type: TaskActionType.TASK_RECV_ITEM, item: result.task});
 				dispatch({type: TaskLogActionType.TASK_RECV_LOG, item: result.log, taskId: result.task._id});
 
