@@ -140,7 +140,7 @@ class TimeMaker{
 
 		function preprocessTasks(tasks){
 			return Q.all(tasks.map(function(task){
-				task.timelevel = getTimeLevel(task);
+				task.timelevel = getTimeLevel(task, currentTime);
 				return helper.tasklog.find(task.userId, {taskId: task._id, time: {$lte: currentTime}})
 				.then(logs=>{
 					task.processedtime = getProcessedTime(logs) || 0;
