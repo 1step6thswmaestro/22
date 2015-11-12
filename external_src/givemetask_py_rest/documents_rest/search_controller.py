@@ -28,13 +28,13 @@ class SearchController():
             other_rss_list = self.get_counts_and_sort_docs(other_rss_list, remain_numbers)
 
         result = {'hits':[]}
-        for item in ever_list:
+        for item in ever_list['hits']:
             item['type'] = "evernote"
             result['hits'].append(item)
-        for item in rss_list:
+        for item in rss_list['hits']:
             item['type'] = "rss"
             result['hits'].append(item)
-        for item in other_rss_list:
+        for item in other_rss_list['hits']:
             item['type'] = "others"
             result['hits'].append(item)
         return result
