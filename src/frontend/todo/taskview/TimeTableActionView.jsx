@@ -16,6 +16,7 @@ class TimeTableActionView extends React.Component {
         let refs = this.refs;
         let needToShow0 = this.refs.taskActionView!=null && this.refs.taskActionView.state.needToShow;
         let needToShow1 = this.refs.activeEventView!=null && this.refs.activeEventView.state.needToShow;
+        let self = this;
 
         if(needToShow0 || needToShow1 || this.props.timetable.toStartEvent || this.props.config.forceShowTaskModal){
             var modal = $(React.findDOMNode(this));
@@ -29,8 +30,8 @@ class TimeTableActionView extends React.Component {
                 if(refs.activeEventView!=null)
                     refs.activeEventView.state.needToShow = false;
                 
-                if(this.props)
-                    this.props.timetable.toStartEvent = undefined;
+                if(self.props && self.props.timetable)
+                    self.props.timetable.toStartEvent = undefined;
             })
 
             this.props.config.forceShowTaskModal = false;
