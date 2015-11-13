@@ -25,6 +25,7 @@ import TaskStateType from '../../constants/TaskStateType';
 import { syncUserStatus } from '../todo/actions/user';
 import $ from 'jquery';
 import TimeTableActionView from './taskview/TimeTableActionView';
+import TaskLineChart from './taskview/TaskLineChart';
 
 class TodoApp extends React.Component{
 	constructor(props){
@@ -114,6 +115,8 @@ class TodoApp extends React.Component{
 					<GoogleCalendarList dispatch={this.props.dispatch} config={this.props.config} google={this.props.thirdparty.google}/>
 				</If>
 
+				<TaskLineChart task={this.props.testTask}/>
+
 				<TimeTableActionView dispatch={this.props.dispatch} timetable={this.props.timetable} tasks={this.props.tasks} config={this.props.config} global={this.props.global} />
 
 				<If test={this.props.config.userview!=true}>
@@ -145,6 +148,12 @@ function mapStateToProps(state){
 		props.tasks.list.push(task);
 		props.tasks.plist.push(task);
 	})
+
+	try{
+		props.testTask = props.tasks.tasks[props.tasks.list[0]._id];
+		console.log('testTask : ', props.testTask);
+	}
+	catch(e){}
 
 	props.tasks.activeList = _.map(_activeList, _id => state.tasks.tasks[_id]);
 
