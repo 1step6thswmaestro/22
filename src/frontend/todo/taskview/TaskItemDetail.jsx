@@ -298,9 +298,9 @@ class TaskItemDetail extends React.Component {
 					                		<div className='col-xs-6'>
 					                			<div className="form-group form-group-default">
 					                				<label>소요시간</label>
-					                				<i className='fa fa-minus-square mr5'></i>
+					                				{propertyButton('estimation', -0.5)}
 													{ task.estimation } 시간
-													<i className='fa fa-plus-square ml5'></i>
+													{propertyButton('estimation', +0.5)}
 								                </div>
 					                		</div>
 					                		<div className='col-xs-6'>

@@ -131,7 +131,7 @@ module.exports = function(_router, app){
 
 	router.put('/:_id/increment/:propertyName', function(req, res){
 		let body = req.body || {};
-		let value = parseInt(body.value || 0);
+		let value = parseFloat(body.value || 0);
 		let _id = req.params._id;
 		let userId = req.user._id;
 		let propertyName = req.params.propertyName;
