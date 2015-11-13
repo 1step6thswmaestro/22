@@ -16,10 +16,11 @@ class EventItem extends React.Component{
 		this.state = {};
 	}
 
-	setImportant(value, e){
+	setProperty(propertyName, value, e){
 		let { dispatch } = this.props;
+
 		if(this.props.task)
-			dispatch(setTaskProperty(this.props.task, {important: value}));
+			dispatch(setTaskProperty(this.props.task, {[propertyName]: value}));
 
 		e.stopPropagation();
 	}
@@ -44,32 +45,44 @@ class EventItem extends React.Component{
 		dispatch(setConfig('focusedTableId', null))
 	}
 
+	renderProperty(propertyName, opt){
+		let task = this.props.task;
+		let propertyValue = task && task[propertyName] == true;
+		let setProperty = this.setProperty.bind(this);
 
-	
+		opt = _.defaults(opt||{}, {
+			icon: 'fa-exclamation'
+			, icon2: 'fa-circle-o'
+			, className: ''
+		});
+
+		if(propertyValue){
+			return (
+				<div className={`table-item-header property ${opt.className}`} onClick={setProperty.bind(this, propertyName, false)}>
+					<i className={`fa ${opt.icon}`}></i>
+				</div>
+			)
+		}
+		else{
+			return (
+				<div className={`table-item-header property ${opt.className}`} onClick={setProperty.bind(this, propertyName, true)}>
+					<i className={`fa ${opt.icon2}`}></i>
+				</div>
+			)
+		}
+	}	
 
 	getSimpleView(){
 		var event = this.props.event;
 		var task = this.props.task;
 		let start = moment(new Date(event.tableslotStart * (1000*60*30)));
 		let end = moment(new Date(event.tableslotEnd * (1000*60*30)));
-		let important = task && task.important==true;
+		let renderProperty = this.renderProperty.bind(this);
 
 		return (
 			<div className='table-item-title' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} onClick={this.onClick.bind(this)}>
-				<If test={important}>
-					<div className='table-item-header border-right property' onClick={this.setImportant.bind(this, false)}>
-						<i className='fa fa-exclamation'></i>
-					</div>
-				</If>
-				<If test={!important}>
-					<div className='table-item-header border-right property' onClick={this.setImportant.bind(this, true)}>
-						<i className='fa fa-circle-o'></i>
-					</div>
-				</If>
-
-				<div className='table-item-header border-right'>
-					<i className='fa fa-check-circle'></i>
-				</div>
+				{renderProperty('important', {className: 'border-right'})}
+				{renderProperty('adjustable', {className: 'border-right'})}
 				<div className='table-item-header'>
 					<i className='fa fa-check-circle'></i>
 				</div>
@@ -103,7 +116,7 @@ class EventItem extends React.Component{
 						task={this.props.task} tasklog={this.props.tasklog} 
 						dispatch={this.props.dispatch}
 						global={this.props.global}
-						setImportant={this.setImportant.bind(this)}
+						setProperty={this.setProperty.bind(this)}
 						onTaskModify={this.props.onTaskModify.bind(this, this.props.task)}
 					/>
 				</If>

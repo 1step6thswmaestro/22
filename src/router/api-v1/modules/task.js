@@ -119,7 +119,7 @@ module.exports = function(_router, app){
 
 	router.put('/:id/set', function(req, res){
 		let body = req.body;
-		body = _.pick(body, 'important');
+		body = _.pick(body, 'important', 'adjustable');
 
 		helper.taskHelper.findByIdAndUpdate(req.user._id, req.params.id, body)
 		.then(function(){

@@ -145,9 +145,55 @@ class TaskItemDetail extends React.Component {
 		return result;
 	}
 
+	renderProperty(propertyName, opt){
+		let task = this.props.task;
+		let propertyValue = task && task[propertyName] == true;
+		opt = _.defaults(opt||{}, {
+			label: 'label'
+			, icon: 'fa-exclamation'
+			, icon2: 'fa-circle-o'
+			, className: ''
+			, desc: 'decription'
+			, desc2: 'decription'
+		});
+		let setProperty = this.props.setProperty;
+
+		function _renderProperty(){
+			if(propertyValue){
+				return (
+					<div>
+						<div className='table-item-header property' onClick={setProperty.bind(this, propertyName, false)}>
+							<i className={`fa ${opt.icon}`}></i>
+						</div>
+						{opt.desc}
+					</div>
+				)
+			}
+			else{
+				return (
+					<div>
+						<div className='table-item-header property' onClick={setProperty.bind(this, propertyName, true)}>
+							<i className={`fa ${opt.icon2}`}></i>
+						</div>
+						{opt.desc2}
+					</div>
+				)	
+			}
+		}
+		
+		return (
+			<div className="form-group form-group-default">
+				<label>{opt.label}</label>
+				{_renderProperty()}
+            </div>
+		);
+	}	
+
+
     render(){
 		let task = this.props.task || {};
 		let locButtonState = this.getLocButtonStates(task.relatedLocation);
+		let renderProperty = this.renderProperty.bind(this);
 
 		let actionButtons = [];
 		if(task.state != TaskStateType.named.complete.id){
@@ -199,7 +245,6 @@ class TaskItemDetail extends React.Component {
 			</div>
 		);
 
-		let important = this.props.task.important;
 		let self = this;
 		let incrementPropertyValue = this.incrementPropertyValue;
 
@@ -220,38 +265,15 @@ class TaskItemDetail extends React.Component {
 								<div className='row'>
 									<div className='col-sm-6'>
 										<div className='col-xs-4'>
-											<div className="form-group form-group-default">
-												<label>중요도</label>
-												<If test={important}>
-													<div>
-														<div className='table-item-header property' onClick={this.props.setImportant.bind(this, false)}>
-															<i className='fa fa-exclamation'></i>
-														</div>
-														수행 생략 불가능
-													</div>
-												</If>
-												<If test={!important}>
-													<div>
-														<div className='table-item-header property' onClick={this.props.setImportant.bind(this, true)}>
-															<i className='fa fa-circle-o'></i>
-														</div>
-														수행 생략 가능
-													</div>
-												</If>
-							                </div>
+											{renderProperty('important', {label: '중요도', desc: '수행 생략 불가능', desc2: '수행 생략 가능'})}
 										</div>
 										<div className='col-xs-4'>
-											<div className="form-group form-group-default">
-												<label>속성2</label>
-												<div className='table-item-header property' onClick={this.props.setImportant.bind(this, true)}>
-													<i className='fa fa-check-circle'></i>
-												</div>
-						                	</div>
+											{renderProperty('adjustable', {label: '시간 유동', desc: '스케쥴에 우선', desc2: '수행시간 고정'})}
 										</div>
 										<div className='col-xs-4'>
 											<div className="form-group form-group-default">
 												<label>속성3</label>
-												<div className='table-item-header property' onClick={this.props.setImportant.bind(this, true)}>
+												<div className='table-item-header property'>
 													<i className='fa fa-check-circle'></i>
 												</div>
 											</div>
@@ -264,23 +286,24 @@ class TaskItemDetail extends React.Component {
 										</div>
 									</div>
 								</div>
-				                <div className='row'>
-				                	<div className='col-md-6'>
-						                <div className="form-group form-group-default">
-						                	<label>생성 위치</label>
-						                	{ this.getCreatedLocation() }
-						                </div>
-				                	</div>
-				                	<div className='col-md-6'>
-						                <div className="form-group form-group-default">
-						                	<label>완료 위치</label>
-						                	{ task.locationstampComplete ? <LocationAddress location={task.locationstampComplete} /> : null }
-						                </div>
-				                	</div>
-				                </div>
-				                <div className='form-group-attached'>
+
+								<div className='form-group-attached'>
 					                <div className='row'>
-					                	<div className='col-md-4'>
+					                	<div className='col-md-6'>
+					                		<div className='col-xs-6'>
+								                <div className="form-group form-group-default">
+								                	<label>생성 위치</label>
+								                	{ this.getCreatedLocation() }
+							                	</div>
+							                </div>
+							                <div className='col-xs-6'>
+								                <div className="form-group form-group-default">
+								                	<label>완료 위치</label>
+								                	{ task.locationstampComplete ? <LocationAddress location={task.locationstampComplete} /> : null }
+								                </div>
+							                </div>
+					                	</div>
+					                	<div className='col-md-6'>
 					                		<div className='col-xs-6'>
 					                			<div className="form-group form-group-default">
 													<label>생성일</label>
@@ -291,6 +314,26 @@ class TaskItemDetail extends React.Component {
 					                			<div className="form-group form-group-default">
 													<label>마감일</label>
 												{getReadableDate(task.duedate)}
+								                </div>
+					                		</div>
+					                	</div>
+					                </div>
+								</div>
+				                <div className='form-group-attached'>
+					                <div className='row'>
+					                	<div classNameame='col-md-4'>
+					                		<div className='col-xs-6'>
+					                			<div className="form-group form-group-default">
+					                				<label>소요시간</label>
+					                				{propertyButton('estimation', -0.5)}
+													{ task.estimation } 시간
+													{propertyButton('estimation', +0.5)}
+								                </div>
+					                		</div>
+					                		<div className='col-xs-6'>
+					                			<div className="form-group form-group-default">
+					                				<label>여유시간</label>
+													{this.getRemainTime()}
 								                </div>
 					                		</div>
 					                	</div>
