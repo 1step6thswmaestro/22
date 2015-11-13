@@ -24,9 +24,18 @@ export function tokenToReadableTime(token){
 }
 
 export function getStringHourMinutes(miliseconds){
+	if(miliseconds===undefined){
+		return '-';
+	}
 	let seconds = miliseconds/1000;
 	let minutes = seconds/60;
 	return getStringHourFromHourMinutes(minutes/60, minutes%60)
+}
+
+export function getStringFromHours(_hours){
+	let hours = Math.floor(_hours);
+	let minutes = (Math.ceil(_hours)-_hours)*60;
+	return getStringHourFromHourMinutes(hours, minutes);
 }
 
 export function getStringHourFromHourMinutes(hours, minutes){

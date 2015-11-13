@@ -103,7 +103,8 @@ class TaskActionView extends React.Component {
 
     	if(event){
     		if(task){
-    			length_hours = task.estimation;
+    			length_hours = Math.floor(task.estimation);
+                length_minuts = Math.floor((task.estimation-Math.floor(task.estimation))*60);
     		}
     		else{
     			let slots = (event.tableslotEnd-event.tableslotStart);
@@ -215,7 +216,7 @@ class TaskActionView extends React.Component {
                 </If>
                 <div>
                     <small className='mr10'>예상 시간</small> 
-                    {length_hours>0?`${length_hours}시간`:''+ `${length_minuts}분`}
+                    {(length_hours>0?`${length_hours}시간`:'')+ `${length_minuts}분`}
                 </div>
                 <div>
                     <div className='btn-group'>

@@ -166,6 +166,8 @@ class TimeMaker{
 					task.timelevel = getTimeLevel(task, currentTime);
 					task.slotspan = Math.max(Math.floor(task.estimation * 2), 1);
 					task.intervalScore = calculateIntervalScore(task);
+					task.processedtime = Math.min(processedtime/HOUR_MILLISEC, 365*24);
+					
 					//console.log(task.name, task.intervalScore[0].score);
 					return task;
 				})

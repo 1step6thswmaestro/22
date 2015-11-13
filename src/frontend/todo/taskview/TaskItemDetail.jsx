@@ -3,7 +3,7 @@ import DocView from './DocView';
 import MapImage from '../dialog/MapImage';
 import LocationAddress from '../dialog/LocationAddress';
 import _ from 'underscore';
-import { getReadableDate, tokenToReadableTime } from '../../utility/date'
+import { getReadableDate, tokenToReadableTime, getStringHourMinutes, getStringFromHours } from '../../utility/date'
 import { pauseItem, completeItem, uncompleteItem, removeItem, postponeItem, getRemainTime, incrementPropertyValue } from '../actions/tasks';
 import { startItemDialog } from '../actions/timetable';
 import If from '../../utility/if'
@@ -326,14 +326,14 @@ class TaskItemDetail extends React.Component {
 					                			<div className="form-group form-group-default">
 					                				<label>소요시간</label>
 					                				{propertyButton('estimation', -0.5)}
-													{ task.estimation } 시간
+													{ getStringFromHours(task.estimation) }
 													{propertyButton('estimation', +0.5)}
 								                </div>
 					                		</div>
 					                		<div className='col-xs-6'>
 					                			<div className="form-group form-group-default">
-					                				<label>여유시간</label>
-													{this.getRemainTime()}
+					                				<label>수행 시간</label>
+													{getStringHourMinutes(task.processedTime)}
 								                </div>
 					                		</div>
 					                	</div>
@@ -342,7 +342,7 @@ class TaskItemDetail extends React.Component {
 					                			<div className="form-group form-group-default">
 					                				<label>소요시간</label>
 					                				{propertyButton('estimation', -0.5)}
-													{ task.estimation } 시간
+													{ getStringFromHours(task.estimation) }
 													{propertyButton('estimation', +0.5)}
 								                </div>
 					                		</div>

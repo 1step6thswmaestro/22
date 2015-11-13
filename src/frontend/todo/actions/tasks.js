@@ -28,6 +28,27 @@ export function fetchList(){
 	}
 }
 
+export function fetchItem(task){
+	console.log('fetchItem', task);
+	return function(dispatch, getState){
+		dispatch({
+			type: type.TASK_REQ_UPDATE
+			, item: task
+		})
+
+		return $.ajax({
+			url: `/v1/tasks/${task._id}/`
+			, type: 'get'
+		})
+		.then(result => {
+			console.log('fetch', result);
+			dispatch({type: type.TASK_RECV_ITEM, item: result});
+		}, err => {
+			dispatch({type: type.TASK_ERROR, err});
+		});
+	}
+}
+
 export function fetchPrioritizedList(){
 	return (dispatch, getState) => {
 		dispatch({
