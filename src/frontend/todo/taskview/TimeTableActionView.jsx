@@ -102,7 +102,7 @@ class TimeTableActionView extends React.Component {
                             <div className="modal-header">
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 className="modal-title" id="gridSystemModalLabel">
-                                    title
+                                    Task Wizard
                                 </h4>
                             </div>
                             <div className='row'>

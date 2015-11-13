@@ -81,7 +81,7 @@ class EventItem extends React.Component{
 				</div>
 				<div className='content'>
 					<If test={task && task.state == TaskStateType.named.start.id}>
-						<i className='fa fa-play'></i>
+						<i className='fa fa-play mr10'></i>
 					</If>
 					{event.summary}
 				</div>

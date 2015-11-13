@@ -7,12 +7,15 @@ export default class TaskProgress extends React.Component{
 	}
 
 	render(){
-		if(this.props.count<=0){
+		let count = this.props.count;
+		count = Math.ceil(count);
+
+		if(count<=0){
 			return <i></i>
 		}
 
 		let x = 0;
-		let contents = _.map(_.range(this.props.count), i=>{
+		let contents = _.map(_.range(count), i=>{
 			let _x = x;
 			x += 5 + 3;
 			return (
@@ -21,7 +24,7 @@ export default class TaskProgress extends React.Component{
 			)
 		})
 
-		let width = this.props.count * 5 + (this.props.count-1) * 3
+		let width = count * 5 + (count-1) * 3
 		return (
 			<svg width={width} className='task-progress'>
 				{contents}
