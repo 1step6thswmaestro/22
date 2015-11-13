@@ -3,7 +3,7 @@
 import React from 'react'
 import d3 from 'd3'
 import d3tip from 'd3-tip';
-import { Chart, XAxis, YAxis } from '../d3/common';
+import { XAxis, YAxis } from '../d3/timeline';
 import { ViewBoxMixin } from '../d3/mixins';
 import _ from 'underscore';
 import classnames from 'classnames'
