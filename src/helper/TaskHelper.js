@@ -6,7 +6,7 @@ var Q = require('q');
 var tokenizer = require('../taskprocess/tokenizer');
 var TaskStateType = require('../constants/TaskStateType');
 
-
+const HOUR_MILLISEC = 1000*60*60;
 
 function init(app){
 	function TaskHelper(){
@@ -102,6 +102,46 @@ function init(app){
 		.then(function(result){
 			taskTokenizer.processTask(userId, result.task, opt.time)
 			return result;
+		})
+	}
+
+	TaskHelper.prototype.getProcessedTime = function(task, currentTime){
+		function _getProcessedTime(logs) {
+			let takenTime = 0;
+
+			let lognum;
+			if(!logs) {
+				lognum = -1;
+			}
+			else {
+				lognum = logs.length;
+			}
+
+			let to = -1;
+			let processed = false;
+			while (--lognum > 0) {
+				let logType = logs[lognum].type;
+				if(logType == 300 || logType == 400) {
+					to = lognum;
+					processed = true;
+				}
+				else if ((logType == 200 || logType == 350) && processed) {
+					let timeTo = new Date(logs[to].time);
+					let timeFrom = new Date(logs[lognum].time);
+					takenTime += timeTo - timeFrom;
+					processed = false;
+				}
+			}
+
+			takenTime /= HOUR_MILLISEC;
+
+			if (takenTime > 365*24) return 365*24;
+			return takenTime.toFixed(1);
+		}
+
+		return app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$lte: currentTime}})
+		.then(logs=>{
+			return _getProcessedTime(logs) || 0;
 		})
 	}
 

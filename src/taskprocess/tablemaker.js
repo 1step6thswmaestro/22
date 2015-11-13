@@ -66,52 +66,12 @@ class TimeMaker{
 		return newVal;
 	}
 
-	getProcessedTime(task, currentTime){
-		function _getProcessedTime(logs) {
-			let takenTime = 0;
-
-			let lognum;
-			if(!logs) {
-				lognum = -1;
-			}
-			else {
-				lognum = logs.length;
-			}
-
-			let to = -1;
-			let processed = false;
-			while (--lognum > 0) {
-				let logType = logs[lognum].type;
-				if(logType == 300 || logType == 400) {
-					to = lognum;
-					processed = true;
-				}
-				else if ((logType == 200 || logType == 350) && processed) {
-					let timeTo = new Date(logs[to].time);
-					let timeFrom = new Date(logs[lognum].time);
-					takenTime += timeTo - timeFrom;
-					processed = false;
-				}
-			}
-
-			takenTime /= HOUR_MILLISEC;
-
-			if (takenTime > 365*24) return 365*24;
-			return takenTime.toFixed(1);
-		}
-		return this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$lte: currentTime}})
-		.then(logs=>{
-			return _getProcessedTime(logs) || 0;
-		})
-	}
-
 	process(userId, originalTimeTables, events, tasks, opt) {
 		opt = opt || {};
 
 		console.log('process');
 
 		//methods & properties of this class
-		let self = this;
 		let helper = this.app.helper;
 		let getTimeslot = this.getTimeslot;
 		let getTimeLevel = this.getTimeLevel;
@@ -150,7 +110,7 @@ class TimeMaker{
 
 		function preprocessTasks(tasks){
 			return Q.all(tasks.map(task=>{
-				let p0 = self.getProcessedTime(task, currentTime);
+				let p0 = helper.taskHelper.getProcessedTime(task, currentTime);
 				
 				return Q.spread([p0], (processedtime)=>{
 					task.timelevel = getTimeLevel(task, currentTime);
