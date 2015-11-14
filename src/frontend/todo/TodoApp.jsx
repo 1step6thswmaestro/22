@@ -32,6 +32,7 @@ class TodoApp extends React.Component{
 		super(props);
 		this.state = {
 			location: '',
+			predictLocation: '',
 			currentView: 'task', // Save current user's view
 			timelineState: ''
 		};
@@ -42,16 +43,28 @@ class TodoApp extends React.Component{
 
 	componentDidMount() {
 		getLocation()
-		.then(loc => {
+		.then(function(loc){
 			this.sendStillAlive();
+
+			var url = 'v1/locs?lat='+loc.lat+'&lon='+loc.lon;
+			
+			$.getJSON(url, function( data ) {
+				console.log('recieved resp:', data);
+				this.setState({
+					predictLocation: data.name
+				});
+			}.bind(this))
+			.fail((err)=>{
+				console.error('err', err);
+			});
+
 			this.setState({
 				location: loc
 			});
-
 			// Send still alive signal on every 5 min.
 			// NOTE: When user inactive the tab in Chrome, the timer is paused.
 			setInterval(this.sendStillAlive, 5*60*1000);
-		});
+		}.bind(this));
 
 		var self = this;
 		var wrap = window;
@@ -109,7 +122,7 @@ class TodoApp extends React.Component{
 				<Topbar/>
 				<MainTimeline timetable={this.props.timetable} config={this.props.config} global={this.props.global}/>
 				<TaskBanner tasks={this.props.tasks} timetable={this.props.timetable} dispatch={this.props.dispatch} config={this.props.config}/>
-				<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user}/>
+				<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user} predictLocation={this.state.predictLocation}/>
 				<ConfigView dispatch={this.props.dispatch} config={this.props.config}/>
 				<If test={this.props.config.showCalendarList==true}>
 					<GoogleCalendarList dispatch={this.props.dispatch} config={this.props.config} google={this.props.thirdparty.google}/>
@@ -120,7 +133,7 @@ class TodoApp extends React.Component{
 				<TimeTableActionView dispatch={this.props.dispatch} timetable={this.props.timetable} tasks={this.props.tasks} config={this.props.config} global={this.props.global} />
 
 				<If test={this.props.config.userview!=true}>
-					<TaskView dispatch={this.props.dispatch} 
+					<TaskView dispatch={this.props.dispatch}
 						tasks={this.props.tasks}
 						tasklog={this.props.tasklog}
 						global={this.props.global}

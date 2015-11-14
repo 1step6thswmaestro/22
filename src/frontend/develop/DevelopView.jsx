@@ -10,6 +10,7 @@ import moment from 'moment-timezone';
 import { resetTimetable } from '../todo/actions/timetable'
 
 export default class DevelopView extends React.Component{
+
 	setGlobalTime(time){
 		const { dispatch } = this.props;
 		var unixtime= time.valueOf();
@@ -136,6 +137,7 @@ export default class DevelopView extends React.Component{
 
 		return (
 			<div>
+				현재 접속한 위치: {this.props.predictLocation}
 				<If test={this.props.config.userview==true}>
 					<button className='btn btn-checked' onClick={this.toggleUserView.bind(this)}>
 						TaskView 보이기

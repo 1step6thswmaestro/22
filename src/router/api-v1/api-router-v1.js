@@ -7,6 +7,8 @@ var mongoose = require('mongoose');
 var ConnectionLog = mongoose.model('ConnectionLog');
 var Account = mongoose.model('Account');
 
+
+
 module.exports = function(app){
 	var router_auth = express.Router();
 	router_auth.use('/', app.needAuthorization);
@@ -43,15 +45,61 @@ module.exports = function(app){
 		Account.findOne({'_id' :req.user._id}, function (err, account){
 			if (err) return handleError(err);
 			var locations = [account.locHome, account.locSchool, account.locWork, account.locEtc];
-			res.send(locations);
+			console.log('query:', req.query);
+			if (req.query.lat && req.query.lon){
+				// If coordinate info is in the request, it is locatino query request.
+				// So return the name of location. If not sure, return 'unknown'
+				var queryPoint= [ Number(req.query.lat), Number(req.query.lon) ];
+
+				var dist = function(p1, p2){
+					console.log('calc distance', p1, p2);
+					var R = 6371; // km
+					var dLat = (p2[0]-p1[0])*(Math.PI / 180);
+					var dLon = (p2[1]-p1[1])*(Math.PI / 180);
+					var lat1 = p1[0]*(Math.PI / 180);
+					var lat2 = p2[0]*(Math.PI / 180);
+
+					var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+					        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+					var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					var d = R * c;
+					return d;
+				}
+
+				var names = ['home', 'school', 'work', 'etc'];
+				for (let i = 0 ; i < 4; i++){
+					if (locations[i].coordinates.length != 2){
+						// If location is not saved, skip.
+						continue;
+					}
+					let distance = dist(locations[i].coordinates, queryPoint);
+					console.log('distance from ', names[i], ': ', distance);
+					if (Math.abs(distance) < 5){
+						// less than 5 km
+						res.send({name:names[i]});
+						return;
+					}
+				}
+				res.send({name:'unknown'});
+			}
+			else{
+				res.send(locations);
+			}
 		});
 	})
 
 	router_auth.post('/locs/:label', function(req, res){
 		// Save recieved location info to location of the label.
-
 		// recieved data has this form. {type : "Point", coordinates: [100.0, 0.0]}
+		console.log('body:', req.body)
 		let locInfo = _.pick(req.body, ['type', 'coordinates']);
+		if(locInfo.coordinates){
+			// convert string to number
+			locInfo.coordinates = [ Number(locInfo.coordinates[0]), Number(locInfo.coordinates[1]) ];
+		}
+		else{
+			locInfo = _.extend(locInfo, {coordinates: []});
+		}
 		if (req.params.label == 'home'){
 			Account.update({_id: req.user._id}, {locHome: locInfo}, function(err, affected, resp) {
 				if (err) return console.error(err);
