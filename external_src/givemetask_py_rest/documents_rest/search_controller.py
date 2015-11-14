@@ -2,16 +2,19 @@ from elastic_search import DocumentES
 from search_cluster import SearchCluster
 from config import NUMBER_DOCS
 from pandas import Series
+from konlpy.tag import Mecab
 
 class SearchController():
     def __init__(self, app):
         self.app = app
         self.es = DocumentES(app)
         self.cluster = SearchCluster(app)
+        self.mecab = Mecab()
 
     def search(self, user_id, query):
 
         whole_number = NUMBER_DOCS
+        query = self.get_nouns(query)
 
         # find evernotes, doc_type 1 is evernote
         ever_list = self.es.search(query, user_id, topn=whole_number['ever_note'], contains_id=True, doc_type=1)
@@ -84,3 +87,6 @@ class SearchController():
         for item in doc_list['hits']:
             item['type'] = type
             result['hits'].append(item)
+
+    def get_nouns(self, query):
+        return ' '.join(self.mecab.nouns(query.decode('utf-8'))).encode('utf-8')
