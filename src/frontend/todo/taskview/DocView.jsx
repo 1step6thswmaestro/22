@@ -34,9 +34,9 @@ class DocItem extends React.Component{
 			return (
 				<tr>
 					<td rowSpan={this.props.doc.span} width="20%">
-						<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
+						<h5>
 							{this.props.doc.type}
-						</a>
+						</h5>
 					</td>
 					<td width="80%">
 						<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
@@ -44,7 +44,6 @@ class DocItem extends React.Component{
 						</a>
 					</td>
 				</tr>
-				// </div>
 			);
 		}
 
@@ -56,7 +55,6 @@ class DocItem extends React.Component{
 					</a>
 				</td>
 			</tr>
-			//</div>
 		);
 	}
 };

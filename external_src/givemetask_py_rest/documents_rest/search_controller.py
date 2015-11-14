@@ -49,6 +49,12 @@ class SearchController():
             for rss_item in doc_list['hits']:
                 if rss_item['_id'] in selected_id_and_count.index:
                     result['hits'].append(rss_item)
+
+            for rss_item in doc_list['hits']:
+                if len(result['hits']) >= topn : break
+                if rss_item['_id'] not in selected_id_and_count.index:
+                    result['hits'].append(rss_item)
+
         elif len(counts) > 0 and len(counts) < topn:
             count = 0
             for item in doc_list['hits']:
