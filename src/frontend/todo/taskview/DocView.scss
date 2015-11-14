@@ -1,6 +1,28 @@
 .doc-view{
-	border: solid 1px #DDEEEE;
-    border-collapse: collapse;
-    border-spacing: 0;
-    font: normal 13px Arial, sans-serif;
+	width: 100%;
+	.table-header{
+		.header-row{
+			.header-row-item{
+				text-align: center;	
+				padding: 5px 5px 5px 5px;
+				border: solid 1px #CCC;
+			}
+		}
+	}
+
+	.table-body{
+		.table-row{
+			text-align: center;
+			padding: 5px 5px 5px 5px;
+			border: solid 1px #CCC;
+
+			.doc-type{
+				width: 20%;
+				border: solid 1px #CCC;
+			}
+			.doc-title{
+				width: 80%;
+			}
+		}
+	}
 }

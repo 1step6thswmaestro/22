@@ -32,13 +32,13 @@ class DocItem extends React.Component{
 			console.log(this);
 
 			return (
-				<tr>
-					<td rowSpan={this.props.doc.span} width="20%">
+				<tr className="table-row">
+					<td className="doc-type" rowSpan={this.props.doc.span}>
 						<h5>
 							{this.props.doc.type}
 						</h5>
 					</td>
-					<td width="80%">
+					<td className="doc-title">
 						<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
 							{this.props.doc.title}
 						</a>
@@ -48,8 +48,8 @@ class DocItem extends React.Component{
 		}
 
 		return (
-			<tr>
-				<td width="80%">
+			<tr className="table-row">
+				<td className="doc-title">
 					<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
 						{this.props.doc.title}
 					</a>
@@ -145,14 +145,14 @@ class DocView extends React.Component{
 		return (
 			<div className="doc-view">
 				<h4>참고하세요! {this.state.waitMessage}</h4>
-				<table>
-					<thead>
-						<tr>
-							<th>Type</th>
-							<th>제목</th>
+				<table className="doc-table">
+					<thead className="table-header">
+						<tr className="header-row">
+							<th className="header-row-item">Type</th>
+							<th className="header-row-item">제목</th>
 						</tr>
 					</thead>
-					<tbody>{createDocElements(this.state.docList)}</tbody>
+					<tbody className="table-body">{createDocElements(this.state.docList)}</tbody>
 				</table>
 			</div>
 		);
