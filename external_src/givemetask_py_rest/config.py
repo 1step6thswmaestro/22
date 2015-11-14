@@ -14,7 +14,7 @@ PIPE_DUMPING = FILE_DIR + 'pipe_dump.sv'
 NUMBER_DOCS = {
     'ever_note' : 2,
     'own_rss' : 2,
-    'check_topn' : 10,
+    'check_topn' : 20,
     'entire' : 5
 }
 

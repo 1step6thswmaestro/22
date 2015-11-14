@@ -41,9 +41,9 @@ class SearchController():
         result = {'hits' : []}
         prev_link = ''
         for doc in doc_list['hits']:
-            if doc['originId'] != prev_link:
+            if doc['link'] != prev_link:
                 result['hits'].append(doc)
-            prev_link = doc['originId']
+            prev_link = doc['link']
         return result
 
     def get_counts_and_sort_docs(self, doc_list, topn):
