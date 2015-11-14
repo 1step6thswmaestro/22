@@ -8,14 +8,13 @@ module.exports = class SlotAllocator{
 	}
 
 	test(begin, end, as_much){
-		let length = end-begin;
+		let length = end-begin+1;
 		let idx_begin = begin-this.base;
 
 		for(var i=0; i<length; ++i){
 			let slot = idx_begin+i;
 
 			if(this.slots[slot] == true){
-				// console.log((this.base + slot) + ' allocated.');
 				break;
 			}
 		}
@@ -38,7 +37,7 @@ module.exports = class SlotAllocator{
 	}
 
 	_alloc(slot_begin, slot_end){
-		console.log('_alloc', slot_begin, slot_end);
+		//console.log('_alloc', slot_begin, slot_end);
 
 		for(var i=slot_begin; i<slot_end; ++i){
 			this.slots[i-this.base] = true;
