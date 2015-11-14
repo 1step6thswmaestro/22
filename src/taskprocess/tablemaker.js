@@ -10,7 +10,8 @@ const SLOT_SIZE = 1000*60*30;
 const HOUR_MILLISEC = 1000*60*60;
 const SLOT_NUMBER = 48*7;
 const SLOT_REVISE_NUMBER = 24*2*4;
-const TIMELEVEL_SIZE = 4; //hours
+const TIMELEVEL_SIZE = 4; // hours
+const CALC_DAY_NUMBER = 7; // days
 
 class TimeMaker{
 
@@ -106,13 +107,13 @@ class TimeMaker{
 
 		function calculateIntervalScore(task) {
 			let intervalScore = [];
-			let slot_due;
-			if (!task.duedate) {
-				slot_due = SLOT_NUMBER / 7 * 3;
-			}
-			slot_due = getTimeslot(task.duedate) - now;
+			let slot_due = getTimeslot(task.duedate) - now;
 			
-			for (let i = 0; i < slot_due; i++) {
+			let loop_from = slot_due - task.slotspan;
+			if (loop_from < 0) loop_from += (SLOT_NUMBER * Math.floor(1+((0-loop_from)/SLOT_NUMBER)));
+			let loop_to = Math.max(0, loop_from - 48*CALC_DAY_NUMBER);
+
+			for (let i = loop_from; i >= loop_to; --i) {
 				let score = 0.0;
 				let slot_num = (now + i + SLOT_REVISE_NUMBER)%SLOT_NUMBER;
 				for (let j = 0; j <= task.slotspan; j++) {
@@ -122,6 +123,17 @@ class TimeMaker{
 					intervalScore.push({
 						from: slot_num,
 						score: score
+					});
+				}
+			}
+
+			if (intervalScore.length == 0 || !intervalScore) {
+				for (let i = loop_from; i >= loop_to; --i) {
+					let slot_num = (now + i + SLOT_REVISE_NUMBER)%SLOT_NUMBER;
+					
+					intervalScore.push({
+						from: slot_num,
+						score: 0.0
 					});
 				}
 			}
@@ -136,7 +148,7 @@ class TimeMaker{
 				
 				return Q.spread([p0], (processedtime)=>{
 					task.timelevel = getTimeLevel(task, currentTime);
-					task.slotspan = Math.max(Math.floor(task.estimation * 2 - processedtime),0);
+					task.slotspan = Math.max(Math.floor(task.estimation * 2), 1);
 					task.intervalScore = calculateIntervalScore(task);
 					//console.log(task.name, task.intervalScore[0].score);
 					return task;
@@ -149,29 +161,15 @@ class TimeMaker{
 		}
 
 		// Global variables for making timetable
-		var VISIT;
 		var _TASKS;
-		var _MAX_SCORE; // we are going to find this value
-		var _TIMETABLE; // this var is used during DFS search.
-
-		function isVisited(from, span) {
-			for (let i = 0; i < span; i++){
-				if (GLOBAL_VISIT[(from + i)%SLOT_NUMBER]) return true;
-			}
-			return false;
-		}
-
-		function setVisit(from, span) {
-			for (let i = 0; i < span; i++){
-				GLOBAL_VISIT[(from + i)%SLOT_NUMBER] = true;
-			}
-		}
+		var _MAX_SCORE = -1; // we are going to find this value
+		var _TIMETABLE = []; // this var is used during DFS search.
 
 		function allocateTasks(score, indexCurrentTask) {
 			// score: score when we processed task up to task[indexCurrentTask-1].
 			var _task = _TASKS[indexCurrentTask];
 			var intervalScore = _task.intervalScore;
-			
+
 			if (indexCurrentTask == _TASKS.length - 1) {
 				// Process the last tasks on the list.
 				// Special treatment on DFS terminal node. We don't want to waste stack resource.
@@ -223,8 +221,6 @@ class TimeMaker{
 
 		function processAndFilterAlreadyPlayingTask(task){
 			let alreadyStarted = task.state==TaskStateType.named.start.id;
-			console.log(task.name, task._id, {alreadyStarted});
-			console.log(originalTimeTables);
 
 			if(alreadyStarted){
 				let query = {taskId: task._id};
@@ -247,10 +243,6 @@ class TimeMaker{
 		})
 		.then(tasks=>{
 			tasks = _.filter(tasks, processAndFilterAlreadyPlayingTask);
-			
-			VISIT = [];
-			let loop = SLOT_NUMBER;
-			while (loop--) VISIT.push(false);
 
 			//events
 			fillEvents(events);
