@@ -24,7 +24,8 @@ def log(var, indent = 0):
 # https://docs.google.com/spreadsheet/ccc?key=0ApcJghR6UMXxdEdURGY2YzIwb3dSZ290RFpSaUkzZ0E&usp=sharing
 def extractor(content):
     """
-    Extract key morphemes
+    Extract key morphemes.
+	If duplicate occurs, drop duplicates.
     """
     words = []
     node = m.parseToNode(content.encode('utf-8'));
@@ -51,7 +52,9 @@ def extractor(content):
 
                 pass
         node = node.next
-    return words
+
+
+    return list(set(words))
 
 def permute(tokens, n=3):
     """
@@ -65,6 +68,6 @@ def permute(tokens, n=3):
 
     return items
 
-	
+
 def get(content):
     return permute(extractor(content));
