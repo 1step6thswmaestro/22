@@ -5,6 +5,7 @@ import d3 from 'd3'
 import rd3 from '../../d3'
 import _ from 'underscore';
 import classnames from 'classnames'
+import If from '../../utility/if'
 
 var BarChart = rd3.BarChart;
 var LineChart = rd3.LineChart;
@@ -18,27 +19,23 @@ export default class TaskLineChart extends React.Component{
 	componentWillUpdate(nextProps, nextState) {
 	    if(!nextProps.config.timePreferenceChartTaskId || !nextProps.tasks.preferences){
 	    	nextState.preferences = undefined;
-    		nextState.preference = undefined;
     		return;
 	    }
 
     	let preferences = nextProps.tasks.preferences[nextProps.config.timePreferenceChartTaskId];
 		if(!preferences){
 			nextState.preferences = undefined;
-			nextState.preference = undefined;
 			return;
 		}
 
 
 		preferences = [preferences[0], ...preferences[1]]
 		nextState.preferences = preferences;
-		let preference = preferences[nextState.index];
-		nextState.preference = preference;  
 	}
 
 	componentDidUpdate(prevProps, prevState) {
         if(this.props.config.timePreferenceChartTaskId != null){
-        	if(this.state.preference)
+        	if(this.state.preferences)
         		this.show();
         }
     }
@@ -55,25 +52,49 @@ export default class TaskLineChart extends React.Component{
         })
     }
 
-    renderTitle(){
-    	const { preference } = this.state;
-		if(!preference){
+    renderTitle(index){
+    	const { preferences } = this.state;
+		if(!preferences || !preferences[index]){
 			return 'no-token';
 		}
 
+		let preference = preferences[index];
 		let text = preference.tokens.join?preference.tokens.join(', '):preference.tokens;
 		return `[${this.state.index}] ${text}`
     }
 
-    renderContents(){
-    	const { preference } = this.state;
-    	if(!preference)
-    		return;
+    makeLineData(index){
+    	const { preferences } = this.state;
+    	if(!preferences)
+    		return [];
 
-		let values = _.map(preference.score, (v, i)=>{
-			return {x: i, y: v};
-		})
+    	let range;
+    	if(index==0){
+    		range = _.range(0, preferences.length);
+    	}
+    	else{
+    		range = [index];
+    	}
 
+
+    	let lineData = _.map(range, i=>{
+    		let preference = preferences[i];
+			let values = _.map(preference.score, (v, i)=>{
+				return {x: i, y: v};
+			})
+
+			return {
+				name: this.renderTitle(i)
+				, values
+				, strokeWidth: i==0?"3":"1"
+				, strokeDashArray: i==0?undefined:`${i*2},${i*2}`
+			}
+    	})
+
+		return lineData;
+    }
+
+    renderContents(lineData){
 		let xAxisTickValues = _.range(0, 7*48, 12);
 
 		function formatter(i){
@@ -82,23 +103,6 @@ export default class TaskLineChart extends React.Component{
 			let val = Math.floor(i/2);
 			return (val<10?'0':'') + val;
 		}
-
-		var lineData = [
-			{ 
-				name: 'series1',
-				values: values,
-				// strokeWidth: 3,
-				// strokeDashArray: "5,5",
-				},
-			// {
-			// 	name: 'series2',
-			// 	values : [ { x: 0, y: 8 }, { x: 1, y: 5 }, { x: 2, y: 20 }, { x: 3, y: 12 }, { x: 4, y: 4 }, { x: 5, y: 6 }, { x: 6, y: 2 } ]
-			// },
-			// {
-			// 	name: 'series3',
-			// 	values: [ { x: 0, y: 0 }, { x: 1, y: 5 }, { x: 2, y: 8 }, { x: 3, y: 2 }, { x: 4, y: 6 }, { x: 5, y: 4 }, { x: 6, y: 2 } ]
-			// } 
-		];
 
 		return (
 			<LineChart
@@ -118,6 +122,8 @@ export default class TaskLineChart extends React.Component{
 				xAxisFormatter={formatter}
 				gridHorizontal={true}
 				circleRadius={0}
+				legend={lineData.length>0}
+				sideOffset={130}
             />
 		)
     }
@@ -135,14 +141,15 @@ export default class TaskLineChart extends React.Component{
                         <div className="modal-contents form-group-attached">
                             <div className="modal-header">
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						        <button className='btn btn-default' onClick={this.nextToken.bind(this, -1)}><i className='fa fa-chevron-left'></i></button>
+						        <button className='btn btn-default mr10' onClick={this.nextToken.bind(this, +1)}><i className='fa fa-chevron-right'></i></button>
+                                
                                 <h4 className="modal-title" id="gridSystemModalLabel">
-                                    {this.renderTitle()}
+                                    {this.renderTitle(this.state.index)} 
                                 </h4>
                             </div>
-							{this.renderContents()}
+							{this.renderContents(this.makeLineData(this.state.index))}
 				        </div>
-				        <button className='btn btn-default' onClick={this.nextToken.bind(this, -1)}>prev</button>
-				        <button className='btn btn-default' onClick={this.nextToken.bind(this, +1)}>next</button>
 				    </div>
 	        	</div>
 	        </div>

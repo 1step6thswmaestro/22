@@ -69,7 +69,9 @@ module.exports = React.createClass({
         colorAccessor={props.colorAccessor}
         width={props.width}
         height={props.height}
-        title={props.title}>
+        title={props.title}
+        sideOffset={props.sideOffset}
+        >
         <g transform={trans} className={props.className}>
           <XAxis
             xAxisClassName={props.xAxisClassName}
