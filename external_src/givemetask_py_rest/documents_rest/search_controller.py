@@ -16,8 +16,11 @@ class SearchController():
         whole_number = NUMBER_DOCS
         query = self.get_nouns(query)
 
+        result = {'hits':[]}
+
         # find evernotes, doc_type 1 is evernote
         ever_list = self.es.search(query, user_id, topn=whole_number['ever_note'], contains_id=True, doc_type=1)
+        self.fit_to_front_type(result, ever_list, 'evernote')
 
         # find own rss list
         rss_list = self.es.search(query, user_id, topn=whole_number['check_topn'], contains_id=True, doc_type=0)
@@ -25,28 +28,29 @@ class SearchController():
         if len(rss_list['hits']) > whole_number['own_rss']:
             rss_list = self.get_counts_and_sort_docs(rss_list, whole_number['own_rss'])
 
+        self.fit_to_front_type(result, rss_list, 'rss')
+
         remain_numbers = whole_number['entire'] - (len(ever_list['hits']) + len(rss_list['hits']))
         # find other user's rss docs
         other_rss_list = self.es.search(query, user_id, topn=whole_number['check_topn'], contains_id=False, doc_type=0)
-        other_rss_list = self.get_distinct_docs(other_rss_list)
+        other_rss_list = self.get_distinct_docs(other_rss_list, rss_list)
         if len(other_rss_list['hits']) > remain_numbers:
             other_rss_list = self.get_counts_and_sort_docs(other_rss_list, remain_numbers)
 
-        result = {'hits':[]}
-        self.fit_to_front_type(result, ever_list, 'evernote')
-        self.fit_to_front_type(result, rss_list, 'rss')
         self.fit_to_front_type(result, other_rss_list, 'others')
 
         return result
         #return self.convert_list_to_json_type(rss_list)#, cluster_list)
 
-    def get_distinct_docs(self, doc_list):
+    def get_distinct_docs(self, doc_list, check_list=[]):
         result = {'hits' : []}
         prev_link = ''
         for doc in doc_list['hits']:
             if doc['link'] != prev_link:
-                result['hits'].append(doc)
-            prev_link = doc['link']
+                if doc['link'] not in check_list:
+                    result['hits'].append(doc)
+                prev_link = doc['link']
+
         return result
 
     def get_counts_and_sort_docs(self, doc_list, topn):
