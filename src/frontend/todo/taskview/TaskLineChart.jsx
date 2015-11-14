@@ -16,28 +16,27 @@ export default class TaskLineChart extends React.Component{
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-        if(this.state.task != null){
-        	this.show();
+        if(this.props.config.timePreferenceChartTaskId != null){
+        	if(this.state.task)
+        		this.show();
         }
-
     }
 
     show(){
+    	let self = this;
     	var modal = $(React.findDOMNode(this));
         modal.modal({
             backdrop: true
             , keyboard: true
             , show: true
         }).on('hidden.bs.modal', function (e) {
-            
+        	self.props.config.timePreferenceChartTaskId  = undefined;
         })
     }
 
-	render(){
-		let task = this.props.tasks.tasks[this.props.config.timePreferenceChartTaskId];
+    renderContents(){
+    	let task = this.props.tasks.tasks[this.props.config.timePreferenceChartTaskId];
 		this.state.task = task;
-		console.log('timePreferenceChartTaskId', this.props.config.timePreferenceChartTaskId);
-		console.log('task', task);
 
 		if(!task){
 			return <div></div>;
@@ -75,7 +74,29 @@ export default class TaskLineChart extends React.Component{
 			// } 
 		];
 
+		return (
+			<LineChart
+				data={lineData}
+				width='100%'
+				height={400}
+				viewBoxObject={{
+					x: 0,
+					y: 0,
+					width: 1000,
+					height: 400
+				}}
+				title="Line Chart"
+				yAxisLabel="Preference"
+				xAxisLabel="Time"
+				xAxisTickValues={xAxisTickValues}
+				xAxisFormatter={formatter}
+				gridHorizontal={true}
+				circleRadius={0}
+            />
+		)
+    }
 
+	render(){
 		return (
 			<div className="modal" tabIndex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
 				<div className="modal-dialog" role="document" style={{width: 'auto'}}>
@@ -87,24 +108,7 @@ export default class TaskLineChart extends React.Component{
                                     Task Wizard
                                 </h4>
                             </div>
-							<LineChart
-								data={lineData}
-								width='100%'
-								height={400}
-								viewBoxObject={{
-									x: 0,
-									y: 0,
-									width: 1000,
-									height: 400
-								}}
-								title="Line Chart"
-								yAxisLabel="Preference"
-								xAxisLabel="Time"
-								xAxisTickValues={xAxisTickValues}
-								xAxisFormatter={formatter}
-								gridHorizontal={true}
-								circleRadius={0}
-				            />
+							{this.renderContents()}
 				        </div>
 				    </div>
 	        	</div>
