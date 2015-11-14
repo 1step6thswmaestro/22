@@ -11,7 +11,7 @@ const HOUR_MILLISEC = 1000*60*60;
 const SLOT_NUMBER = 48*7;
 const SLOT_REVISE_NUMBER = 24*2*4;
 const TIMELEVEL_SIZE = 4; // hours
-const CALC_DAY_NUMBER = 7; // days
+const CALC_DAY_NUMBER = 5; // days
 
 class TimeMaker{
 
@@ -52,6 +52,18 @@ class TimeMaker{
 		return _a.tableslotStart-_b.tableslotStart;
 	}
 
+	reviseTimeSlot(toRealtime, now, slot) {
+		if (toRealtime) {
+			let diff = slot - ((now + SLOT_REVISE_NUMBER) % SLOT_NUMBER);
+			if (diff < 0) diff += SLOT_NUMBER;
+			return now + diff;
+		}
+		else {
+			slot = (slot + SLOT_REVISE_NUMBER) % SLOT_NUMBER;
+		}
+		return slot;
+	}
+
 	makeNewEvent(userId, taskId, _start, _end, _summary, _estimation) {
 		let newVal = {
 			userId,
@@ -76,6 +88,7 @@ class TimeMaker{
 		let makeNewEvent = this.makeNewEvent;
 		let sortByTime = this.sortByTime;
 		let sortByTimelevel = this.sortByTimelevel;
+		let reviseTimeSlot = this.reviseTimeSlot;
 
 		//temporally used variables in this method.
 		let currentTime = opt.time || Date.now();
@@ -107,32 +120,31 @@ class TimeMaker{
 
 		function calculateIntervalScore(task) {
 			let intervalScore = [];
-			let slot_due = getTimeslot(task.duedate) - now;
-			
-			let loop_from = slot_due - task.slotspan;
-			if (loop_from < 0) loop_from += (SLOT_NUMBER * Math.floor(1+((0-loop_from)/SLOT_NUMBER)));
-			let loop_to = Math.max(0, loop_from - 48*CALC_DAY_NUMBER);
+			let loopSize = getTimeslot(task.duedate) - now - task.slotspan;
 
-			for (let i = loop_from; i >= loop_to; --i) {
+			let _loop = loopSize;
+			while (_loop-- > 0) {
 				let score = 0.0;
-				let slot_num = (now + i + SLOT_REVISE_NUMBER)%SLOT_NUMBER;
-				for (let j = 0; j <= task.slotspan; j++) {
-					score += task.timePreferenceScore[slot_num + j];
+				let scoreIndex = reviseTimeSlot(false, now, now + _loop);
+
+				for (let i = 0; i <= task.slotspan; i++) {
+					score += task.timePreferenceScore[(scoreIndex + i)%SLOT_NUMBER];
 				}
 				if (score > 0) {
 					intervalScore.push({
-						from: slot_num,
+						from: scoreIndex,
 						score: score
 					});
 				}
 			}
 
 			if (intervalScore.length == 0 || !intervalScore) {
-				for (let i = loop_from; i >= loop_to; --i) {
-					let slot_num = (now + i + SLOT_REVISE_NUMBER)%SLOT_NUMBER;
-					
+				let _loop = Math.min(loopSize, CALC_DAY_NUMBER*48);
+				while (_loop-- > 0) {
+					let scoreIndex = reviseTimeSlot(false, now, now + _loop);
+
 					intervalScore.push({
-						from: slot_num,
+						from: scoreIndex,
 						score: 0.0
 					});
 				}
@@ -158,6 +170,7 @@ class TimeMaker{
 
 		function processTasksByTimeLevel(tasks){
 			allocateTasks(0, 0);
+			console.log('table made score with: ', _MAX_SCORE);
 		}
 
 		// Global variables for making timetable
@@ -186,7 +199,7 @@ class TimeMaker{
 
 				if (score > _MAX_SCORE) {
 					_MAX_SCORE = score;
-					let start = now + ((intervalScore[i].from + SLOT_REVISE_NUMBER) % SLOT_NUMBER);
+					let start = reviseTimeSlot(true, now, intervalScore[i].from);
 					let _event = makeNewEvent(userId, _task.id, start, start+_task.slotspan, _task.name, 0)
 					_TIMETABLE.push(_event);
 
@@ -208,7 +221,7 @@ class TimeMaker{
 					// set visit
 					slotAllocator._alloc(from, to);
 
-					let start = now + ((_interval.from + SLOT_REVISE_NUMBER) % SLOT_NUMBER);
+					let start = reviseTimeSlot(true, now, _interval.from);
 					let _event = makeNewEvent(userId, _task.id, start, start+_task.slotspan, _task.name, 0)
 					_TIMETABLE.push(_event);
 
@@ -219,7 +232,7 @@ class TimeMaker{
 			}
 		}
 
-		function processAndFilterAlreadyPlayingTask(task){
+		function processAndFilterPassedOrAlreadyPlayingTask(task){
 			let alreadyStarted = task.state==TaskStateType.named.start.id;
 
 			if(alreadyStarted){
@@ -232,6 +245,9 @@ class TimeMaker{
 				timetable.push(timeTableEvent);
 				return false;
 			}
+			else if (getTimeslot(task.duedate) < now) {
+				return false;
+			}
 			else{
 				return true;
 			}
@@ -242,7 +258,7 @@ class TimeMaker{
 			return tasks.sort(sortByTimelevel);
 		})
 		.then(tasks=>{
-			tasks = _.filter(tasks, processAndFilterAlreadyPlayingTask);
+			tasks = _.filter(tasks, processAndFilterPassedOrAlreadyPlayingTask);
 
 			//events
 			fillEvents(events);
