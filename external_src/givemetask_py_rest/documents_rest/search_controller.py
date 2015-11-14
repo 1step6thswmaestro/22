@@ -44,16 +44,20 @@ class SearchController():
     def get_distinct_docs(self, doc_list, check_list=[]):
         result = {'hits' : []}
         prev_link = ''
-        prev_title = ''
+
+        title_set = set()
+        temp_list = []
         for doc in doc_list['hits']:
+            if doc['title'] not in title_set:
+                title_set.add(doc['title'])
+                temp_list.append(doc)
+
+        for doc in temp_list:
             if doc['link'] != prev_link:
                 if len(check_list) > 0:
                     if doc['link'] not in check_list['hits']:
                         result['hits'].append(doc)
-                else:
-                    if doc['title'] != prev_title:
-                        result['hits'].append(doc)
-                        prev_title = doc['title']
+
                 prev_link = doc['link']
 
         return result
