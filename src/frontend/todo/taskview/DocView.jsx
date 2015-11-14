@@ -33,12 +33,12 @@ class DocItem extends React.Component{
 
 			return (
 				<tr>
-					<td rowSpan={this.props.doc.span}>
+					<td rowSpan={this.props.doc.span} width="20%">
 						<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
 							{this.props.doc.type}
 						</a>
 					</td>
-					<td>
+					<td width="80%">
 						<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
 							{this.props.doc.title}
 						</a>
@@ -50,7 +50,7 @@ class DocItem extends React.Component{
 
 		return (
 			<tr>
-				<td>
+				<td width="80%">
 					<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
 						{this.props.doc.title}
 					</a>
@@ -120,9 +120,6 @@ class DocView extends React.Component{
 		function createDocElements(list){
 			var count = 0;
 
-			console.info(list);
-			console.info(typeof list);
-
 			for(var i = list.length - 1 ; i > 0 ; i--)
 			{
 				count++;
@@ -153,8 +150,8 @@ class DocView extends React.Component{
 				<table>
 					<thead>
 						<tr>
-							<th>Title</th>
-							<th>Link</th>
+							<th>Type</th>
+							<th>제목</th>
 						</tr>
 					</thead>
 					<tbody>{createDocElements(this.state.docList)}</tbody>
