@@ -1164,6 +1164,22 @@ textarea:focus, input:focus {
   .day-seperator:first-child {
     border-top-right-radius: 10px; }
 
+.doc-view {
+  width: 100%; }
+  .doc-view .table-header .header-row .header-row-item {
+    text-align: center;
+    padding: 5px 5px 5px 5px;
+    border: solid 1px #CCC; }
+  .doc-view .table-body .table-row {
+    text-align: center;
+    padding: 5px 5px 5px 5px;
+    border: solid 1px #CCC; }
+    .doc-view .table-body .table-row .doc-type {
+      width: 20%;
+      border: solid 1px #CCC; }
+    .doc-view .table-body .table-row .doc-title {
+      width: 80%; }
+
 .list {
   border-radius: 10px;
   border: 1px solid #bbb;

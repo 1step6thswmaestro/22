@@ -14,7 +14,6 @@ class SearchController():
     def search(self, user_id, query):
 
         whole_number = NUMBER_DOCS
-        query = self.get_nouns(query)
 
         result = {'hits':[]}
 
@@ -91,6 +90,3 @@ class SearchController():
         for item in doc_list['hits']:
             item['type'] = type
             result['hits'].append(item)
-
-    def get_nouns(self, query):
-        return ' '.join(self.mecab.nouns(query.decode('utf-8'))).encode('utf-8')
