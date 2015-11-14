@@ -22,7 +22,7 @@ module.exports = function(opt){
 	app.helper = {};
 
 
-	init(['app/init.js', 'app/init_mongodb.js', 'models/', 'app/init_passport.js', 'router/', 'helper/']);
+	init(['app/init.js', 'app/init_mongodb.js', 'models/', 'app/init_passport.js', 'router/', 'helper/', 'tests/']);
 
 	app.config = getConfig('config.json');
 
@@ -32,6 +32,7 @@ module.exports = function(opt){
 		return app.connectMongo()
 		.then(function(){
 			app.listen(port);
+			_.each(app.tests, func=>func());
 			logger.log('*** server is running on', port);
 		});
 	}

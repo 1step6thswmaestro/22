@@ -18,6 +18,12 @@ function init(app){
 		return Q.nbind(Task.find, Task)(Object.assign({userId}, query), proj, opt);
 	}
 
+	TaskHelper.prototype.findAll = function(query, proj, opt){
+		opt = opt || {};
+		opt.sort = opt.sort || {created: 1};
+		return Q.nbind(Task.find, Task)(query, proj, opt);
+	}
+
 	TaskHelper.prototype.findOne = function(userId, query, proj, opt){
 		opt = opt || {};
 		opt.sort = opt.sort || {created: 1};
