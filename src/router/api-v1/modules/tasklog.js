@@ -14,8 +14,8 @@ module.exports = function(router, app){
 	router.get('/alllocations.json', function(req, res){
 		Account.findOne({'_id' :req.user._id}, function (err, account){
 			if (err) return handleError(err);
-			console.log(req.user._id);
-			console.log(account.locAllInfo);
+			// console.log(req.user._id);
+			// console.log(account.locAllInfo);
 			res.send(account.locAllInfo);
 		});
 	})

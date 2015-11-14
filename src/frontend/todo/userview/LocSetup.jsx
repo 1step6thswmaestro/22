@@ -19,31 +19,52 @@ class LocSetup extends React.Component{
 	}
 
 	componentDidMount() {
-		// Load User's favorite locations from server
-		var locations;
-		// TODO: LOAD FROM SERVER CODE HERE
+		// Load User's saved locations from server
+		$.getJSON('v1/locs', function( data ) {
+			var items = [];
+			// Convert data type from {type : "Point", coordinates: [37.531767, 126.913857]}
+			// to { "latitude": 37.528901654859453, "longitude": 126.97144059041139  }
 
-		// PUT DUMMY DATA for now.
-		locations={
-			locationstampHome: {
-				longitude: 126.9003409,
-				latitude: 37.5392375
+			for(let i = 0; i < 4; i++){
+				if (data[i].coordinates.length == 2){
+					items.push({
+						latitude: data[i].coordinates[0],
+						longitude: data[i].coordinates[1]
+					});
+				}
+				else{
+					items.push(null);
+				}
 			}
-			, locationstampSchool: {
-				longitude: 126.952145,
-				latitude: 37.449822
-			}
-			, locationstampWork: {
-				longitude: 127.045323,
-				latitude: 37.503720
-			}
-			, locationstampEtc: {
-				longitude: 126.932801,
-				latitude: 37.525809
-			}
-		};
 
-		this.setState(locations);
+			console.log('recieved saved locations:', items);
+
+			var locations={
+				locationstampHome: items[0]
+				, locationstampSchool: items[1]
+				, locationstampWork: items[2]
+				, locationstampEtc: items[3]
+			};
+			this.setState(locations);
+		}.bind(this));
+	}
+
+	clickLocationClearButton(locLabel){
+		var targetUrl = '/v1/locs/'+locLabel;
+		console.log('Post Request to save location (url:', targetUrl);
+		var coordinates = [];
+		$.ajax({
+			url: targetUrl
+			, type: 'POST'
+			, data:{
+				type: 'Point',
+				coordinates: coordinates
+			}
+		})
+		.then(
+			result => {}
+			, err => {console.log(err);}
+		)
 	}
 
 	render() {
@@ -60,6 +81,9 @@ class LocSetup extends React.Component{
 					<td>
 						<div className='location-home'>
 							{ this.state.locationstampHome ? <LocationAddress location={this.state.locationstampHome} /> : null }
+							<button className="btn btn-warning" label="Discard this location" onClick={this.clickLocationClearButton.bind(this, 'home')}>
+								<span className="glyphicon glyphicon-trash"></span> clear
+							</button>
 						</div>
 					</td>
 				</tr>
@@ -68,6 +92,9 @@ class LocSetup extends React.Component{
 					<td>
 						<div className='location-school'>
 							{ this.state.locationstampSchool ? <LocationAddress location={this.state.locationstampSchool} /> : null }
+							<button className="btn btn-warning" label="Discard this location" onClick={this.clickLocationClearButton.bind(this, 'school')}>
+								<span className="glyphicon glyphicon-trash"></span> clear
+							</button>
 						</div>
 					</td>
 				</tr>
@@ -76,6 +103,9 @@ class LocSetup extends React.Component{
 					<td>
 						<div className='location-work'>
 							{ this.state.locationstampWork ? <LocationAddress location={this.state.locationstampWork} /> : null }
+							<button className="btn btn-warning" label="Discard this location" onClick={this.clickLocationClearButton.bind(this, 'work')}>
+								<span className="glyphicon glyphicon-trash"></span> clear
+							</button>
 						</div>
 					</td>
 				</tr>
@@ -84,6 +114,9 @@ class LocSetup extends React.Component{
 					<td>
 						<div className='location-etc'>
 							{ this.state.locationstampEtc ? <LocationAddress location={this.state.locationstampEtc} /> : null }
+							<button className="btn btn-warning" label="Discard this location" onClick={this.clickLocationClearButton.bind(this, 'etc')}>
+								<span className="glyphicon glyphicon-trash"></span> clear
+							</button>
 						</div>
 					</td>
 				</tr>

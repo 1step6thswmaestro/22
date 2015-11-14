@@ -26,26 +26,13 @@ module.exports = function(){
 
 		, timestampLastActivity: {type: Date, default: ""}
 
-		, locationstampHome: {
-			longitude: Number,
-			latitude: Number,
-			required: false
-		}
-		, locationstampSchool: {
-			longitude: Number,
-			latitude: Number,
-			required: false
-		}
-		, locationstampWork: {
-			longitude: Number,
-			latitude: Number,
-			required: false
-		}
-		, locationstampEtc: {
-			longitude: Number,
-			latitude: Number,
-			required: false
-		}
+		// A GeoJSON geometry object.
+		// http://geojson.org/geojson-spec.html
+		// Example data: {type : "Point", coordinates: [100.0, 0.0]}
+		, locHome: { type: { type: String }, coordinates: [ ] }
+		, locSchool: { type: { type: String }, coordinates: [ ] }
+		, locWork: { type: { type: String }, coordinates: [ ] }
+		, locEtc: { type: { type: String }, coordinates: [ ] }
 		, locAllInfo: String
 		, locClusterKey: String
 	});
