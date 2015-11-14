@@ -10,8 +10,8 @@ def apply(app):
     @crossdomain(origin='*', headers=['Content-Type','Authorization'], methods=['POST'])
     def log_doc(user_id, doc_id, task_title):
         log = article_log(user_id, doc_id, task_title)
-        app.query_pool2.insert_read_log(log)
-        return 'hello'
+        app.query_pool.insert_read_log(log)
+        return jsonify({'message' : 'succeed'})
 
     @app.route('/search/<user_id>/<query>', methods=['POST'])
     @crossdomain(origin='*', headers=['Content-Type', 'Authorization'], methods=['POST'])
