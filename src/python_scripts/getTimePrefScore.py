@@ -2,10 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import batchTimePrefScore as calc
+import logging
+
+logging.basicConfig(level=logging.DEBUG, filename='./pythonGetTokenScore.log')
 
 def main():
     import sys
     import json
+    # logging.info(sys.argv)
 
     from pymongo import MongoClient
     from bson.objectid import ObjectId
@@ -24,11 +28,12 @@ def main():
         score = calc.getTimePrefScore(user_id, predtokens, tokens)
         result["score"] = score
     except:
-        with open('errlog.txt', 'w') as f:
-            f.write(sys.exc_info()[0])
+        logging.exception("Oops:")
         sys.exit(1);
 
-    print json.dumps(result)
+    output = json.dumps(result)
+    # logging.info(output)
+    print output
     sys.exit(0)
 
 if __name__ == "__main__":

@@ -28,10 +28,12 @@ var py_function_broker = function(path, input, callback){
 
 	pythonProcess.stdout.on('close', function(code){
 		if (code == 0){ // On success
+			// console.error('stdout closed with code: ', code);
+			// console.error('result: ',result);
 			callback(JSON.parse(result));
 		}
 		else{
-			console.error('stdout closed with code: ' + code);
+			console.error('stdout closed with code: ', code);
 			callback(null);
 		}
 	});
@@ -71,6 +73,8 @@ module.exports = {
 	getTimePrefScore : function(userId, tokens) {
 		// userId: userId string. NOT object.
 		// tokens: array of strings
+		// console.log('Python TimePrefScore request:');
+		// console.log(userId, tokens);
 
 		var input = [userId].concat(tokens);
 		// console.log(input);
