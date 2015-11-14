@@ -143,7 +143,7 @@ class TimeMaker{
 				while (_loop-- > 0) {
 					let scoreIndex = reviseTimeSlot(false, now, now + _loop);
 
-					if (!(0 <= scoreIndex%48 && scoreIndex%48 <= 16)) {
+					if (task.name == 'sleep' || !(0 <= (scoreIndex+18)%48 && (scoreIndex+18)%48 <= 20)) {
 						intervalScore.push({
 							from: scoreIndex,
 							score: 0.0
