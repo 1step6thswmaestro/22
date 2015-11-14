@@ -21,7 +21,7 @@ def log(var, indent = 0):
     space = ' ' * indent;
     print space, json.dumps(var, ensure_ascii=False)
 
-def getTimeSlotScore(num_tok_weekday, num_tok_daytime, factor_daypropagation=0.5, factor_smooth=1, scale=True):
+def getTimeSlotScore(num_tok_weekday, num_tok_daytime, factor_daypropagation=0.1, factor_smooth=1, scale=True):
     '''
     From token occurence frequency over weekdays and daytime, return score over timeslot.
     The scaled tf score is in [0, 1].
@@ -164,9 +164,12 @@ def batchCalcTimePrefScore():
         # tasks even if it is already completed.
 
         # get score for all time slots.
+
         content = c['name'] + ' ' + c['description']
+        # print 'Process: ', content
         tokens = tokenizer.get(content);
         score = getTimePrefScore(c['userId'], token_collection, tokens)
+        # print score
         task_collection.update_one({'_id': c['_id']}, {'$set': {'timePreferenceScore': score}});
 
 
