@@ -26,15 +26,35 @@ class DocItem extends React.Component{
 		})
 	}
 	render() {
+
+		if(this.props.doc.span != 0)
+		{
+			console.log(this);
+
+			return (
+				<tr className="table-row">
+					<td className="doc-type" rowSpan={this.props.doc.span}>
+						<h5>
+							{this.props.doc.type}
+						</h5>
+					</td>
+					<td className="doc-title">
+						<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
+							{this.props.doc.title}
+						</a>
+					</td>
+				</tr>
+			);
+		}
+
 		return (
-			<div className="doc-item" onClick={this.onDocumentClick.bind(this, this.props.doc._id)}>
-				<h5> 
-					{this.props.doc.type} : 
-				</h5>
-				<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
-					{this.props.doc.title}
-				</a>
-			</div>
+			<tr className="table-row">
+				<td className="doc-title">
+					<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
+						{this.props.doc.title}
+					</a>
+				</td>
+			</tr>
 		);
 	}
 };
@@ -94,7 +114,29 @@ class DocView extends React.Component{
 	render() {
 		var query = this.props.keyword;
 		var user_id = this.props.user_id;
+
 		function createDocElements(list){
+			var count = 0;
+
+			for(var i = list.length - 1 ; i > 0 ; i--)
+			{
+				count++;
+
+				if(list[i].type != list[i-1].type)
+				{
+					list[i].span = count;
+					count = 0;
+				}
+				else {
+					list[i].span = 0;
+				}
+			}
+
+			if(list.length > 0)
+			{
+				list[0].span = count + 1;
+			}
+
 			return _.map(list, doc => (
 		        <DocItem key={doc._id} doc={doc} keyword={query} user_id={user_id}/>
 			));
@@ -103,7 +145,15 @@ class DocView extends React.Component{
 		return (
 			<div className="doc-view">
 				<h4>참고하세요! {this.state.waitMessage}</h4>
-				{createDocElements(this.state.docList)}
+				<table className="doc-table">
+					<thead className="table-header">
+						<tr className="header-row">
+							<th className="header-row-item">Type</th>
+							<th className="header-row-item">제목</th>
+						</tr>
+					</thead>
+					<tbody className="table-body">{createDocElements(this.state.docList)}</tbody>
+				</table>
 			</div>
 		);
 	}

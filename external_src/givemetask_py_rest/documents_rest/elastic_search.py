@@ -31,7 +31,8 @@ class DocumentES():
                               {
                               "should": [
                                    {"match": {"title": query}},
-                                   {"match": {"summary" : query}}
+                                   {"match": {"summary" : query}},
+                                   {"match": {"content" : query}}
                                 ],
                               "must": [
                                   {"term": {"userId": user_id}},
@@ -63,8 +64,9 @@ class DocumentES():
                             }
                         ],
                         "should" : [
-                            {"term": {"title": query}},
-                            {"term": {"summary" : query}}
+                            {"match": {"title": query}},
+                            {"match": {"summary" : query}},
+                            {"match": {"content" : query}}
                         ]
                     }
                 }

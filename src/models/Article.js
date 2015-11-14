@@ -5,9 +5,9 @@ module.exports = function(app){
 	var articleSchema = new Schema({
 		userId: Schema.Types.ObjectId,
 		originId: String,
-		title: String,
-		content: String,
-		summary: String,
+		title: {type: String, default : ""},
+		content: {type: String, default : ""},
+		summary: {type: String, default : ""},
 		type: Number // 0 for RSS Article, 1 for Evernote		
 	});
 

@@ -18,13 +18,13 @@ class SearchController():
 
         # find own rss list
         rss_list = self.es.search(query, user_id, topn=whole_number['check_topn'], contains_id=True, doc_type=0)
-        if len(rss_list['hits']) >= whole_number['own_rss']:
+        if len(rss_list['hits']) > whole_number['own_rss']:
             rss_list = self.get_counts_and_sort_docs(rss_list, whole_number['own_rss'])
 
         remain_numbers = whole_number['entire'] - (len(ever_list['hits']) + len(rss_list['hits']))
         # find other user's rss docs
         other_rss_list = self.es.search(query, user_id, topn=whole_number['check_topn'], contains_id=False, doc_type=0)
-        if len(other_rss_list['hits']) >= remain_numbers:
+        if len(other_rss_list['hits']) > remain_numbers:
             other_rss_list = self.get_counts_and_sort_docs(other_rss_list, remain_numbers)
 
         result = {'hits':[]}
@@ -49,6 +49,12 @@ class SearchController():
             for rss_item in doc_list['hits']:
                 if rss_item['_id'] in selected_id_and_count.index:
                     result['hits'].append(rss_item)
+
+            for rss_item in doc_list['hits']:
+                if len(result['hits']) >= topn : break
+                if rss_item['_id'] not in selected_id_and_count.index:
+                    result['hits'].append(rss_item)
+
         elif len(counts) > 0 and len(counts) < topn:
             count = 0
             for item in doc_list['hits']:
