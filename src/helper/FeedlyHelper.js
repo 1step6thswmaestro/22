@@ -55,14 +55,15 @@ class FeedlyHelper{
 	}
 
 	validateAccessToken(user){
-		if(user.feedly.expireDate >= Date.now()){
-			// let findByIdAndUpdate = Q.nbind(Account.findByIdAndUpdate, Account);
+		if(!user.feedly.expireDate || user.feedly.expireDate >= Date.now()){
+			let findByIdAndUpdate = Q.nbind(Account.findByIdAndUpdate, Account);
+			let feedly = user.feedly;
 			console.log('user.feedly.refresh_token : ', user.feedly.refresh_token);
 			return this._refreshToken(user.feedly.refresh_token)
 			.then(results=>{
 				let access_token = results.access_token;
 				let expireDate = Date.now() + results.expires_in*1000;
-				return findByIdAndUpdate(user._id, {$set: {feedly: {access_token, expireDate}}})
+				return findByIdAndUpdate(user._id, {$set: {feedly: _.extend(feedly, {access_token, expireDate})}})
 				.then(function(){
 					return access_token;
 				})
