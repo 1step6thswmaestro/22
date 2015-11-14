@@ -67,7 +67,6 @@ module.exports = function(router, app){
 			res.send(_.mapObject(_.groupBy(tokens, 'status'), arr=>_.countBy(arr, 'text')));
 		})
 	})
-
 	router.get('/tasktoken/time/:time?', function(req, res){
 		let time = parseInt(req.params.time) || Date.now();
 		let timeDivision = taskTokenizer.getTimeDivision(time);

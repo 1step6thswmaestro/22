@@ -105,6 +105,8 @@ def getTimePrefScore(user_id, token_collection, tokens):
                 if pred_token["daytime"] != -1:
                     num_tok_daytime[pred_token["daytime"]] += 1
 
+            # print token, num_tok_weekday, num_tok_daytime
+
             # If the token never occurs in PredictToken, we are going to ignore this token.
             occurence = sum(x>0 for x in num_tok_weekday)
             if occurence == 0:
