@@ -3,7 +3,8 @@ __author__ = 'iljichoi'
 ES_INDEX = 'givemetask'
 ES_SEARCH_INDEX = ['_id', 'title', 'summary', 'originId']
 ES_HOST, ES_PORT = '192.168.175.128', 9200
-ES_SCORE = 0.5
+ES_RSS_SCORE = 0.5
+ES_EVER_SCORE = 1
 
 # Files
 FILE_DIR = '../temp/'
