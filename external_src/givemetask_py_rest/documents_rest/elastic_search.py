@@ -26,6 +26,11 @@ class DocumentES():
             result = {
                         "size": topn,
                         "min_score":config.ES_SCORE,
+                        "aggs" : {
+                            "docs" : {
+                                "cardinality" : {"field" : "originId"}
+                            }
+                        },
                         "query":
                          {"bool":
                               {
@@ -45,6 +50,11 @@ class DocumentES():
             result = {
                 "size": topn,
                 "min_score": config.ES_SCORE,
+                "aggs" : {
+                    "docs" : {
+                        "cardinality" : {"field" : "originId"}
+                    }
+                },
                 "query" : {
                     "bool" : {
                         "must" : [

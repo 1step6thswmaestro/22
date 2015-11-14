@@ -18,12 +18,14 @@ class SearchController():
 
         # find own rss list
         rss_list = self.es.search(query, user_id, topn=whole_number['check_topn'], contains_id=True, doc_type=0)
+        rss_list = self.get_distinct_docs(rss_list)
         if len(rss_list['hits']) > whole_number['own_rss']:
             rss_list = self.get_counts_and_sort_docs(rss_list, whole_number['own_rss'])
 
         remain_numbers = whole_number['entire'] - (len(ever_list['hits']) + len(rss_list['hits']))
         # find other user's rss docs
         other_rss_list = self.es.search(query, user_id, topn=whole_number['check_topn'], contains_id=False, doc_type=0)
+        other_rss_list = self.get_distinct_docs(other_rss_list)
         if len(other_rss_list['hits']) > remain_numbers:
             other_rss_list = self.get_counts_and_sort_docs(other_rss_list, remain_numbers)
 
@@ -34,6 +36,15 @@ class SearchController():
 
         return result
         #return self.convert_list_to_json_type(rss_list)#, cluster_list)
+
+    def get_distinct_docs(self, doc_list):
+        result = {'hits' : []}
+        prev_link = ''
+        for doc in doc_list['hits']:
+            if doc['link'] != prev_link:
+                result['hits'].append(doc)
+            prev_link = doc['link']
+        return result
 
     def get_counts_and_sort_docs(self, doc_list, topn):
         rss_id_list = [item['_id'] for item in doc_list['hits']]
