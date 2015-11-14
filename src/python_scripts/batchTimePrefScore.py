@@ -4,7 +4,7 @@
 
 # Please change below DB Address only when you schedule regular job with cron.
 # CONST_DB_ADDR='128.199.166.149'
-CONST_DB_ADDR='localhost'
+CONST_DB_ADDR='172.16.101.172' # MacPro DB
 CONST_DB_PORT=27340
 
 CONST_NUM_TIMESLOT = 48*7
@@ -164,8 +164,12 @@ def batchCalcTimePrefScore():
         # tasks even if it is already completed.
 
         # get score for all time slots.
+        if c.has_key('description'):
+            desc = c['description']
+        else:
+            desc = ''
 
-        content = c['name'] + ' ' + c['description']
+        content = c['name'] + ' ' + desc
         # print 'Process: ', content
         tokens = tokenizer.get(content);
         score = getTimePrefScore(c['userId'], token_collection, tokens)
