@@ -26,15 +26,37 @@ class DocItem extends React.Component{
 		})
 	}
 	render() {
+
+		if(this.props.doc.span != 0)
+		{
+			console.log(this);
+
+			return (
+				<tr>
+					<td rowSpan={this.props.doc.span}>
+						<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
+							{this.props.doc.type}
+						</a>
+					</td>
+					<td>
+						<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
+							{this.props.doc.title}
+						</a>
+					</td>
+				</tr>
+				// </div>
+			);
+		}
+
 		return (
-			<div className="doc-item" onClick={this.onDocumentClick.bind(this, this.props.doc._id)}>
-				<h5> 
-					{this.props.doc.type} : 
-				</h5>
-				<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
-					{this.props.doc.title}
-				</a>
-			</div>
+			<tr>
+				<td>
+					<a href={this.props.doc.link} data-toggle="tooltip" title={this.props.doc.summary}>
+						{this.props.doc.title}
+					</a>
+				</td>
+			</tr>
+			//</div>
 		);
 	}
 };
@@ -94,7 +116,32 @@ class DocView extends React.Component{
 	render() {
 		var query = this.props.keyword;
 		var user_id = this.props.user_id;
+
 		function createDocElements(list){
+			var count = 0;
+
+			console.info(list);
+			console.info(typeof list);
+
+			for(var i = list.length - 1 ; i > 0 ; i--)
+			{
+				count++;
+
+				if(list[i].type != list[i-1].type)
+				{
+					list[i].span = count;
+					count = 0;
+				}
+				else {
+					list[i].span = 0;
+				}
+			}
+
+			if(list.length > 0)
+			{
+				list[0].span = count + 1;
+			}
+
 			return _.map(list, doc => (
 		        <DocItem key={doc._id} doc={doc} keyword={query} user_id={user_id}/>
 			));
@@ -103,7 +150,15 @@ class DocView extends React.Component{
 		return (
 			<div className="doc-view">
 				<h4>참고하세요! {this.state.waitMessage}</h4>
-				{createDocElements(this.state.docList)}
+				<table>
+					<thead>
+						<tr>
+							<th>Title</th>
+							<th>Link</th>
+						</tr>
+					</thead>
+					<tbody>{createDocElements(this.state.docList)}</tbody>
+				</table>
 			</div>
 		);
 	}
