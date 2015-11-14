@@ -143,14 +143,18 @@ class TimeMaker{
 				while (_loop-- > 0) {
 					let scoreIndex = reviseTimeSlot(false, now, now + _loop);
 
-					intervalScore.push({
-						from: scoreIndex,
-						score: 0.0
-					});
+					if (!(0 <= scoreIndex%48 && scoreIndex%48 <= 16)) {
+						intervalScore.push({
+							from: scoreIndex,
+							score: 0.0
+						});
+					}
 				}
 			}
 
-			intervalScore.sort(function(a, b){return b.score-a.score});
+			intervalScore.sort(function(a, b){
+				return b.score-a.score
+			});
 			return intervalScore;
 		}
 
