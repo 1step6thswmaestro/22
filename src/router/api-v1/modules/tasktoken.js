@@ -14,7 +14,7 @@ module.exports = function(router, app){
 		helper.taskHelper.find(req.user._id, {_id: req.params.taskId})
 		.then((results)=>{
 			var task = results[0];
-			var content = task.name + '' + task.description;
+			var content = task.name + ' ' + task.description;
 
 
 			taskTokenizer.tokenizeText(content)
