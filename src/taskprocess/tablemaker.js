@@ -9,8 +9,8 @@ var TaskStateType = require('../constants/TaskStateType');
 const SLOT_SIZE = 1000*60*30;
 const HOUR_MILLISEC = 1000*60*60;
 const SLOT_NUMBER = 48*7;
+const SLOT_REVISE_NUMBER = 24*2*4;
 const TIMELEVEL_SIZE = 4; //hours
-
 
 class TimeMaker{
 
@@ -51,8 +51,6 @@ class TimeMaker{
 		return _a.tableslotStart-_b.tableslotStart;
 	}
 
-	
-
 	makeNewEvent(userId, taskId, _start, _end, _summary, _estimation) {
 		let newVal = {
 			userId,
@@ -68,8 +66,6 @@ class TimeMaker{
 
 	process(userId, originalTimeTables, events, tasks, opt) {
 		opt = opt || {};
-
-		console.log('process');
 
 		//methods & properties of this class
 		let helper = this.app.helper;
@@ -108,113 +104,120 @@ class TimeMaker{
 			});
 		}
 
+		function calculateIntervalScore(task) {
+			let intervalScore = [];
+			let slot_due;
+			if (!task.duedate) {
+				slot_due = SLOT_NUMBER / 7 * 3;
+			}
+			slot_due = getTimeslot(task.duedate) - now;
+			
+			for (let i = 0; i < slot_due; i++) {
+				let score = 0.0;
+				let slot_num = (now + i + SLOT_REVISE_NUMBER)%SLOT_NUMBER;
+				for (let j = 0; j <= task.slotspan; j++) {
+					score += task.timePreferenceScore[slot_num + j];
+				}
+				if (score > 0) {
+					intervalScore.push({
+						from: slot_num,
+						score: score
+					});
+				}
+			}
+
+			intervalScore.sort(function(a, b){return b.score-a.score});
+			return intervalScore;
+		}
+
 		function preprocessTasks(tasks){
 			return Q.all(tasks.map(task=>{
 				let p0 = helper.taskHelper.getProcessedTime(task, currentTime);
 				
 				return Q.spread([p0], (processedtime)=>{
 					task.timelevel = getTimeLevel(task, currentTime);
-					task.processedtime = processedtime;
+					task.slotspan = Math.max(Math.floor(task.estimation * 2 - processedtime),0);
+					task.intervalScore = calculateIntervalScore(task);
+					//console.log(task.name, task.intervalScore[0].score);
 					return task;
 				})
 			}))
 		}
 
 		function processTasksByTimeLevel(tasks){
-			_.each(tasks, processTaskByTimeLevel);
+			allocateTasks(0, 0);
 		}
 
-		function processTaskByTimeLevel(task){
-			let level = task.timelevel;
-			let slot_begin = now%SLOT_NUMBER;
-			let slot_size = SLOT_NUMBER;
-			let timespan = Math.max(Math.floor(task.estimation*2 - task.processedtime),0);
-			timespan += (task.marginBefore||0) + (task.marginAfter||0);
+		// Global variables for making timetable
+		var VISIT;
+		var _TASKS;
+		var _MAX_SCORE; // we are going to find this value
+		var _TIMETABLE; // this var is used during DFS search.
 
-			let timePreferenceScore = task.timePreferenceScore;
-			let slot_due = getTimeslot(task.duedate);
+		function isVisited(from, span) {
+			for (let i = 0; i < span; i++){
+				if (GLOBAL_VISIT[(from + i)%SLOT_NUMBER]) return true;
+			}
+			return false;
+		}
+
+		function setVisit(from, span) {
+			for (let i = 0; i < span; i++){
+				GLOBAL_VISIT[(from + i)%SLOT_NUMBER] = true;
+			}
+		}
+
+		function allocateTasks(score, indexCurrentTask) {
+			// score: score when we processed task up to task[indexCurrentTask-1].
+			var _task = _TASKS[indexCurrentTask];
+			var intervalScore = _task.intervalScore;
 			
-			if(slot_due-now < SLOT_NUMBER){
-				slot_size = slot_due - now;
+			if (indexCurrentTask == _TASKS.length - 1) {
+				// Process the last tasks on the list.
+				// Special treatment on DFS terminal node. We don't want to waste stack resource.
+				
+				let i;
+				for (i = 0; i < intervalScore.length; i++) {
+					let from = intervalScore[i].from;
+					let to = from + _task.slotspan;
+					if (slotAllocator.test(from, to) > 0){
+						score += intervalScore[i].score;
+					    break;
+					}
+				}
+
+				if (score > _MAX_SCORE) {
+					_MAX_SCORE = score;
+					let start = now + ((intervalScore[i].from + SLOT_REVISE_NUMBER) % SLOT_NUMBER);
+					let _event = makeNewEvent(userId, _task.id, start, start+_task.slotspan, _task.name, 0)
+					_TIMETABLE.push(_event);
+
+					timetable = _.map(_TIMETABLE, _.clone);
+				}
 			}
 
-			// console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
-			// console.log(timePreferenceScore.length);
+			// Special treatment on DFS terminal node. We don't want to waste stack resource.
+			if (indexCurrentTask == _TASKS.length-1)
+				return;
 
-			if (task.adjustable || (0 <= level && level < (24*7/TIMELEVEL_SIZE))) {
-				// Calculate time prefer score for each slot term
+			for (let i = 0; i < intervalScore.length; i++) {
+				let _interval = intervalScore[i];
 
-				let beginAfter = Math.floor((task.beginAfter || 0)/SLOT_SIZE); 
+				// if unvisited interval
+				let from = _interval.from;
+				let to = from + _task.slotspan;
+				if (slotAllocator.test(from, to) > 0) {
+					// set visit
+					slotAllocator._alloc(from, to);
 
-				let scores = [];
-				for (let i = 0; i <= slot_size-(task.adjustable?1:timespan); ++i) {
-					let slot = now+i;
+					let start = now + ((_interval.from + SLOT_REVISE_NUMBER) % SLOT_NUMBER);
+					let _event = makeNewEvent(userId, _task.id, start, start+_task.slotspan, _task.name, 0)
+					_TIMETABLE.push(_event);
 
-					let start = slot;
-					let _timespan = timespan;
-
-					if(beginAfter>0)
-						console.log(task.name, beginAfter);
-
-					if(start < beginAfter){
-						continue;
-					}
-
-					if(slot_due - start < _timespan)	//only possible when 'adjustable' set
-						_timespan = slot_due-start;
-					
-					let end = slot + _timespan;
-					let allocation = slotAllocator.test(start, end, task.adjustable);
-					end = start + allocation;
-
-					if(allocation>0 || timespan==0){
-						let score = 0;
-						for (let j = 0; j < allocation; j++) {
-							score += timePreferenceScore[(start+j)%SLOT_NUMBER] || 0;
-						}
-						scores.push({start, end, score, length: allocation});
-					}
+					// get maximum score if allocate with this interval
+					allocateTasks(score + _interval.score, indexCurrentTask+1);
+					_TIMETABLE.pop();
 				}
-
-				scores.sort(function(a, b){
-					if(a.score != b.score)
-						return b.score - a.score;
-
-					if(a.length != b.length)
-						return b.length - a.length;
-
-					if(a.start != b.start)
-						return a.start - b.start;
-					
-					if(a.end != b.end)
-						return b.end - a.end;
-
-					return 0;
-				});
-
-				if(task.name == 'sleep 2'){
-					console.log(scores);
-				}
-
-				// console.log('maximum score : ', _.max(scores, item=>item.score))
-				// console.log('minimum score : ', _.min(scores, item=>item.score))
-				
-				// Checkout if the task's prefer slot is taken by the other
-				for (let i = 0; i < scores.length; i++) {
-					let scoreObj = scores[i];
-					let start = scoreObj.start;
-					let end = scoreObj.end;
-					let score = scoreObj.score;
-					let allocation = slotAllocator._alloc(start, end);
-
-					if(allocation>0 || timespan==0){
-						let tableTask = makeNewEvent(userId, task._id, start+task.marginBefore||0, end-task.marginAfter||0, task.name, task.estimation);
-						if (tableTask) {
-							timetable.push(tableTask);
-							break;
-						}
-					}
-				}					
 			}
 		}
 
@@ -245,13 +248,16 @@ class TimeMaker{
 		.then(tasks=>{
 			tasks = _.filter(tasks, processAndFilterAlreadyPlayingTask);
 			
+			VISIT = [];
+			let loop = SLOT_NUMBER;
+			while (loop--) VISIT.push(false);
+
 			//events
 			fillEvents(events);
 			
 			//tasks
-			_.chain(tasks)
-			.groupBy('timelevel')
-			.each(processTasksByTimeLevel);
+			_TASKS = tasks;
+			processTasksByTimeLevel(0, 0);
 
 			return timetable;
 		})
