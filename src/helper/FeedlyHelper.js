@@ -57,7 +57,7 @@ class FeedlyHelper{
 	validateAccessToken(user){
 		if(user.feedly.expireDate >= Date.now()){
 			// let findByIdAndUpdate = Q.nbind(Account.findByIdAndUpdate, Account);
-
+			console.log('user.feedly.refresh_token : ', user.feedly.refresh_token);
 			return this._refreshToken(user.feedly.refresh_token)
 			.then(results=>{
 				let access_token = results.access_token;
@@ -155,7 +155,6 @@ class FeedlyHelper{
 		return this.getStream(user, params)
 		.then(results=>{
 			results = JSON.parse(results);
-			console.log(results.items[0])
 			var articles = _.map(results.items, item=>_.pick(item, 'title', 'content', 'originId', 'summary'));
 			return articles;
 		})
