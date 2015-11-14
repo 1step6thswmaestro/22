@@ -124,11 +124,20 @@ DECL('TASK_REQ_UPDATE', (state, action)=>{
 	return Object.assign({}, state, {tasks});
 })
 
+
+DECL('TASK_FETCH_TOKEN_PREFERENCE', (state, action)=>{
+	let preferences = Object.assign({}, state.preferences || {});
+	preferences[action.taskId] = action.preferences;
+	
+	return Object.assign({}, state, {preferences});
+})
+
 export const reducer = group.getReducer({
 	isFetching: false
 	, tasks: {}
 	, _list: []
 	, _plist: []
 	, _tlist: []
+	, preferences: {}
 });
 export const type = group.getTypes();

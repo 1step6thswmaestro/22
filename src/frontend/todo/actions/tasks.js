@@ -28,6 +28,19 @@ export function fetchList(){
 	}
 }
 
+export function fetchPreference(task){
+	return function(dispatch, getState){
+		$.ajax(`/v1/tasktoken/timeprefscore/${task._id}`)
+		.then(result=>{
+			dispatch({
+				type: type.TASK_FETCH_TOKEN_PREFERENCE
+				, taskId: task._id
+				, preferences: result
+			})
+		})
+	}
+}
+
 export function fetchItem(task){
 	console.log('fetchItem', task);
 	return function(dispatch, getState){

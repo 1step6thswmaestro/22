@@ -6,7 +6,7 @@ import TaskProgress from './TaskProgress'
 import { setConfig } from '../actions/config'
 import TaskItemDetail from './TaskItemDetail'
 import { startItem, pauseItem, completeItem, removeItem, postponeItem, getRemainTime } from '../actions/tasks';
-import { fetchItem, setTaskProperty } from '../actions/tasks'
+import { fetchItem, setTaskProperty, fetchPreference } from '../actions/tasks'
 import classnames from 'classnames'
 import TaskStateType from '../../../constants/TaskStateType';
 
@@ -39,6 +39,7 @@ class EventItem extends React.Component{
 		else{
 			dispatch(setConfig('selectedTableId', this.props.event._id))	
 			dispatch(fetchItem(this.props.task));
+			dispatch(fetchPreference(this.props.task));
 		}
 	}
 

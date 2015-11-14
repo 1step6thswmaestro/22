@@ -12,12 +12,33 @@ var LineChart = rd3.LineChart;
 export default class TaskLineChart extends React.Component{
 	constructor(props){
 		super(props);
-		this.state = {}
+		this.state = {index: 0}
+	}
+
+	componentWillUpdate(nextProps, nextState) {
+	    if(!nextProps.config.timePreferenceChartTaskId || !nextProps.tasks.preferences){
+	    	nextState.preferences = undefined;
+    		nextState.preference = undefined;
+    		return;
+	    }
+
+    	let preferences = nextProps.tasks.preferences[nextProps.config.timePreferenceChartTaskId];
+		if(!preferences){
+			nextState.preferences = undefined;
+			nextState.preference = undefined;
+			return;
+		}
+
+
+		preferences = [preferences[0], ...preferences[1]]
+		nextState.preferences = preferences;
+		let preference = preferences[nextState.index];
+		nextState.preference = preference;  
 	}
 
 	componentDidUpdate(prevProps, prevState) {
         if(this.props.config.timePreferenceChartTaskId != null){
-        	if(this.state.task)
+        	if(this.state.preference)
         		this.show();
         }
     }
@@ -34,19 +55,24 @@ export default class TaskLineChart extends React.Component{
         })
     }
 
-    renderContents(){
-    	let task = this.props.tasks.tasks[this.props.config.timePreferenceChartTaskId];
-		this.state.task = task;
-
-		if(!task){
-			return <div></div>;
+    renderTitle(){
+    	const { preference } = this.state;
+		if(!preference){
+			return 'no-token';
 		}
 
-		let values = _.map(task.timePreferenceScore, (v, i)=>{
+		let text = preference.tokens.join?preference.tokens.join(', '):preference.tokens;
+		return `[${this.state.index}] ${text}`
+    }
+
+    renderContents(){
+    	const { preference } = this.state;
+    	if(!preference)
+    		return;
+
+		let values = _.map(preference.score, (v, i)=>{
 			return {x: i, y: v};
 		})
-
-		console.log('values', values);
 
 		let xAxisTickValues = _.range(0, 7*48, 12);
 
@@ -96,6 +122,11 @@ export default class TaskLineChart extends React.Component{
 		)
     }
 
+    nextToken(offset){
+    	let index = (this.state.index+offset)%(this.state.preferences||[]).length;
+    	this.setState({index});
+    }
+
 	render(){
 		return (
 			<div className="modal" tabIndex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
@@ -105,11 +136,13 @@ export default class TaskLineChart extends React.Component{
                             <div className="modal-header">
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 className="modal-title" id="gridSystemModalLabel">
-                                    Task Wizard
+                                    {this.renderTitle()}
                                 </h4>
                             </div>
 							{this.renderContents()}
 				        </div>
+				        <button className='btn btn-default' onClick={this.nextToken.bind(this, -1)}>prev</button>
+				        <button className='btn btn-default' onClick={this.nextToken.bind(this, +1)}>next</button>
 				    </div>
 	        	</div>
 	        </div>
