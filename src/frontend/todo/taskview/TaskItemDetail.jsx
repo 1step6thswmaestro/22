@@ -10,6 +10,7 @@ import If from '../../utility/if'
 var TaskStateType = require('../../../constants/TaskStateType');
 import { fetchTaskLog } from '../actions/tasklog';
 import classnames from 'classnames';
+import { setConfig } from '../actions/config'
 
 class TaskItemDetail extends React.Component {
     constructor(props) {
@@ -189,6 +190,11 @@ class TaskItemDetail extends React.Component {
 		);
 	}	
 
+	showTimePreference(){
+		const { dispatch } = this.props;
+		dispatch(setConfig('timePreferenceChartTaskId', this.props.task._id));
+	}
+
 
     render(){
 		let task = this.props.task || {};
@@ -279,10 +285,17 @@ class TaskItemDetail extends React.Component {
 											</div>
 										</div>
 									</div>
-									<div className='col-sm-6'>
+									<div className='col-sm-4'>
 										<div className="form-group form-group-default">
 											<label>작업 가능 장소 선택</label>
 											{locationPresetButtons}
+										</div>
+									</div>
+									<div className='col-sm-2'>
+										<div className="form-group form-group-default">
+											<button className='btn btn-default' onClick={this.showTimePreference.bind(this)}>
+												시간대별 점수 보기
+											</button>
 										</div>
 									</div>
 								</div>

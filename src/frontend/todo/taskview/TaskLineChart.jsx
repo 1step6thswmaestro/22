@@ -10,8 +10,35 @@ var BarChart = rd3.BarChart;
 var LineChart = rd3.LineChart;
 
 export default class TaskLineChart extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+        if(this.state.task != null){
+        	this.show();
+        }
+
+    }
+
+    show(){
+    	var modal = $(React.findDOMNode(this));
+        modal.modal({
+            backdrop: true
+            , keyboard: true
+            , show: true
+        }).on('hidden.bs.modal', function (e) {
+            
+        })
+    }
+
 	render(){
-		let task = this.props.task;
+		let task = this.props.tasks.tasks[this.props.config.timePreferenceChartTaskId];
+		this.state.task = task;
+		console.log('timePreferenceChartTaskId', this.props.config.timePreferenceChartTaskId);
+		console.log('task', task);
+
 		if(!task){
 			return <div></div>;
 		}
@@ -50,25 +77,38 @@ export default class TaskLineChart extends React.Component{
 
 
 		return (
-			<LineChart
-				legend={true}
-				data={lineData}
-				width='100%'
-				height={400}
-				viewBoxObject={{
-					x: 0,
-					y: 0,
-					width: 1000,
-					height: 400
-				}}
-				title="Line Chart"
-				yAxisLabel="Preference"
-				xAxisLabel="Time"
-				xAxisTickValues={xAxisTickValues}
-				xAxisFormatter={formatter}
-				gridHorizontal={true}
-				circleRadius={0}
-            />
+			<div className="modal" tabIndex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+				<div className="modal-dialog" role="document" style={{width: 'auto'}}>
+					<div className="modal-content time-preference-score">
+                        <div className="modal-contents form-group-attached">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title" id="gridSystemModalLabel">
+                                    Task Wizard
+                                </h4>
+                            </div>
+							<LineChart
+								data={lineData}
+								width='100%'
+								height={400}
+								viewBoxObject={{
+									x: 0,
+									y: 0,
+									width: 1000,
+									height: 400
+								}}
+								title="Line Chart"
+								yAxisLabel="Preference"
+								xAxisLabel="Time"
+								xAxisTickValues={xAxisTickValues}
+								xAxisFormatter={formatter}
+								gridHorizontal={true}
+								circleRadius={0}
+				            />
+				        </div>
+				    </div>
+	        	</div>
+	        </div>
 		)
 	}
 }

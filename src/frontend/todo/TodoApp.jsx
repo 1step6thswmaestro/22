@@ -115,7 +115,7 @@ class TodoApp extends React.Component{
 					<GoogleCalendarList dispatch={this.props.dispatch} config={this.props.config} google={this.props.thirdparty.google}/>
 				</If>
 
-				<TaskLineChart task={this.props.testTask}/>
+				<TaskLineChart config={this.props.config} tasks={this.props.tasks}/>
 
 				<TimeTableActionView dispatch={this.props.dispatch} timetable={this.props.timetable} tasks={this.props.tasks} config={this.props.config} global={this.props.global} />
 

@@ -50,7 +50,7 @@ module.exports = function(_router, app){
 	router.get('/:_id', function(req, res){
 		app.helper.taskHelper.findOne(req.user._id, {_id: req.params._id})
 		.then(objectify)
-		.then(omit)
+		// .then(omit)
 		.then(task=>addProcessedTime(req.query, task))
 		.then(task=>res.send(task))
 		.fail(err=>console.err(err, err.stack))
@@ -166,7 +166,7 @@ module.exports = function(_router, app){
 		return helper.taskHelper.__findOneAndUpdate(userId, query, {$inc: {[propertyName]: value}})
 		.then(()=>helper.taskHelper.findOne(userId, {_id}))
 		.then(objectify)
-		.then(omit)
+		// .then(omit)
 		.then(task=>addProcessedTime(req.query, task))
 		.then(task=>res.send({task}))
 		.fail(err=>logger.error(err, err.stack))
