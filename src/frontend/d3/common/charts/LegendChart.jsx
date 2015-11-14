@@ -100,7 +100,7 @@ module.exports = React.createClass({
           <div style={{ display: 'table-cell' }}>
             {this._renderChart()}
           </div>
-          <div style={{ display: 'table-cell', width: props.sideOffset, 'verticalAlign': 'top' }}>
+          <div className="rd3-legend-container" style={{ display: 'table-cell', width: props.sideOffset, 'verticalAlign': 'top' }}>
             {this._renderLegend()}
           </div>
         </div>

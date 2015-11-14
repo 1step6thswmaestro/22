@@ -47,6 +47,9 @@ module.exports = React.createClass({
         'fontSize': '200%'
       };
 
+      if(idx>8)
+        return;
+
       legendItems.push(
         <li
           key={idx}

@@ -60,7 +60,7 @@ export default class TaskLineChart extends React.Component{
 
 		let preference = preferences[index];
 		let text = preference.tokens.join?preference.tokens.join(', '):preference.tokens;
-		return `[${this.state.index}] ${text}`
+		return text;
     }
 
     makeLineData(index){
@@ -84,7 +84,7 @@ export default class TaskLineChart extends React.Component{
 			})
 
 			return {
-				name: this.renderTitle(i)
+				name: i==0?"total":(`[${i}] `+this.renderTitle(i))
 				, values
 				, strokeWidth: i==0?"3":"1"
 				, strokeDashArray: i==0?undefined:`${i*2},${i*2}`
@@ -145,6 +145,7 @@ export default class TaskLineChart extends React.Component{
 						        <button className='btn btn-default mr10' onClick={this.nextToken.bind(this, +1)}><i className='fa fa-chevron-right'></i></button>
                                 
                                 <h4 className="modal-title" id="gridSystemModalLabel">
+                                	{`[${this.state.index}] `}
                                     {this.renderTitle(this.state.index)} 
                                 </h4>
                             </div>
