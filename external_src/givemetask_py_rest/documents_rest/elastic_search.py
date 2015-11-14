@@ -28,7 +28,7 @@ class DocumentES():
                         "min_score":config.ES_SCORE,
                         "aggs" : {
                             "docs" : {
-                                { "terms" : {"field" : "originId"}}
+                                "terms" : {"field" : "originId"}
                             }
                         },
                         "query":
@@ -52,7 +52,7 @@ class DocumentES():
                 "min_score": config.ES_SCORE,
                 "aggs" : {
                     "docs" : {
-                        { "terms" : {"field" : "originId"}}
+                        "terms" : {"field" : "originId"}
                     }
                 },
                 "query" : {
