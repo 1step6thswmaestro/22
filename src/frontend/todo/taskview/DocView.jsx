@@ -116,6 +116,9 @@ class DocView extends React.Component{
 		var user_id = this.props.user_id;
 
 		function createDocElements(list){
+			if(!list)
+				return;
+			
 			var count = 0;
 
 			for(var i = list.length - 1 ; i > 0 ; i--)
