@@ -8,13 +8,12 @@ module.exports = function(app){
 		name: String,
 		description: {type: String, default: ""},
 		importance: {type: Number, default: 0}, // 1=important, 0=not
-		priorityScore: {type: Number, default: 1.0},
+		priorityScore: {type: Number, default: 1.0}, // ????
 		timePreferenceScore: [], // array of (timslotIdx, score) tuples.
 		estimation: {type: Number, default: 1.0},	//unit-hour
 		duedate: {type: Date, default: function(){
 			return new Date(Date.now() + 24*60*60*1000);
-		}},		
-		expectedDuration: {type: String, default: ""},
+		}},
 		state: {type: Number, default: TaskStateType.named.create.id},
 
 		// Save related location as 4 bits. (home, school, work, etc)

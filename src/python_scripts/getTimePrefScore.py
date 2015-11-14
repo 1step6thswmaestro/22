@@ -13,7 +13,8 @@ def main():
 
     from pymongo import MongoClient
     from bson.objectid import ObjectId
-    db_addr='localhost' # Assume that this localhost is DB production server.
+    # Improvement Note: Load db config from config/config.json. 
+    db_addr='172.16.101.172'
     db_port=27340
 
     client = MongoClient(db_addr, db_port)
