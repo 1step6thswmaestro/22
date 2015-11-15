@@ -50,8 +50,8 @@ class LocAsk extends React.Component{
 			return _.map(list, (function(val){
 				// console.log('generate tags for:', val);
 				var loc = {
-					longitude: val.coordinates[1],
-					latitude: val.coordinates[0]
+					longitude: val.coordinates[0],
+					latitude: val.coordinates[1]
 				};
 				return(
 					<tr>

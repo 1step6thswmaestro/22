@@ -28,8 +28,8 @@ class LocSetup extends React.Component{
 			for(let i = 0; i < 4; i++){
 				if (data[i].coordinates.length == 2){
 					items.push({
-						latitude: data[i].coordinates[0],
-						longitude: data[i].coordinates[1]
+						latitude: data[i].coordinates[1],
+						longitude: data[i].coordinates[0]
 					});
 				}
 				else{

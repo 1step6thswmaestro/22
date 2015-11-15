@@ -67,7 +67,8 @@ class Tokenizer{
 		return this.tokenizeText(task.name)
 		.then(textTokens=>{
 			let tokens = _.map(textTokens, text => {
-				console.log('weekday:', weekdayIndex, 'daytime:', daytime);
+				// console.log('weekday:', weekdayIndex, 'daytime:', daytime);
+				// console.log('loc:', log.loc);
 				let obj = {
 					userId: task.userId,
 					taskId: task._id,

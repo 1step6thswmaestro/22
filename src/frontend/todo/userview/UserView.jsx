@@ -32,8 +32,8 @@ class UserView extends React.Component{
 		function createConnectionLogsElements(list){
 			return _.map(list, function(val){
 				var loc = {
-					latitude: val.loc.coordinates[0],
-					longitude: val.loc.coordinates[1]
+					latitude: val.loc.coordinates[1],
+					longitude: val.loc.coordinates[0]
 				};
 				return(
 					<div key={val.time}>

@@ -28,7 +28,7 @@ module.exports = function(){
 
 		// A GeoJSON geometry object.
 		// http://geojson.org/geojson-spec.html
-		// Example data: {type : "Point", coordinates: [100.0, 0.0]}
+		// Example data: {type : "Point", coordinates: [lon, lat]}
 		, locHome: { type: { type: String }, coordinates: [ ] }
 		, locSchool: { type: { type: String }, coordinates: [ ] }
 		, locWork: { type: { type: String }, coordinates: [ ] }

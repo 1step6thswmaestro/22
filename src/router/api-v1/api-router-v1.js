@@ -18,7 +18,7 @@ module.exports = function(app){
 			'userId': req.user._id,
 			'loc': {
 				type: 'Point',
-				coordinates: [ Number(req.body.lat), Number(req.body.lon) ]
+				coordinates: [ Number(req.body.lon), Number(req.body.lat) ]
 			 }
 		});
 		newLog.save(function (err, obj){
@@ -45,19 +45,19 @@ module.exports = function(app){
 		Account.findOne({'_id' :req.user._id}, function (err, account){
 			if (err) return handleError(err);
 			var locations = [account.locHome, account.locSchool, account.locWork, account.locEtc];
-			console.log('query:', req.query);
+
 			if (req.query.lat && req.query.lon){
 				// If coordinate info is in the request, it is locatino query request.
 				// So return the name of location. If not sure, return 'unknown'
-				var queryPoint= [ Number(req.query.lat), Number(req.query.lon) ];
+				var queryPoint= [ Number(req.query.lon), Number(req.query.lat) ];
 
 				var dist = function(p1, p2){
-					console.log('calc distance', p1, p2);
+					// console.log('calc distance', p1, p2);
 					var R = 6371; // km
-					var dLat = (p2[0]-p1[0])*(Math.PI / 180);
-					var dLon = (p2[1]-p1[1])*(Math.PI / 180);
-					var lat1 = p1[0]*(Math.PI / 180);
-					var lat2 = p2[0]*(Math.PI / 180);
+					var dLat = (p2[1]-p1[1])*(Math.PI / 180);
+					var dLon = (p2[0]-p1[0])*(Math.PI / 180);
+					var lat1 = p1[1]*(Math.PI / 180);
+					var lat2 = p2[1]*(Math.PI / 180);
 
 					var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
 					        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
@@ -73,7 +73,7 @@ module.exports = function(app){
 						continue;
 					}
 					let distance = dist(locations[i].coordinates, queryPoint);
-					console.log('distance from ', names[i], ': ', distance);
+					// console.log('distance from ', names[i], ': ', distance);
 					if (Math.abs(distance) < 5){
 						// less than 5 km
 						res.send({name:names[i]});

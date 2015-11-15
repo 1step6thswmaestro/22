@@ -38,12 +38,12 @@ class LocClusterView extends React.Component{
 		$.getJSON('v1/keylocations.json', function( data ) {
 			var items = [];
 			$.each( data, function( key, val ) {
-				// Convert data type from {type : "Point", coordinates: [37.531767, 126.913857]}
+				// Convert data type from {type : "Point", coordinates: [126.913857, 37.528901654]}
 				// to { "coordinate": { "lat": 37.528901654859453, "lng": 126.97144059041139 } }
 				var newVal = {
 					coordinate: {
-						lat: val.coordinates[0],
-						lng: val.coordinates[1]
+						lat: val.coordinates[1],
+						lng: val.coordinates[0]
 					}
 				};
 

@@ -17,6 +17,7 @@ module.exports = function(app){
 		                              // Saturday 23:30 is index (48 * 7 - 1)
 		prevType: {type: Number},
 		type: {type: Number},
+		// Example data: {type : "Point", coordinates: [lon, lat]}
 		loc: {type: { type: String }, coordinates: [ ]},
 		loc_cluster: {type: Number},
 	});
