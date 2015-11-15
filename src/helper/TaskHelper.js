@@ -133,7 +133,7 @@ function init(app){
 				else if ((logType == 200 || logType == 350) && processed) {
 					let timeTo = new Date(logs[to].time);
 					let timeFrom = new Date(logs[lognum].time);
-					console.log({timeTo, timeFrom});
+					// console.log({timeTo, timeFrom});
 					takenTime += timeTo - timeFrom;
 					processed = false;
 				}
