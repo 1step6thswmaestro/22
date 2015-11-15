@@ -25,7 +25,7 @@
 
 @media (min-width: 992px){
 	#actionview-contents, #activeview-contents{
-		min-height: 300px;
+		height: 300px;
 	}
 }
 
@@ -44,4 +44,6 @@
 		pointer-events: none;
 		opacity: 0.7;
 	}
+
+	overflow: auto;
 }
