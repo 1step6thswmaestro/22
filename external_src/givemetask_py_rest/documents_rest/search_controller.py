@@ -45,7 +45,7 @@ class SearchController():
         result = {'hits' : []}
         prev_link = ''
 
-        title_set = set()
+        title_set = set([doc['title'] for doc in check_list['hits']])
         temp_list = []
         for doc in doc_list['hits']:
             if doc['title'] not in title_set:
@@ -55,7 +55,7 @@ class SearchController():
         for doc in temp_list:
             if doc['link'] != prev_link:
                 if len(check_list) > 0:
-                    if doc['link'] not in check_list['hits']:
+                    if doc['link'] not in [d['link'] for d in check_list['hits']]:
                         result['hits'].append(doc)
                 else:
                     result['hits'].append(doc)

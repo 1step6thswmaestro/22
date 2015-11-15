@@ -1164,21 +1164,21 @@ textarea:focus, input:focus {
   .day-seperator:first-child {
     border-top-right-radius: 10px; }
 
-.doc-view {
+.doc-view .doc-table {
   width: 100%; }
-  .doc-view .table-header .header-row .header-row-item {
+  .doc-view .doc-table .table-header .header-row .header-row-item {
     text-align: center;
     padding: 5px 5px 5px 5px;
     border: solid 1px #CCC; }
-  .doc-view .table-body .table-row {
+  .doc-view .doc-table .table-body .table-row {
     text-align: center;
     padding: 5px 5px 5px 5px;
     border: solid 1px #CCC; }
-    .doc-view .table-body .table-row .doc-type {
+    .doc-view .doc-table .table-body .table-row .doc-type {
       width: 20%;
       border: solid 1px #CCC; }
-    .doc-view .table-body .table-row .doc-title {
-      width: 80%; }
+    .doc-view .doc-table .table-body .table-row .doc-title {
+      width: 100%; }
 
 .list {
   border-radius: 10px;
