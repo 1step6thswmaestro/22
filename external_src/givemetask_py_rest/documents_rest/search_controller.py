@@ -57,7 +57,8 @@ class SearchController():
                 if len(check_list) > 0:
                     if doc['link'] not in check_list['hits']:
                         result['hits'].append(doc)
-
+                else:
+                    result['hits'].append(doc)
                 prev_link = doc['link']
 
         return result

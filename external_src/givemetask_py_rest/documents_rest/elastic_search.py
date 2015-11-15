@@ -22,10 +22,10 @@ class DocumentES():
 
     def get_search_body(self, query, user_id, topn, contains_id, doc_type):
 
-        if doc_type == 0:
-            score = config.ES_RSS_SCORE
-        elif doc_type == 1:
+        if doc_type == 1 and contains_id:
             score = config.ES_EVER_SCORE
+        else:
+            score = config.ES_RSS_SCORE
 
         if contains_id: # it deals to search user's evernotes and rss
             result = {
