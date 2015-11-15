@@ -44,4 +44,10 @@ module.exports = class SlotAllocator{
 		}
 		return slot_end-slot_begin;
 	}
+
+	clone(){
+		let allocator = new SlotAllocator(this.base, 0);
+		allocator.slots = this.slots.splice(0);
+		return allocator;
+	}
 }
