@@ -8,6 +8,7 @@ var TaskStateType = require('../constants/TaskStateType');
 
 const SLOT_SIZE = 1000*60*30;
 const HOUR_MILLISEC = 1000*60*60;
+const SLOT_REVISE_NUMBER = 24*2*4;
 const SLOT_NUMBER = 48*7;
 const TIMELEVEL_SIZE = 4; //hours
 
@@ -51,7 +52,18 @@ class TimeMaker{
 		return _a.tableslotStart-_b.tableslotStart;
 	}
 
-	
+	reviseTimeSlot(toRealtime, now, slot) {
+		if (toRealtime) {
+			let diff = slot - ((now + SLOT_REVISE_NUMBER) % SLOT_NUMBER);
+			if (diff < 0) diff += SLOT_NUMBER;
+			return now + diff;
+		}
+		else {
+			slot = (slot + SLOT_REVISE_NUMBER) % SLOT_NUMBER;
+		}
+		return slot;
+	}
+
 
 	makeNewEvent(userId, taskId, _start, _end, _summary, _estimation) {
 		let newVal = {
@@ -79,6 +91,7 @@ class TimeMaker{
 		let makeNewEvent = this.makeNewEvent;
 		let sortByTime = this.sortByTime;
 		let sortByTimelevel = this.sortByTimelevel;
+		let reviseTimeSlot = this.reviseTimeSlot;
 
 		//temporally used variables in this method.
 		let currentTime = opt.time || Date.now();
@@ -148,7 +161,7 @@ class TimeMaker{
 
 				let scores = [];
 				for (let i = 0; i <= slot_size-(task.adjustable?1:timespan); ++i) {
-					let slot = now+i;
+					let slot = reviseTimeSlot(false, now, now+i);
 
 					let start = slot;
 					let _timespan = timespan;
@@ -202,10 +215,10 @@ class TimeMaker{
 				// Checkout if the task's prefer slot is taken by the other
 				for (let i = 0; i < scores.length; i++) {
 					let scoreObj = scores[i];
-					let start = scoreObj.start;
-					let end = scoreObj.end;
+					let start = reviseTimeSlot(true, now, scoreObj.start);
+					let end = reviseTimeSlot(true, now, scoreObj.end);
 					let score = scoreObj.score;
-					let allocation = slotAllocator._alloc(start, end);
+					let allocation = slotAllocator._alloc(scoreObj.start, scoreObj.end);
 
 					if(allocation>0 || timespan==0){
 						let tableTask = makeNewEvent(userId, task._id, start+task.marginBefore||0, end-task.marginAfter||0, task.name, task.estimation);
