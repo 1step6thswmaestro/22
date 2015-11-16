@@ -11,7 +11,7 @@ const HOUR_MILLISEC = 1000*60*60;
 const SLOT_REVISE_NUMBER = 24*2*4;
 const SLOT_NUMBER = 48*7;
 const TIMELEVEL_SIZE = 4; //hours
-const DEFAULT_MARGIN = 0;
+const DEFAULT_MARGIN = 1;
 
 class TimeMaker{
 
@@ -47,7 +47,7 @@ class TimeMaker{
 			return now + diff;
 		}
 		else {
-			slot = (slot - SLOT_REVISE_NUMBER) % SLOT_NUMBER;
+			slot = (slot + SLOT_REVISE_NUMBER) % SLOT_NUMBER;
 		}
 		return slot;
 	}
@@ -128,7 +128,11 @@ class TimeMaker{
 			let slot_size = SLOT_NUMBER;
 			let timespan = Math.max(Math.floor(task.estimation*2 - task.processedtime),0);
 
-			timespan += (task.marginBefore||DEFAULT_MARGIN) + (task.marginAfter||DEFAULT_MARGIN);
+			let marginBefore = task.marginBefore||DEFAULT_MARGIN;
+			let marginAfter = task.marginAfter||DEFAULT_MARGIN;
+			let marginTotal = marginBefore + marginAfter;
+
+			//timespan += (task.marginBefore||0) + (task.marginAfter||0);
 
 			let timePreferenceScore = task.timePreferenceScore;
 			let slot_due = getTimeslot(task.duedate);
@@ -143,7 +147,7 @@ class TimeMaker{
 				let beginAfter = Math.floor((task.beginAfter || 0)/SLOT_SIZE); 
 
 				let scores = [];
-				let _loop = slot_size-(task.adjustable?1:timespan);
+				let _loop = slot_size-timespan;
 				for (let i = 0; i < _loop; ++i) {
 					let start = reviseTimeSlot(false, now, now+i);
 					let _timespan = timespan;
@@ -159,15 +163,15 @@ class TimeMaker{
 						_timespan = slot_due-start;
 					
 					let end = start + _timespan - 1;
-					let allocation = slotAllocator.test(start, end, task.adjustable);
-					end = start + allocation;
+					let allocation = slotAllocator.test(start - marginBefore, end + marginAfter, task.adjustable);
+					end = start + allocation - marginTotal;
 
 					if(allocation>0 || timespan==0){
 						let score = 0;
 						for (let j = 0; j < allocation; j++) {
 							score += timePreferenceScore[(start+j)%SLOT_NUMBER] || 0;
 						}
-						scores.push({start, end, score, length: allocation});
+						scores.push({start, end, score, marginBefore, marginAfter, length: allocation});
 					}
 				}
 
@@ -175,11 +179,11 @@ class TimeMaker{
 					if(a.score != b.score)
 						return b.score - a.score;
 
-					if(a.end != b.end)
-						return b.end - a.end;
-
 					if(a.length != b.length)
 						return b.length - a.length;
+
+					if(a.end != b.end)
+						return b.end - a.end;
 
 					if(a.start != b.start)
 						return a.start - b.start;
@@ -193,10 +197,10 @@ class TimeMaker{
 					let start = reviseTimeSlot(true, now, scoreObj.start);
 					let end = reviseTimeSlot(true, now, scoreObj.end);
 					let score = scoreObj.score;
-					let allocation = slotAllocator._alloc(scoreObj.start, scoreObj.end);
+					let allocation = slotAllocator._alloc(scoreObj.start-scoreObj.marginBefore, scoreObj.end+scoreObj.marginAfter);
 
 					if(allocation>0 || timespan==0){
-						let tableTask = makeNewEvent(userId, task._id, start+task.marginBefore||0, end-task.marginAfter||0, task.name, task.estimation);
+						let tableTask = makeNewEvent(userId, task._id, start, end, task.name, task.estimation);
 						if (tableTask) {
 							timetable.push(tableTask);
 							break;
