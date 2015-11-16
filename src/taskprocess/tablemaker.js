@@ -47,7 +47,7 @@ class TimeMaker{
 			return now + diff;
 		}
 		else {
-			slot = (slot + SLOT_REVISE_NUMBER) % SLOT_NUMBER;
+			slot = (slot - SLOT_REVISE_NUMBER) % SLOT_NUMBER;
 		}
 		return slot;
 	}
@@ -144,7 +144,7 @@ class TimeMaker{
 
 				let scores = [];
 				let _loop = slot_size-(task.adjustable?1:timespan);
-				for (let i = _loop; i >= 0; --i) {
+				for (let i = 0; i < _loop; ++i) {
 					let start = reviseTimeSlot(false, now, now+i);
 					let _timespan = timespan;
 
@@ -158,7 +158,7 @@ class TimeMaker{
 					if(slot_due - start < _timespan)	//only possible when 'adjustable' set
 						_timespan = slot_due-start;
 					
-					let end = start + _timespan;
+					let end = start + _timespan - 1;
 					let allocation = slotAllocator.test(start, end, task.adjustable);
 					end = start + allocation;
 
