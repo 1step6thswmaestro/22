@@ -11,24 +11,12 @@ const HOUR_MILLISEC = 1000*60*60;
 const SLOT_REVISE_NUMBER = 24*2*4;
 const SLOT_NUMBER = 48*7;
 const TIMELEVEL_SIZE = 4; //hours
-
+const DEFAULT_MARGIN = 0;
 
 class TimeMaker{
 
 	constructor(app) {
 		this.app = app;
-	}
-
-	isTaken(pushedTask, _event) {
-		let starttime = _event.tableslotStart;
-		let endtime = _event.tableslotEnd;
-		let result = false;
-		_.each(pushedTask, task=>{
-			if ((task.tableslotStart <= starttime && starttime <= task.tableslotEnd)
-				|| (task.tableslotStart <= endtime && endtime <= task.tableslotEnd))
-				result = true;
-		});
-		return result;
 	}
 
 	getTimeslot(time) {
@@ -64,7 +52,6 @@ class TimeMaker{
 		return slot;
 	}
 
-
 	makeNewEvent(userId, taskId, _start, _end, _summary, _estimation) {
 		let newVal = {
 			userId,
@@ -87,7 +74,6 @@ class TimeMaker{
 		let helper = this.app.helper;
 		let getTimeslot = this.getTimeslot;
 		let getTimeLevel = this.getTimeLevel;
-		let isTaken = this.isTaken;
 		let makeNewEvent = this.makeNewEvent;
 		let sortByTime = this.sortByTime;
 		let sortByTimelevel = this.sortByTimelevel;
@@ -139,10 +125,10 @@ class TimeMaker{
 
 		function processTaskByTimeLevel(task){
 			let level = task.timelevel;
-			let slot_begin = now%SLOT_NUMBER;
 			let slot_size = SLOT_NUMBER;
 			let timespan = Math.max(Math.floor(task.estimation*2 - task.processedtime),0);
-			timespan += (task.marginBefore||0) + (task.marginAfter||0);
+
+			timespan += (task.marginBefore||DEFAULT_MARGIN) + (task.marginAfter||DEFAULT_MARGIN);
 
 			let timePreferenceScore = task.timePreferenceScore;
 			let slot_due = getTimeslot(task.duedate);
@@ -151,19 +137,15 @@ class TimeMaker{
 				slot_size = slot_due - now;
 			}
 
-			// console.log(task.name, task.adjustable, level, {now, slot_begin, slot_size, timespan});
-			// console.log(timePreferenceScore.length);
-
 			if (task.adjustable || (0 <= level && level < (24*7/TIMELEVEL_SIZE))) {
 				// Calculate time prefer score for each slot term
 
 				let beginAfter = Math.floor((task.beginAfter || 0)/SLOT_SIZE); 
 
 				let scores = [];
-				for (let i = 0; i <= slot_size-(task.adjustable?1:timespan); ++i) {
-					let slot = reviseTimeSlot(false, now, now+i);
-
-					let start = slot;
+				let _loop = slot_size-(task.adjustable?1:timespan);
+				for (let i = _loop; i >= 0; --i) {
+					let start = reviseTimeSlot(false, now, now+i);
 					let _timespan = timespan;
 
 					if(beginAfter>0)
@@ -176,7 +158,7 @@ class TimeMaker{
 					if(slot_due - start < _timespan)	//only possible when 'adjustable' set
 						_timespan = slot_due-start;
 					
-					let end = slot + _timespan;
+					let end = start + _timespan;
 					let allocation = slotAllocator.test(start, end, task.adjustable);
 					end = start + allocation;
 
@@ -193,24 +175,17 @@ class TimeMaker{
 					if(a.score != b.score)
 						return b.score - a.score;
 
+					if(a.end != b.end)
+						return b.end - a.end;
+
 					if(a.length != b.length)
 						return b.length - a.length;
 
 					if(a.start != b.start)
 						return a.start - b.start;
-					
-					if(a.end != b.end)
-						return b.end - a.end;
 
 					return 0;
 				});
-
-				if(task.name == 'sleep 2'){
-					console.log(scores);
-				}
-
-				// console.log('maximum score : ', _.max(scores, item=>item.score))
-				// console.log('minimum score : ', _.min(scores, item=>item.score))
 				
 				// Checkout if the task's prefer slot is taken by the other
 				for (let i = 0; i < scores.length; i++) {
