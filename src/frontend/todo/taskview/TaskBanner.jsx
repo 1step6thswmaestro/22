@@ -114,13 +114,13 @@ export default class TaskBanner extends React.Component{
 						<span className='date-label'>end</span>
 						{end.format("YY/MM/DD, HH:mm")}
 					</div>
-					<div className='buttons'>
+					{/*<div className='buttons'>
 						<div className="btn-group">
 							<button className={"btn "} data-toggle="집" label="집">
 								<span className="glyphicon glyphicon-home"></span>
 							</button>
 						</div>
-					</div>
+					</div>*/}
 					<If test={offset==0}>
 						<div>
 							<If test={!task || task.state != TaskStateType.named.start.id}>

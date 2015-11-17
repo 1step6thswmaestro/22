@@ -122,8 +122,8 @@ class TodoApp extends React.Component{
 				<Topbar/>
 				<MainTimeline timetable={this.props.timetable} config={this.props.config} global={this.props.global}/>
 				<TaskBanner tasks={this.props.tasks} timetable={this.props.timetable} dispatch={this.props.dispatch} config={this.props.config}/>
-				<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user} predictLocation={this.state.predictLocation}/>
-				<ConfigView dispatch={this.props.dispatch} config={this.props.config}/>
+				{/*<DevelopView dispatch={this.props.dispatch} config={this.props.config} user={this.props.user} predictLocation={this.state.predictLocation}/>*/}
+				<ConfigView dispatch={this.props.dispatch} config={this.props.config} predictLocation={this.state.predictLocation}/>
 				<If test={this.props.config.showCalendarList==true}>
 					<GoogleCalendarList dispatch={this.props.dispatch} config={this.props.config} google={this.props.thirdparty.google}/>
 				</If>
