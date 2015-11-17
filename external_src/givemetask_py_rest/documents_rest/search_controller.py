@@ -2,19 +2,24 @@ from elastic_search import DocumentES
 from search_cluster import SearchCluster
 from config import NUMBER_DOCS
 from pandas import Series
+from konlpy.tag import Mecab
 
 class SearchController():
     def __init__(self, app):
         self.app = app
         self.es = DocumentES(app)
         self.cluster = SearchCluster(app)
+        self.mecab = Mecab()
 
     def search(self, user_id, query):
 
         whole_number = NUMBER_DOCS
 
+        result = {'hits':[]}
+
         # find evernotes, doc_type 1 is evernote
         ever_list = self.es.search(query, user_id, topn=whole_number['ever_note'], contains_id=True, doc_type=1)
+        self.fit_to_front_type(result, ever_list, 'evernote')
 
         # find own rss list
         rss_list = self.es.search(query, user_id, topn=whole_number['check_topn'], contains_id=True, doc_type=0)
@@ -22,28 +27,43 @@ class SearchController():
         if len(rss_list['hits']) > whole_number['own_rss']:
             rss_list = self.get_counts_and_sort_docs(rss_list, whole_number['own_rss'])
 
+        self.fit_to_front_type(result, rss_list, 'rss')
+
         remain_numbers = whole_number['entire'] - (len(ever_list['hits']) + len(rss_list['hits']))
         # find other user's rss docs
         other_rss_list = self.es.search(query, user_id, topn=whole_number['check_topn'], contains_id=False, doc_type=0)
-        other_rss_list = self.get_distinct_docs(other_rss_list)
+        other_rss_list = self.get_distinct_docs(other_rss_list, rss_list)
         if len(other_rss_list['hits']) > remain_numbers:
             other_rss_list = self.get_counts_and_sort_docs(other_rss_list, remain_numbers)
 
-        result = {'hits':[]}
-        self.fit_to_front_type(result, ever_list, 'evernote')
-        self.fit_to_front_type(result, rss_list, 'rss')
         self.fit_to_front_type(result, other_rss_list, 'others')
 
         return result
         #return self.convert_list_to_json_type(rss_list)#, cluster_list)
 
-    def get_distinct_docs(self, doc_list):
+    def get_distinct_docs(self, doc_list, check_list=[]):
         result = {'hits' : []}
         prev_link = ''
+
+        if 'hits' in check_list:
+            check_list = check_list['hits']
+
+        title_set = set([doc['title'] for doc in check_list])
+        temp_list = []
         for doc in doc_list['hits']:
+            if doc['title'] not in title_set:
+                title_set.add(doc['title'])
+                temp_list.append(doc)
+
+        for doc in temp_list:
             if doc['link'] != prev_link:
-                result['hits'].append(doc)
-            prev_link = doc['link']
+                if len(check_list) > 0:
+                    if doc['link'] not in [d['link'] for d in check_list]:
+                        result['hits'].append(doc)
+                else:
+                    result['hits'].append(doc)
+                prev_link = doc['link']
+
         return result
 
     def get_counts_and_sort_docs(self, doc_list, topn):
