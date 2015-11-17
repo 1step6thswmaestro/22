@@ -88,8 +88,8 @@ class TimeMaker{
 
 		function fillEvents(events){
 			_.each(events, event=>{
-				let start = getTimeslot(event.start);
-				let end = getTimeslot(event.end);
+				let start = reviseTimeSlot(false, now, getTimeslot(event.start));
+				let end = reviseTimeSlot(false, now, getTimeslot(event.end));
 
 				let allocation = slotAllocator.alloc(start, end, false);
 				let conflicted = false;
