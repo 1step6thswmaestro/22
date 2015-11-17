@@ -47,19 +47,25 @@ class Tokenizer{
 		// Create PredictToken object. It is only function that create this model.
 		let self = this;
 
+		console.log('makeTokens', {time, useWeekday, useDaytime, force});
+		console.log(_.pick(log, 'name', 'type', 'time'));
+
 		if(!force && TaskStateType.indexed[log.type].tokenize === false){
+			// console.log('returned');
 			return;
 		}
 		var NUM_TIMESLOT = 48;
 		var weekdayIndex = self.getWeekDayFromToken(time);
 		var daytime = time%NUM_TIMESLOT; // (9*2) term offset UTC for Asia/Seoul TimeZone
 		var timeslotIndex = weekdayIndex*NUM_TIMESLOT+daytime;
+		console.log(task.name, {weekdayIndex, daytime})
 		if (useWeekday==false){
 			weekdayIndex = -1;
 		}
 		if (useDaytime==false){
 			daytime = -1;
 		}
+
 
 		// Improvement Note: Instead of tokenizing for every timeslot,
 		// to tokenizing before calling this function, and just use the results.
@@ -68,7 +74,6 @@ class Tokenizer{
 		.then(textTokens=>{
 			let tokens = _.map(textTokens, text => {
 				// console.log('weekday:', weekdayIndex, 'daytime:', daytime);
-				// console.log('loc:', log.loc);
 				let obj = {
 					userId: task.userId,
 					taskId: task._id,
@@ -83,7 +88,7 @@ class Tokenizer{
 					type: log.type,
 					loc: log.loc,
 				};
-				console.log(obj);
+				// console.log(obj);
 
 				return obj;
 			});
@@ -115,20 +120,20 @@ class Tokenizer{
 		let _time = currentTime;
 		let lastTime = new Date(task.lastProcessed);
 
-		// console.log({lastTime});
+		console.log({lastTime});
 
 		let p0 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$gt: lastTime}}, undefined, {sort: {time: -1}});
 		let p1 = this.app.helper.tasklog.find(task.userId, {taskId: task._id, time: {$lte: lastTime}}, undefined, {sort: {type: -1}, limit: 1});
 		// let p2 = this.app.helper.predictToken.find(task.userId, {taskId: task._id}, undefined, {sort: {time: 1}, limit: 1});
 
 		return Q.spread([p0, p1], function(logs, lastlog){
-			// console.log({logs, lastlog});
+			console.log({logs, lastlog});
 			lastlog = lastlog[0];
 			var promises = [];
 			_.each(logs, (log) => {
-				// console.log(log);
+				console.log(log);
 				// console.log({_time, 'log.time': log.time});
-				// console.log('p0', self.getTimeDivision(_time), self.getTimeDivision(log.time), _.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1));
+				console.log('p0', self.getTimeDivision(_time), self.getTimeDivision(log.time), _.range(self.getTimeDivision(_time), self.getTimeDivision(log.time), -1));
 
 				// Put token for weekday
 				var lastUsedWeekday;
@@ -155,9 +160,10 @@ class Tokenizer{
 			});
 			//create token
 			if(lastlog){
-				// console.log('===p1===');
-				// console.log({created: task.created, lastProcessed: task.lastProcessed});
 				if(task.created.getTime() == task.lastProcessed.getTime()){
+					console.log('===p1===');
+					console.log(lastlog, lastTime);
+					console.log({created: task.created, lastProcessed: task.lastProcessed});
 					// In this case, force tokenzing.
 
 					// console.log(task, lastlog, self.getTimeDivision(lastlog.time));
@@ -170,10 +176,10 @@ class Tokenizer{
 			}
 
 			if(lastlog){
-				// console.log('===p2===');
-				// console.log(lastlog);
+				console.log('===p2===');
+				console.log(lastlog);
 				// console.log({_time});
-				// console.log(_.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime), -1));
+				console.log(_.range(self.getTimeDivision(_time), self.getTimeDivision(lastTime), -1));
 				var lastUsedWeekday;
 				if(self.getTimeDivision(_time) != self.getTimeDivision(lastTime)){
 					// Put token for weekday
@@ -227,7 +233,9 @@ class Tokenizer{
 		let p1 = app.helper.taskHelper.findOneAndUpdate(userId, {_id: task._id}, {lastProcessed: task.created});
 
 		return Q.spread([p0, p1], function(result0, task){
+			console.log('reset');
 			task.lastProcessed = task.created;
+			console.log(task);
 			self.processTask(userId, task);
 		})
 	}
