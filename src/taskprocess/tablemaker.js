@@ -88,10 +88,10 @@ class TimeMaker{
 
 		function fillEvents(events){
 			_.each(events, event=>{
-				let start = reviseTimeSlot(false, now, getTimeslot(event.start));
-				let end = reviseTimeSlot(false, now, getTimeslot(event.end));
+				let start_slot = reviseTimeSlot(false, now, getTimeslot(event.start));
+				let end_slot = reviseTimeSlot(false, now, getTimeslot(event.end));
 
-				let allocation = slotAllocator.alloc(start, end, false);
+				let allocation = slotAllocator.alloc(start_slot, end_slot, false);
 				let conflicted = false;
 				if(allocation == 0){
 					console.log("########");
@@ -101,6 +101,8 @@ class TimeMaker{
 					conflicted = true;
 				}
 
+				let start = reviseTimeSlot(true, now, start_slot);
+				let end = reviseTimeSlot(true, now, end_slot);
 				let tableEvent = makeNewEvent(userId, undefined, start, end, event.summary, 0);
 				tableEvent.conflicted = conflicted;
 				timetable.push(tableEvent);
