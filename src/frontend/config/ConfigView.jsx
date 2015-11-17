@@ -75,7 +75,30 @@ export default class ConfigView extends React.Component{
 		dispatch(setConfig('forceShowTaskModal', true));
 	}
 
+	resetTimetable(){
+		const { dispatch } = this.props;
+		dispatch(resetTimetable());
+	}
+
 	render(){
+		let dataPickerButton;
+
+		if(this.props.config.globalTimePicker!=true){
+			dataPickerButton = (
+				<button className='btn btn-default' onClick={this.toggleDatePicker.bind(this)}>
+					<i className='fa fa-clock-o mr5'></i>DatePicker
+				</button>
+			)
+		}
+		else{
+			dataPickerButton = (
+				<button className='btn btn-check' onClick={this.toggleDatePicker.bind(this)}>
+					<i className='fa fa-clock-o mr5'></i>DatePicker
+				</button>
+			)
+		}
+
+
 		return (
 			<div>
 				<div>
@@ -95,16 +118,12 @@ export default class ConfigView extends React.Component{
 						</button>
 					</If>
 					<i className='mr10'></i>
-					<If test={this.props.config.globalTimePicker!=true}>
-						<button className='btn btn-default' onClick={this.toggleDatePicker.bind(this)}>
-							<i className='fa fa-clock-o mr5'></i>DatePicker
+					<div className='btn-group'>
+						{dataPickerButton}
+						<button className='btn btn-default' onClick={this.resetTimetable.bind(this)}>
+							<i className='fa fa-cog mr5'></i> Make Schedule
 						</button>
-					</If>
-					<If test={this.props.config.globalTimePicker==true}>
-						<button className='btn btn-check' onClick={this.toggleDatePicker.bind(this)}>
-							<i className='fa fa-clock-o mr5'></i>DatePicker
-						</button>
-					</If>
+					</div>
 					<i className='mr10'></i>
 					<div className='btn-group'>
 						{this.renderTableButton()}
