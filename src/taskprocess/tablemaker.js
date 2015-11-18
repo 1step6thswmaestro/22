@@ -241,11 +241,14 @@ class TimeMaker{
 			
 			//events
 			fillEvents(events);
-			
-			//tasks
-			_.chain(tasks)
-			.groupBy('timelevel')
-			.each(processTasksByTimeLevel);
+
+			let taskGroup = _.groupBy(tasks, task=>task.important?0:1);
+			_.each(taskGroup, tasks=>{
+				//tasks
+				_.chain(tasks)
+				.groupBy('timelevel')
+				.each(processTasksByTimeLevel);
+			})
 
 			return timetable;
 		})
