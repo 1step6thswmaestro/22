@@ -92,19 +92,38 @@ class EventItem extends React.Component{
 		}
 	}
 
+	renderProperties(){
+		let renderProperty = this.renderProperty.bind(this);
+		if(!this.props.task){
+			return [
+				<div className='table-item-header border-right'>
+					<i className='fa fa-circle-thin'></i>
+				</div>
+				, <div className='table-item-header border-right'>
+					<i className='fa fa-circle-thin'></i>
+				</div>
+			]
+		}
+		else{
+			return [
+				renderProperty('important', {className: 'border-right'})
+				, renderProperty('adjustable', {className: 'border-right'})
+			];
+		}
+	}
+
 	getSimpleView(){
 		var event = this.props.event;
 		var task = this.props.task;
 		let start = moment(new Date(event.tableslotStart * (1000*60*30)));
 		let end = moment(new Date(event.tableslotEnd * (1000*60*30)));
-		let renderProperty = this.renderProperty.bind(this);
+		let renderProperties = this.renderProperties.bind(this);
 		let renderIsEvent = this.renderIsEvent.bind(this);
 
 		return (
 			<div className='table-item-title' onMouseOver={this.onMouseOver.bind(this)} onMouseOut={this.onMouseOut.bind(this)} onClick={this.onClick.bind(this)}>
 				{renderIsEvent()}
-				{renderProperty('important', {className: 'border-right'})}
-				{renderProperty('adjustable', {className: 'border-right'})}
+				{renderProperties()}
 				<div className='table-item-header date'>
 					{start.format("HH:mm")}
 				</div>
