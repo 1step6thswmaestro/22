@@ -184,11 +184,11 @@ class TimeMaker{
 					if(a.length != b.length)
 						return b.length - a.length;
 
-					if(a.end != b.end)
-						return b.end - a.end;
-
 					if(a.start != b.start)
 						return a.start - b.start;
+					
+					if(a.end != b.end)
+						return b.end - a.end;
 
 					return 0;
 				});
